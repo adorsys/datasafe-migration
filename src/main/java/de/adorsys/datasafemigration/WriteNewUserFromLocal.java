@@ -1,11 +1,12 @@
 package de.adorsys.datasafemigration;
 
-import de.adorsys.datasafe.encrypiton.api.types.UserIDAuth;
-import de.adorsys.datasafe.simple.adapter.api.SimpleDatasafeService;
-import de.adorsys.datasafe.simple.adapter.api.types.DSDocument;
-import de.adorsys.datasafe.simple.adapter.api.types.DocumentContent;
-import de.adorsys.datasafe.simple.adapter.api.types.DocumentDirectoryFQN;
-import de.adorsys.datasafe.simple.adapter.api.types.DocumentFQN;
+import de.adorsys.datasafe_0_7_1.encrypiton.api.types.UserIDAuth;
+import de.adorsys.datasafe_0_7_1.simple.adapter.api.SimpleDatasafeService;
+import de.adorsys.datasafe_0_7_1.simple.adapter.api.types.DSDocument;
+import de.adorsys.datasafe_0_7_1.simple.adapter.api.types.DocumentContent;
+import de.adorsys.datasafe_0_7_1.simple.adapter.api.types.DocumentDirectoryFQN;
+import de.adorsys.datasafe_0_7_1.simple.adapter.api.types.DocumentFQN;
+import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
@@ -17,16 +18,20 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Slf4j
-public class WriteUser {
+@AllArgsConstructor
+public class WriteNewUserFromLocal {
+    private final SimpleDatasafeService simpleDatasafeService;
+    private final DocumentDirectoryFQN src;
 
     @SneakyThrows
-    public WriteUser(SimpleDatasafeService simpleDatasafeService, UserIDAuth userIDAuth, DocumentDirectoryFQN src) {
+    public void migrateUser(UserIDAuth userIDAuth) {
 
         if (simpleDatasafeService.userExists(userIDAuth.getUserID())) {
-            throw new RuntimeException("user "+userIDAuth.getUserID().getValue()+" already exists");
+            throw new RuntimeException("user "+userIDAuth.getUserID().getValue()+" already exists in new format");
         }
 
         simpleDatasafeService.createUser(userIDAuth);
+        log.info("create user {} in new format", userIDAuth.getUserID().getValue());
 
         String sourcedir = src.addDirectory(userIDAuth.getUserID().getValue()).getDocusafePath();
         try (Stream<Path> walk = Files.walk(Paths.get(sourcedir))) {
@@ -38,7 +43,7 @@ public class WriteUser {
                 DocumentFQN fqn = new DocumentFQN(path.substring(sourcedir.length()));
                 DSDocument dsDocument = new DSDocument(fqn, new DocumentContent(Files.readAllBytes(Paths.get(path))));
                 simpleDatasafeService.storeDocument(userIDAuth, dsDocument);
-                log.info("stored {}", dsDocument.getDocumentFQN().getDocusafePath());
+                log.info("stored {} in new format", dsDocument.getDocumentFQN().getDocusafePath());
             }
         }
     }

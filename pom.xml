@@ -22,7 +22,58 @@
         <dependency>
             <groupId>de.adorsys</groupId>
             <artifactId>datasafe-simple-adapter-impl</artifactId>
-            <version>${datasafe.version}</version>
+            <version>0.6.1</version>
+            <classifier>datasafe-version-0-6-1</classifier>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>de.adorsys</groupId>
+                    <artifactId>datasafe-simple-adapter-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>de.adorsys</groupId>
+                    <artifactId>datasafe-business</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>de.adorsys</groupId>
+                    <artifactId>datasafe-storage-impl-s3</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>de.adorsys</groupId>
+                    <artifactId>datasafe-storage-impl-fs</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>de.adorsys</groupId>
+            <artifactId>datasafe-simple-adapter-impl</artifactId>
+            <version>0.7.1-SNAPSHOT</version>
+            <classifier>datasafe-version-0-7-1</classifier>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>de.adorsys</groupId>
+                    <artifactId>datasafe-simple-adapter-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>de.adorsys</groupId>
+                    <artifactId>datasafe-business</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>de.adorsys</groupId>
+                    <artifactId>datasafe-storage-impl-s3</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>de.adorsys</groupId>
+                    <artifactId>datasafe-storage-impl-fs</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
