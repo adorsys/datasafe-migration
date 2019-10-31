@@ -1,10 +1,11 @@
-package de.adorsys.datasafemigration;
+package de.adorsys.datasafemigration.withlocalfilesystem;
 
 import de.adorsys.datasafe_0_6_1.simple.adapter.api.SimpleDatasafeService;
 import de.adorsys.datasafe_0_6_1.simple.adapter.api.types.DSDocument;
 import de.adorsys.datasafe_0_6_1.simple.adapter.api.types.DocumentDirectoryFQN;
 import de.adorsys.datasafe_0_6_1.simple.adapter.api.types.DocumentFQN;
 import de.adorsys.datasafe_0_6_1.simple.adapter.api.types.ListRecursiveFlag;
+import de.adorsys.datasafemigration.common.SwitchVersion;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -28,14 +29,13 @@ public class LoadOldUserToLocal {
         List<DocumentFQN> list = simpleDatasafeService.list(SwitchVersion.toOld(userIDAuth), new DocumentDirectoryFQN("/"), ListRecursiveFlag.TRUE);
         for (DocumentFQN fqn : list) {
             DSDocument dsDocument = simpleDatasafeService.readDocument(SwitchVersion.toOld(userIDAuth), fqn);
-            log.info("loaded {} in old format", dsDocument.getDocumentFQN().getDocusafePath());
             store(dsDocument, SwitchVersion.toOld(dest).addDirectory(userIDAuth.getUserID().getValue()));
         }
     }
 
     @SneakyThrows
     private void store(DSDocument dsDocument, DocumentDirectoryFQN dest) {
-        log.info("store local file {}", dsDocument.getDocumentFQN().getDatasafePath());
+        log.info("store {} bytes in local file {} from old format", dsDocument.getDocumentContent().getValue().length, dsDocument.getDocumentFQN().getDatasafePath());
         Path localFileToWrite = Paths.get(dest.addDirectory(dsDocument.getDocumentFQN().getDocusafePath()).getDocusafePath());
         Files.createDirectories(localFileToWrite.getParent());
         Files.write(localFileToWrite, dsDocument.getDocumentContent().getValue());

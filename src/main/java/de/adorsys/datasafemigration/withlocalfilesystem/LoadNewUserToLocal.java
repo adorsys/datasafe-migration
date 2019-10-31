@@ -1,4 +1,4 @@
-package de.adorsys.datasafemigration;
+package de.adorsys.datasafemigration.withlocalfilesystem;
 
 import de.adorsys.datasafe_0_7_1.encrypiton.api.types.UserIDAuth;
 import de.adorsys.datasafe_0_7_1.simple.adapter.api.SimpleDatasafeService;
@@ -29,14 +29,13 @@ public class LoadNewUserToLocal {
         List<DocumentFQN> list = simpleDatasafeService.list(userIDAuth, new DocumentDirectoryFQN("/"), ListRecursiveFlag.TRUE);
         for (DocumentFQN fqn : list) {
             DSDocument dsDocument = simpleDatasafeService.readDocument(userIDAuth, fqn);
-            log.info("loaded {} in new format", dsDocument.getDocumentFQN().getDocusafePath());
             store(dsDocument, dest.addDirectory(userIDAuth.getUserID().getValue()));
         }
     }
 
     @SneakyThrows
     private void store(DSDocument dsDocument, DocumentDirectoryFQN dest) {
-        log.info("store local file {}", dsDocument.getDocumentFQN().getDatasafePath());
+        log.info("store {} bytes in local file {} from new format", dsDocument.getDocumentContent().getValue().length, dsDocument.getDocumentFQN().getDatasafePath());
         Path localFileToWrite = Paths.get(dest.addDirectory(dsDocument.getDocumentFQN().getDocusafePath()).getDocusafePath());
         Files.createDirectories(localFileToWrite.getParent());
         Files.write(localFileToWrite, dsDocument.getDocumentContent().getValue());

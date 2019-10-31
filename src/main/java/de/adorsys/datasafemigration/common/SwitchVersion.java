@@ -1,4 +1,4 @@
-package de.adorsys.datasafemigration;
+package de.adorsys.datasafemigration.common;
 
 
 import de.adorsys.datasafe_0_7_1.encrypiton.api.types.UserIDAuth;
