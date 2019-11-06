@@ -21,9 +21,9 @@ import java.util.List;
 @AllArgsConstructor
 public class LoadOldUserToLocal {
     private final SimpleDatasafeService simpleDatasafeService;
-    private final de.adorsys.datasafe_0_7_1.simple.adapter.api.types.DocumentDirectoryFQN dest;
+    private final de.adorsys.datasafe_0_7_0.simple.adapter.api.types.DocumentDirectoryFQN dest;
 
-    public void migrateUser(de.adorsys.datasafe_0_7_1.encrypiton.api.types.UserIDAuth userIDAuth) {
+    public void migrateUser(de.adorsys.datasafe_0_7_0.encrypiton.api.types.UserIDAuth userIDAuth) {
         Security.addProvider(new BouncyCastleProvider());
 
         List<DocumentFQN> list = simpleDatasafeService.list(SwitchVersion.toOld(userIDAuth), new DocumentDirectoryFQN("/"), ListRecursiveFlag.TRUE);

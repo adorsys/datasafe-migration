@@ -69,7 +69,7 @@ the ```datasafe-simple-adapter/datasafe-simple-adapter-impl.pom.xml```
                             <relocations>
                                 <relocation>
                                     <pattern>de.adorsys.datasafe</pattern>
-                                    <shadedPattern>de.adorsys.datasafe_0_7_1</shadedPattern>
+                                    <shadedPattern>de.adorsys.datasafe_0_7_0</shadedPattern>
                                 </relocation>
                             </relocations>
 

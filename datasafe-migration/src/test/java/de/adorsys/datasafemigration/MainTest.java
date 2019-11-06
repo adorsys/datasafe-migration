@@ -1,13 +1,13 @@
 package de.adorsys.datasafemigration;
 
 
-import de.adorsys.datasafe_0_7_1.encrypiton.api.types.UserID;
-import de.adorsys.datasafe_0_7_1.encrypiton.api.types.UserIDAuth;
-import de.adorsys.datasafe_0_7_1.encrypiton.api.types.encryption.MutableEncryptionConfig;
-import de.adorsys.datasafe_0_7_1.simple.adapter.api.SimpleDatasafeService;
-import de.adorsys.datasafe_0_7_1.simple.adapter.api.types.*;
-import de.adorsys.datasafe_0_7_1.simple.adapter.impl.SimpleDatasafeServiceImpl;
-import de.adorsys.datasafe_0_7_1.types.api.types.ReadKeyPassword;
+import de.adorsys.datasafe_0_7_0.encrypiton.api.types.UserID;
+import de.adorsys.datasafe_0_7_0.encrypiton.api.types.UserIDAuth;
+import de.adorsys.datasafe_0_7_0.encrypiton.api.types.encryption.MutableEncryptionConfig;
+import de.adorsys.datasafe_0_7_0.simple.adapter.api.SimpleDatasafeService;
+import de.adorsys.datasafe_0_7_0.simple.adapter.api.types.*;
+import de.adorsys.datasafe_0_7_0.simple.adapter.impl.SimpleDatasafeServiceImpl;
+import de.adorsys.datasafe_0_7_0.types.api.types.ReadKeyPassword;
 import de.adorsys.datasafemigration.withDFSonly.LoadUserNewToNewFormat;
 import de.adorsys.datasafemigration.withDFSonly.LoadUserOldToNewFormat;
 import de.adorsys.datasafemigration.withDFSonly.WriteUserNewFormat;
