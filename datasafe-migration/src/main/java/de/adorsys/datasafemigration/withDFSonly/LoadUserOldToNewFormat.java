@@ -5,7 +5,7 @@ import de.adorsys.datasafe_0_6_1.simple.adapter.api.types.DSDocument;
 import de.adorsys.datasafe_0_6_1.simple.adapter.api.types.DocumentDirectoryFQN;
 import de.adorsys.datasafe_0_6_1.simple.adapter.api.types.DocumentFQN;
 import de.adorsys.datasafe_0_6_1.simple.adapter.api.types.ListRecursiveFlag;
-import de.adorsys.datasafe_0_7_0.encrypiton.api.types.UserIDAuth;
+import de.adorsys.datasafe_0_7_1.encrypiton.api.types.UserIDAuth;
 import de.adorsys.datasafemigration.common.SwitchVersion;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

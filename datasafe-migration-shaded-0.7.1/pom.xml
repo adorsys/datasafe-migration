@@ -9,13 +9,13 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>datasafe-migration-shaded-0.7.0</artifactId>
+    <artifactId>datasafe-migration-shaded-0.7.1</artifactId>
 
     <dependencies>
         <dependency>
             <groupId>de.adorsys</groupId>
             <artifactId>datasafe-simple-adapter-impl</artifactId>
-            <version>0.7.0</version>
+            <version>0.7.1</version>
         </dependency>
     </dependencies>
     <build>
@@ -38,7 +38,6 @@
 
                             <artifactSet>
                                 <includes>
-                                    <include>de.adorsys:datasafe-migration-shaded</include>
                                     <include>de.adorsys:datasafe-simple-adapter-impl</include>
                                     <include>de.adorsys:datasafe-simple-adapter-api</include>
                                     <include>de.adorsys:datasafe-encryption-api</include>
@@ -62,9 +61,10 @@
                             <relocations>
                                 <relocation>
                                     <pattern>de.adorsys.datasafe</pattern>
-                                    <shadedPattern>de.adorsys.datasafe_0_7_0</shadedPattern>
+                                    <shadedPattern>de.adorsys.datasafe_0_7_1</shadedPattern>
                                 </relocation>
                             </relocations>
+
                         </configuration>
                     </execution>
                 </executions>

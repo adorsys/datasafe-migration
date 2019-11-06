@@ -21,9 +21,16 @@
         </dependency>
         <dependency>
             <groupId>de.adorsys</groupId>
-            <artifactId>datasafe-migration-shaded-0.7.0</artifactId>
+            <artifactId>datasafe-migration-shaded-0.7.1</artifactId>
             <version>1.0.0-SNAPSHOT</version>
         </dependency>
+        <!-- this is brute force -->
+        <dependency>
+            <groupId>de.adorsys</groupId>
+            <artifactId>datasafe-simple-adapter-impl</artifactId>
+            <version>0.7.1</version>
+        </dependency>
+        <!-- end brute force -->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>

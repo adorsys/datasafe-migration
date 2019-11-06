@@ -1,8 +1,8 @@
 package de.adorsys.datasafemigration.common;
 
-import de.adorsys.datasafe_0_7_0.encrypiton.api.types.UserID;
-import de.adorsys.datasafe_0_7_0.encrypiton.api.types.UserIDAuth;
-import de.adorsys.datasafe_0_7_0.types.api.types.ReadKeyPassword;
+import de.adorsys.datasafe_0_7_1.encrypiton.api.types.UserID;
+import de.adorsys.datasafe_0_7_1.encrypiton.api.types.UserIDAuth;
+import de.adorsys.datasafe_0_7_1.types.api.types.ReadKeyPassword;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
