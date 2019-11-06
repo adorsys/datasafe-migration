@@ -35,7 +35,7 @@ public class LoadOldUserToLocal {
 
     @SneakyThrows
     private void store(DSDocument dsDocument, DocumentDirectoryFQN dest) {
-        log.info("store {} bytes in local file {} from old format", dsDocument.getDocumentContent().getValue().length, dsDocument.getDocumentFQN().getDatasafePath());
+        log.debug("store {} bytes in local file {} from old format", dsDocument.getDocumentContent().getValue().length, dsDocument.getDocumentFQN().getDatasafePath());
         Path localFileToWrite = Paths.get(dest.addDirectory(dsDocument.getDocumentFQN().getDocusafePath()).getDocusafePath());
         Files.createDirectories(localFileToWrite.getParent());
         Files.write(localFileToWrite, dsDocument.getDocumentContent().getValue());

@@ -29,7 +29,7 @@ public class ReadUserPasswordFile {
                 list.add(new UserIDAuth(new UserID(username), new ReadKeyPassword(passwordSupplier)));
             }
         }
-        log.info("read {} user from {}", list.size(), filename);
+        log.debug("read {} user from {}", list.size(), filename);
         return list;
     }
 }

@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>de.adorsys</groupId>
-    <artifactId>datasafe-migration</artifactId>
+    <artifactId>datasafemigration</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <properties>
@@ -16,6 +16,8 @@
 
         <slf4j.version>1.7.25</slf4j.version>
         <lombok.version>1.18.6</lombok.version>
+        <jupiter.version>5.4.1</jupiter.version>
+        <surefire.version>2.22.1</surefire.version>
     </properties>
 
     <dependencies>
@@ -23,57 +25,12 @@
             <groupId>de.adorsys</groupId>
             <artifactId>datasafe-simple-adapter-impl</artifactId>
             <version>0.6.1</version>
-            <classifier>datasafe-version-0-6-1</classifier>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.slf4j</groupId>
-                    <artifactId>slf4j-api</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>de.adorsys</groupId>
-                    <artifactId>datasafe-simple-adapter-api</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>de.adorsys</groupId>
-                    <artifactId>datasafe-business</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>de.adorsys</groupId>
-                    <artifactId>datasafe-storage-impl-s3</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>de.adorsys</groupId>
-                    <artifactId>datasafe-storage-impl-fs</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>de.adorsys</groupId>
             <artifactId>datasafe-simple-adapter-impl</artifactId>
             <version>0.7.1-SNAPSHOT</version>
             <classifier>datasafe-version-0-7-1</classifier>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.slf4j</groupId>
-                    <artifactId>slf4j-api</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>de.adorsys</groupId>
-                    <artifactId>datasafe-simple-adapter-api</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>de.adorsys</groupId>
-                    <artifactId>datasafe-business</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>de.adorsys</groupId>
-                    <artifactId>datasafe-storage-impl-s3</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>de.adorsys</groupId>
-                    <artifactId>datasafe-storage-impl-fs</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -90,6 +47,41 @@
             <artifactId>lombok</artifactId>
             <version>${lombok.version}</version>
         </dependency>
+
+
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>${jupiter.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>${jupiter.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-params</artifactId>
+            <version>${jupiter.version}</version>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${surefire.version}</version>
+                <configuration>
+                    <argLine>${surefireArgLine}</argLine>
+                </configuration>
+            </plugin>
+        </plugins>
+
+    </build>
 
 </project>

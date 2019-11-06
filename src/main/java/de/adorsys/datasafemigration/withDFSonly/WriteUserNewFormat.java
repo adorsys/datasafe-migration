@@ -17,11 +17,11 @@ public class WriteUserNewFormat {
         }
 
         simpleDatasafeService.createUser(userIDAuth);
-        log.info("created user {} in new format", userIDAuth.getUserID().getValue());
+        log.debug("created user {} in new format", userIDAuth.getUserID().getValue());
     }
 
     public void storeDocument(UserIDAuth userIDAuth, DSDocument dsDocument) {
         simpleDatasafeService.storeDocument(userIDAuth, dsDocument);
-        log.info("stored document of size {} in new format for user {}", dsDocument.getDocumentContent().getValue().length, userIDAuth.getUserID().getValue());
+        log.debug("stored document of size {} in new format for user {}", dsDocument.getDocumentContent().getValue().length, userIDAuth.getUserID().getValue());
     }
 }
