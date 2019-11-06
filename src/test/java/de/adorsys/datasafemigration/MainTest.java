@@ -8,6 +8,7 @@ import de.adorsys.datasafe_0_7_1.simple.adapter.api.SimpleDatasafeService;
 import de.adorsys.datasafe_0_7_1.simple.adapter.api.types.*;
 import de.adorsys.datasafe_0_7_1.simple.adapter.impl.SimpleDatasafeServiceImpl;
 import de.adorsys.datasafe_0_7_1.types.api.types.ReadKeyPassword;
+import de.adorsys.datasafemigration.withDFSonly.LoadUserNewToNewFormat;
 import de.adorsys.datasafemigration.withDFSonly.LoadUserOldToNewFormat;
 import de.adorsys.datasafemigration.withDFSonly.WriteUserNewFormat;
 import de.adorsys.datasafemigration.withlocalfilesystem.LoadNewUserToLocal;
@@ -18,6 +19,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -64,6 +66,28 @@ public class MainTest {
 
         // compare initial tree to reloaded tree on local disk
         compare(startDatadir, destDatadir);
+    }
+
+    @Test
+    public void testIncompatibility() {
+
+        // create tree of files for one user on local disk (below tempDir)
+        UserIDAuth userIDAuth = new UserIDAuth(new UserID("peter"), new ReadKeyPassword("password"::toCharArray));
+        DocumentDirectoryFQN startDatadir = new DocumentDirectoryFQN(tempDir.toString()).addDirectory("startupfiles");
+        createLocalFilesInFolder(startDatadir.addDirectory(userIDAuth.getUserID().getValue()), 1, 1, 0, 1000);
+
+        // move file tree of user to old datasafe format. destination depending on dataservice config
+        de.adorsys.datasafe_0_6_1.simple.adapter.api.SimpleDatasafeService oldService = createOldService(tempDir.toString() + "/0.6.1");
+        WriteOldUserFromLocal oldWriter = new WriteOldUserFromLocal(oldService, startDatadir);
+        oldWriter.migrateUser(userIDAuth);
+
+        // try to read old files with new datasafe
+        SimpleDatasafeService newSourceService = createNewService(tempDir.toString() + "/0.6.1");
+        SimpleDatasafeService newDestService = createNewService(tempDir.toString() + "/0.7.1");
+        WriteUserNewFormat writer = new WriteUserNewFormat(newDestService);
+        LoadUserNewToNewFormat migrator = new LoadUserNewToNewFormat(newSourceService, writer);
+        Assertions.assertThrows(IOException.class, () -> migrator.migrateUser(userIDAuth));
+
     }
 
     @SneakyThrows
