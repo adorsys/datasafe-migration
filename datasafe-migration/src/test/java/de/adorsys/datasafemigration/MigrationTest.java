@@ -9,9 +9,10 @@ import de.adorsys.datasafe_0_7_1.encrypiton.api.types.encryption.MutableEncrypti
 import de.adorsys.datasafe_0_7_1.simple.adapter.api.SimpleDatasafeService;
 import de.adorsys.datasafe_0_7_1.simple.adapter.api.types.DocumentDirectoryFQN;
 import de.adorsys.datasafe_0_7_1.simple.adapter.api.types.DocumentFQN;
-import de.adorsys.datasafe_0_7_1.simple.adapter.api.types.FilesystemDFSCredentials;
 import de.adorsys.datasafe_0_7_1.simple.adapter.impl.SimpleDatasafeServiceImpl;
 import de.adorsys.datasafe_0_7_1.types.api.types.ReadKeyPassword;
+import de.adorsys.datasafemigration.docker.InitFromStorageProvider;
+import de.adorsys.datasafemigration.docker.WithStorageProvider;
 import de.adorsys.datasafemigration.withDFSonly.LoadUserOldToNewFormat;
 import de.adorsys.datasafemigration.withlocalfilesystem.LoadNewUserToLocal;
 import de.adorsys.datasafemigration.withlocalfilesystem.WriteOldUserFromLocal;
@@ -19,7 +20,8 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -32,9 +34,12 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Slf4j
-public class MigrationTest {
+public class MigrationTest extends WithStorageProvider {
 
     private Path tempDir;
+    private String oldSubFolder = "0.6.1";
+    private String newSubFolder = "0.7.1";
+
 
     @SneakyThrows
     @BeforeEach
@@ -42,12 +47,15 @@ public class MigrationTest {
         tempDir = Files.createTempDirectory("migration-test");
     }
 
-    @Test
-    public void testMigrationWithLocalFiles() {
+
+    @ParameterizedTest
+    @MethodSource("allStorages")
+    public void testMigrationWithLocalFiles(WithStorageProvider.StorageDescriptor descriptor) {
+        InitFromStorageProvider.DFSCredentialsTuple dfsCredentialsTuple = InitFromStorageProvider.dfsFromDescriptor(descriptor, oldSubFolder, newSubFolder);
 
         UserIDAuth userIDAuth = new UserIDAuth(new UserID("peter"), new ReadKeyPassword("password"::toCharArray));
-        SO_SimpleDatasafeService oldService = createOldService(tempDir.toString() + "/0.6.1");
-        SimpleDatasafeService newService = createNewService(tempDir.toString() + "/0.7.1");
+        SO_SimpleDatasafeService oldService = new SO_SimpleDatasafeServiceImpl(dfsCredentialsTuple.getOldVersion());
+        SimpleDatasafeService newService = new SimpleDatasafeServiceImpl(dfsCredentialsTuple.getNewVersion(), new MutableEncryptionConfig());
         DocumentDirectoryFQN startDatadir;
         {
             // Test preparation
@@ -80,11 +88,13 @@ public class MigrationTest {
         }
     }
 
-    @Test
-    public void testIncompatibility() {
+    @ParameterizedTest
+    @MethodSource("allStorages")
+    public void testIncompatibility(WithStorageProvider.StorageDescriptor descriptor) {
+        InitFromStorageProvider.DFSCredentialsTuple dfsCredentialsTuple = InitFromStorageProvider.dfsFromDescriptor(descriptor, oldSubFolder, oldSubFolder);
 
         UserIDAuth userIDAuth = new UserIDAuth(new UserID("peter"), new ReadKeyPassword("password"::toCharArray));
-        SO_SimpleDatasafeService oldService = createOldService(tempDir.toString() + "/0.6.1");
+        SO_SimpleDatasafeService oldService = new SO_SimpleDatasafeServiceImpl(dfsCredentialsTuple.getOldVersion());
         DocumentDirectoryFQN startDatadir;
         {
             // Test preparation
@@ -98,7 +108,7 @@ public class MigrationTest {
             oldWriter.migrateUser(userIDAuth);
         }
 
-        SimpleDatasafeService newService = createNewService(tempDir.toString() + "/0.6.1");
+        SimpleDatasafeService newService = new SimpleDatasafeServiceImpl(dfsCredentialsTuple.getNewVersion(), new MutableEncryptionConfig());
         Assertions.assertThrows(IOException.class, () -> newService.list(
                 userIDAuth,
                 new de.adorsys.datasafe_0_7_1.simple.adapter.api.types.DocumentDirectoryFQN("/"),
@@ -173,19 +183,4 @@ public class MigrationTest {
         new Random().nextBytes(bytes);
         return bytes;
     }
-
-    private SO_SimpleDatasafeService createOldService(String absolutePath) {
-        return new SO_SimpleDatasafeServiceImpl(de.adorsys.datasafe_0_6_1.simple.adapter.api.types.FilesystemDFSCredentials.builder()
-                .root(absolutePath)
-                .build());
-
-    }
-
-    private SimpleDatasafeService createNewService(String absolutePath) {
-        return new SimpleDatasafeServiceImpl(FilesystemDFSCredentials.builder()
-                .root(absolutePath)
-                .build(), new MutableEncryptionConfig());
-
-    }
-
 }
