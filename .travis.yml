@@ -4,7 +4,7 @@ jdk:
   - openjdk8
 
 script:
-  - mvn clean install
+  - mvn -P peter
 
 before_deploy:
   - echo $GPG_SECRET_KEY | base64 --decode | $GPG_EXECUTABLE --import
