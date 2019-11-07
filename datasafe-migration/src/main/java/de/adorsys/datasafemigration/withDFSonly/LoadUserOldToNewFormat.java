@@ -1,5 +1,11 @@
 package de.adorsys.datasafemigration.withDFSonly;
 
+import de.adorsys.datasafe_0_6_1.simple.adapter.api.SO_SimpleDatasafeService;
+import de.adorsys.datasafe_0_6_1.simple.adapter.api.types.SO_DSDocument;
+import de.adorsys.datasafe_0_6_1.simple.adapter.api.types.SO_DocumentDirectoryFQN;
+import de.adorsys.datasafe_0_6_1.simple.adapter.api.types.SO_DocumentFQN;
+import de.adorsys.datasafe_0_6_1.simple.adapter.api.types.SO_ListRecursiveFlag;
+import de.adorsys.datasafe_0_7_1.simple.adapter.api.SimpleDatasafeService;
 import de.adorsys.datasafemigration.common.SwitchVersion;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -10,28 +16,23 @@ import java.util.List;
 @AllArgsConstructor
 @Slf4j
 public class LoadUserOldToNewFormat {
-    private final de.adorsys.datasafe_0_6_1.simple.adapter.api.SimpleDatasafeService sourceDatasafeService;
-    private final de.adorsys.datasafe_0_7_1.simple.adapter.api.SimpleDatasafeService destDatasafeService;
+    private final SO_SimpleDatasafeService sourceDatasafeService;
+    private final SimpleDatasafeService destDatasafeService;
 
     public void migrateUser(de.adorsys.datasafe_0_7_1.encrypiton.api.types.UserIDAuth userIDAuth) {
 
         createUser(userIDAuth);
 
-        List<de.adorsys.datasafe_0_6_1.simple.adapter.api.types.DocumentFQN> list = sourceDatasafeService.list(
-                SwitchVersion.toOld(userIDAuth),
-                new de.adorsys.datasafe_0_6_1.simple.adapter.api.types.DocumentDirectoryFQN("/"),
-                de.adorsys.datasafe_0_6_1.simple.adapter.api.types.ListRecursiveFlag.TRUE);
-        for (de.adorsys.datasafe_0_6_1.simple.adapter.api.types.DocumentFQN fqn : list) {
-            de.adorsys.datasafe_0_6_1.simple.adapter.api.types.DSDocument dsDocument = sourceDatasafeService.readDocument(SwitchVersion.toOld(userIDAuth), fqn);
-            storeDocument(
-                    userIDAuth,
-                    SwitchVersion.toNew(dsDocument));
+        List<SO_DocumentFQN> list = sourceDatasafeService.list(SwitchVersion.toOld(userIDAuth), new SO_DocumentDirectoryFQN("/"), SO_ListRecursiveFlag.TRUE);
+        for (SO_DocumentFQN fqn : list) {
+            SO_DSDocument dsDocument = sourceDatasafeService.readDocument(SwitchVersion.toOld(userIDAuth), fqn);
+            storeDocument(userIDAuth, SwitchVersion.toNew(dsDocument));
         }
     }
 
     private void createUser(de.adorsys.datasafe_0_7_1.encrypiton.api.types.UserIDAuth userIDAuth) {
         if (destDatasafeService.userExists(userIDAuth.getUserID())) {
-            throw new RuntimeException("user "+userIDAuth.getUserID().getValue()+" already exists");
+            throw new RuntimeException("user " + userIDAuth.getUserID().getValue() + " already exists");
         }
 
         destDatasafeService.createUser(userIDAuth);

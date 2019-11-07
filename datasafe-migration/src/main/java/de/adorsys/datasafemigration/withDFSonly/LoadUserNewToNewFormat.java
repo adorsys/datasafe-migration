@@ -22,21 +22,16 @@ public class LoadUserNewToNewFormat {
 
         createUser(userIDAuth);
 
-        List<DocumentFQN> list = sourceDatasafeService.list(
-                userIDAuth,
-                new DocumentDirectoryFQN("/"),
-                ListRecursiveFlag.TRUE);
+        List<DocumentFQN> list = sourceDatasafeService.list(userIDAuth, new DocumentDirectoryFQN("/"), ListRecursiveFlag.TRUE);
         for (DocumentFQN fqn : list) {
             DSDocument dsDocument = sourceDatasafeService.readDocument(userIDAuth, fqn);
-            storeDocument(
-                    userIDAuth,
-                    dsDocument);
+            storeDocument(userIDAuth, dsDocument);
         }
     }
 
     private void createUser(UserIDAuth userIDAuth) {
         if (destDatasafeService.userExists(userIDAuth.getUserID())) {
-            throw new RuntimeException("user "+userIDAuth.getUserID().getValue()+" already exists");
+            throw new RuntimeException("user " + userIDAuth.getUserID().getValue() + " already exists");
         }
 
         destDatasafeService.createUser(userIDAuth);

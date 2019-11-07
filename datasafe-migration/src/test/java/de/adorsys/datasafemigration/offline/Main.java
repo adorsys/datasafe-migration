@@ -1,5 +1,7 @@
 package de.adorsys.datasafemigration.offline;
 
+import de.adorsys.datasafe_0_6_1.simple.adapter.api.SO_SimpleDatasafeService;
+import de.adorsys.datasafe_0_6_1.simple.adapter.impl.SO_SimpleDatasafeServiceImpl;
 import de.adorsys.datasafe_0_7_1.encrypiton.api.types.UserIDAuth;
 import de.adorsys.datasafe_0_7_1.encrypiton.api.types.encryption.MutableEncryptionConfig;
 import de.adorsys.datasafe_0_7_1.simple.adapter.api.SimpleDatasafeService;
@@ -55,7 +57,7 @@ public class Main {
 
         if (get(args, ACTION).equals(LOAD_OLD_TO_LOCAL)) {
             DocumentDirectoryFQN localfolder = new DocumentDirectoryFQN(get(args, LOCALFOLDER));
-            de.adorsys.datasafe_0_6_1.simple.adapter.api.SimpleDatasafeService simpleDatasafeService = new de.adorsys.datasafe_0_6_1.simple.adapter.impl.SimpleDatasafeServiceImpl(getOldDfsCredentials(args));
+            SO_SimpleDatasafeService simpleDatasafeService = new SO_SimpleDatasafeServiceImpl(getOldDfsCredentials(args));
             LoadOldUserToLocal service = new LoadOldUserToLocal(simpleDatasafeService, localfolder);
             for (UserIDAuth userIDAuth : usersToMigrate) {
                 service.migrateUser(userIDAuth);
@@ -79,7 +81,7 @@ public class Main {
         }
         if (get(args, ACTION).equals(STORE_LOCAL_TO_OLD)) {
             DocumentDirectoryFQN localfolder = new DocumentDirectoryFQN(get(args, LOCALFOLDER));
-            de.adorsys.datasafe_0_6_1.simple.adapter.api.SimpleDatasafeService simpleDatasafeService = new de.adorsys.datasafe_0_6_1.simple.adapter.impl.SimpleDatasafeServiceImpl(getOldDfsCredentials(args));
+            SO_SimpleDatasafeService simpleDatasafeService = new SO_SimpleDatasafeServiceImpl(getOldDfsCredentials(args));
             WriteOldUserFromLocal service = new WriteOldUserFromLocal(simpleDatasafeService, localfolder);
             for (UserIDAuth userIDAuth : usersToMigrate) {
                 service.migrateUser(userIDAuth);
@@ -87,7 +89,7 @@ public class Main {
         }
         if (get(args, ACTION).equals(MIGRATE_DFS_TO_INTERMEDIATE)) {
             SimpleDatasafeService intermediateService = new SimpleDatasafeServiceImpl(getNewDfsCredentials("intermediate", args), new MutableEncryptionConfig());
-            de.adorsys.datasafe_0_6_1.simple.adapter.api.SimpleDatasafeService oldService = new de.adorsys.datasafe_0_6_1.simple.adapter.impl.SimpleDatasafeServiceImpl(getOldDfsCredentials(args));
+            SO_SimpleDatasafeService oldService = new SO_SimpleDatasafeServiceImpl(getOldDfsCredentials(args));
 
             LoadUserOldToNewFormat old = new LoadUserOldToNewFormat(oldService, intermediateService);
 

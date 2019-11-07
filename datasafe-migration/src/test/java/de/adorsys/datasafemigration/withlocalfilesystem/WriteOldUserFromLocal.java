@@ -1,9 +1,9 @@
 package de.adorsys.datasafemigration.withlocalfilesystem;
 
-import de.adorsys.datasafe_0_6_1.simple.adapter.api.SimpleDatasafeService;
-import de.adorsys.datasafe_0_6_1.simple.adapter.api.types.DSDocument;
+import de.adorsys.datasafe_0_6_1.simple.adapter.api.SO_SimpleDatasafeService;
 import de.adorsys.datasafe_0_6_1.simple.adapter.api.types.DocumentContent;
-import de.adorsys.datasafe_0_6_1.simple.adapter.api.types.DocumentFQN;
+import de.adorsys.datasafe_0_6_1.simple.adapter.api.types.SO_DSDocument;
+import de.adorsys.datasafe_0_6_1.simple.adapter.api.types.SO_DocumentFQN;
 import de.adorsys.datasafe_0_7_1.encrypiton.api.types.UserIDAuth;
 import de.adorsys.datasafe_0_7_1.simple.adapter.api.types.DocumentDirectoryFQN;
 import de.adorsys.datasafemigration.common.SwitchVersion;
@@ -21,7 +21,7 @@ import java.util.stream.Stream;
 @Slf4j
 @AllArgsConstructor
 public class WriteOldUserFromLocal {
-    private final SimpleDatasafeService simpleDatasafeService;
+    private final SO_SimpleDatasafeService simpleDatasafeService;
     private final DocumentDirectoryFQN src;
 
     @SneakyThrows
@@ -39,8 +39,8 @@ public class WriteOldUserFromLocal {
             List<String> result = walk.filter(Files::isRegularFile).map(x -> x.toString()).collect(Collectors.toList());
 
             for (String path : result) {
-                DocumentFQN fqn = new DocumentFQN(path.substring(sourcedir.length()));
-                DSDocument dsDocument = new DSDocument(fqn, new DocumentContent(Files.readAllBytes(Paths.get(path))));
+                SO_DocumentFQN fqn = new SO_DocumentFQN(path.substring(sourcedir.length()));
+                SO_DSDocument dsDocument = new SO_DSDocument(fqn, new DocumentContent(Files.readAllBytes(Paths.get(path))));
                 simpleDatasafeService.storeDocument(SwitchVersion.toOld(userIDAuth), dsDocument);
                 log.debug("stored {} bytes for file {} in old format", dsDocument.getDocumentContent().getValue().length, dsDocument.getDocumentFQN().getDocusafePath());
             }

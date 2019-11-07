@@ -1,11 +1,15 @@
 package de.adorsys.datasafemigration;
 
 
+import de.adorsys.datasafe_0_6_1.simple.adapter.api.SO_SimpleDatasafeService;
+import de.adorsys.datasafe_0_6_1.simple.adapter.impl.SO_SimpleDatasafeServiceImpl;
 import de.adorsys.datasafe_0_7_1.encrypiton.api.types.UserID;
 import de.adorsys.datasafe_0_7_1.encrypiton.api.types.UserIDAuth;
 import de.adorsys.datasafe_0_7_1.encrypiton.api.types.encryption.MutableEncryptionConfig;
 import de.adorsys.datasafe_0_7_1.simple.adapter.api.SimpleDatasafeService;
-import de.adorsys.datasafe_0_7_1.simple.adapter.api.types.*;
+import de.adorsys.datasafe_0_7_1.simple.adapter.api.types.DocumentDirectoryFQN;
+import de.adorsys.datasafe_0_7_1.simple.adapter.api.types.DocumentFQN;
+import de.adorsys.datasafe_0_7_1.simple.adapter.api.types.FilesystemDFSCredentials;
 import de.adorsys.datasafe_0_7_1.simple.adapter.impl.SimpleDatasafeServiceImpl;
 import de.adorsys.datasafe_0_7_1.types.api.types.ReadKeyPassword;
 import de.adorsys.datasafemigration.withDFSonly.LoadUserOldToNewFormat;
@@ -47,7 +51,7 @@ public class MigrationTest {
         createLocalFilesInFolder(startDatadir.addDirectory(userIDAuth.getUserID().getValue()), 3, 3, 2, 1000);
 
         // move file tree of user to old datasafe format. destination depending on dataservice config
-        de.adorsys.datasafe_0_6_1.simple.adapter.api.SimpleDatasafeService oldService = createOldService(tempDir.toString() + "/0.6.1");
+        SO_SimpleDatasafeService oldService = createOldService(tempDir.toString() + "/0.6.1");
         WriteOldUserFromLocal oldWriter = new WriteOldUserFromLocal(oldService, startDatadir);
         oldWriter.migrateUser(userIDAuth);
 
@@ -74,7 +78,7 @@ public class MigrationTest {
         createLocalFilesInFolder(startDatadir.addDirectory(userIDAuth.getUserID().getValue()), 1, 1, 0, 1000);
 
         // move file tree of user to old datasafe format. destination depending on dataservice config
-        de.adorsys.datasafe_0_6_1.simple.adapter.api.SimpleDatasafeService oldService = createOldService(tempDir.toString() + "/0.6.1");
+        SO_SimpleDatasafeService oldService = createOldService(tempDir.toString() + "/0.6.1");
         WriteOldUserFromLocal oldWriter = new WriteOldUserFromLocal(oldService, startDatadir);
         oldWriter.migrateUser(userIDAuth);
 
@@ -155,8 +159,8 @@ public class MigrationTest {
         return bytes;
     }
 
-    private de.adorsys.datasafe_0_6_1.simple.adapter.api.SimpleDatasafeService createOldService(String absolutePath) {
-        return new de.adorsys.datasafe_0_6_1.simple.adapter.impl.SimpleDatasafeServiceImpl(de.adorsys.datasafe_0_6_1.simple.adapter.api.types.FilesystemDFSCredentials.builder()
+    private SO_SimpleDatasafeService createOldService(String absolutePath) {
+        return new SO_SimpleDatasafeServiceImpl(de.adorsys.datasafe_0_6_1.simple.adapter.api.types.FilesystemDFSCredentials.builder()
                 .root(absolutePath)
                 .build());
 

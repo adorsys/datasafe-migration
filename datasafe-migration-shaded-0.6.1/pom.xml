@@ -41,6 +41,37 @@
                                     <include>de.adorsys:datasafe-simple-adapter-impl</include>
                                 </includes>
                             </artifactSet>
+
+                            <relocations>
+                                <relocation>
+                                    <pattern>de.adorsys.datasafe_0_6_1.encrypiton.api.types.UserIDAuth</pattern>
+                                    <shadedPattern>de.adorsys.datasafe_0_6_1.encrypiton.api.types.SO_UserIDAuth</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>de.adorsys.datasafe_0_6_1.simple.adapter.api.SimpleDatasafeService</pattern>
+                                    <shadedPattern>de.adorsys.datasafe_0_6_1.simple.adapter.api.SO_SimpleDatasafeService</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>de.adorsys.datasafe_0_6_1.simple.adapter.api.types.DSDocument</pattern>
+                                    <shadedPattern>de.adorsys.datasafe_0_6_1.simple.adapter.api.types.SO_DSDocument</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>de.adorsys.datasafe_0_6_1.simple.adapter.api.types.DocumentDirectoryFQN</pattern>
+                                    <shadedPattern>de.adorsys.datasafe_0_6_1.simple.adapter.api.types.SO_DocumentDirectoryFQN</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>de.adorsys.datasafe_0_6_1.simple.adapter.api.types.DocumentFQN</pattern>
+                                    <shadedPattern>de.adorsys.datasafe_0_6_1.simple.adapter.api.types.SO_DocumentFQN</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>de.adorsys.datasafe_0_6_1.simple.adapter.api.types.ListRecursiveFlag</pattern>
+                                    <shadedPattern>de.adorsys.datasafe_0_6_1.simple.adapter.api.types.SO_ListRecursiveFlag</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>de.adorsys.datasafe_0_6_1.simple.adapter.impl.SimpleDatasafeServiceImpl</pattern>
+                                    <shadedPattern>de.adorsys.datasafe_0_6_1.simple.adapter.impl.SO_SimpleDatasafeServiceImpl</shadedPattern>
+                                </relocation>
+                            </relocations>
                         </configuration>
                     </execution>
                 </executions>

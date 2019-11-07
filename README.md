@@ -16,6 +16,24 @@ select root pom.xml
 right click -> Maven -> reimport
 ``` 
 
+# Details
+To get rid of long pathes like 
+```
+import de.adorsys.datasafe_0_7_1.simple.adapter.api.SimpleDatasafeService
+...
+de.adorsys.datasafe_0_6_1.simple.adapter.api.SimpleDatasafeService oldService...
+SimpleDatasafeService newService...
+```
+all directly used old classes got prefix SO_ (Shaded Old) to better see in import section what is used
+```
+import de.adorsys.datasafe_0_6_1.simple.adapter.api.SO_SimpleDatasafeService
+import de.adorsys.datasafe_0_7_1.simple.adapter.api.SimpleDatasafeService
+...
+SO_SimpleDatasafeService oldService...
+SimpleDatasafeService newService...
+```
+
+
 # Unclear yet !
 <details>
     <summary>To shade Datasafe 0.6.1 it is sufficiant to do:</summary>
