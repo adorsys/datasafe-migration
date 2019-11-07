@@ -45,46 +45,61 @@ public class MigrationTest {
     @Test
     public void testMigrationWithLocalFiles() {
 
-        // create tree of files for one user on local disk (below tempDir)
         UserIDAuth userIDAuth = new UserIDAuth(new UserID("peter"), new ReadKeyPassword("password"::toCharArray));
-        DocumentDirectoryFQN startDatadir = new DocumentDirectoryFQN(tempDir.toString()).addDirectory("startupfiles");
-        createLocalFilesInFolder(startDatadir.addDirectory(userIDAuth.getUserID().getValue()), 3, 3, 2, 1000);
-
-        // move file tree of user to old datasafe format. destination depending on dataservice config
         SO_SimpleDatasafeService oldService = createOldService(tempDir.toString() + "/0.6.1");
-        WriteOldUserFromLocal oldWriter = new WriteOldUserFromLocal(oldService, startDatadir);
-        oldWriter.migrateUser(userIDAuth);
-
-        // migrate old filetree to new filetree
         SimpleDatasafeService newService = createNewService(tempDir.toString() + "/0.7.1");
-        LoadUserOldToNewFormat migrator = new LoadUserOldToNewFormat(oldService, newService);
-        migrator.migrateUser(userIDAuth);
+        DocumentDirectoryFQN startDatadir;
+        {
+            // Test preparation
 
-        // load all data from new filetree to local disk
-        DocumentDirectoryFQN destDatadir = new DocumentDirectoryFQN(tempDir.toString()).addDirectory("loadedfromnewfiles");
-        LoadNewUserToLocal loadNewUserToLocal = new LoadNewUserToLocal(newService, destDatadir);
-        loadNewUserToLocal.migrateUser(userIDAuth);
+            // create tree of files for one user on local disk (below tempDir)
+            startDatadir = new DocumentDirectoryFQN(tempDir.toString()).addDirectory("startupfiles");
+            createLocalFilesInFolder(startDatadir.addDirectory(userIDAuth.getUserID().getValue()), 3, 3, 2, 1000);
 
-        // compare initial tree to reloaded tree on local disk
-        compare(startDatadir, destDatadir);
+            // move file tree of user to old datasafe format. destination depending on dataservice config
+            WriteOldUserFromLocal oldWriter = new WriteOldUserFromLocal(oldService, startDatadir);
+            oldWriter.migrateUser(userIDAuth);
+        }
+
+        {
+            // Migration itself
+            LoadUserOldToNewFormat migrator = new LoadUserOldToNewFormat(oldService, newService);
+            migrator.migrateUser(userIDAuth);
+        }
+
+        {
+            // Test result
+
+            // load all data from new filetree to local disk
+            DocumentDirectoryFQN destDatadir = new DocumentDirectoryFQN(tempDir.toString()).addDirectory("loadedfromnewfiles");
+            LoadNewUserToLocal loadNewUserToLocal = new LoadNewUserToLocal(newService, destDatadir);
+            loadNewUserToLocal.migrateUser(userIDAuth);
+
+            // compare initial tree to reloaded tree on local disk
+            compare(startDatadir, destDatadir);
+        }
     }
 
     @Test
     public void testIncompatibility() {
 
-        // create tree of files for one user on local disk (below tempDir)
         UserIDAuth userIDAuth = new UserIDAuth(new UserID("peter"), new ReadKeyPassword("password"::toCharArray));
-        DocumentDirectoryFQN startDatadir = new DocumentDirectoryFQN(tempDir.toString()).addDirectory("startupfiles");
-        createLocalFilesInFolder(startDatadir.addDirectory(userIDAuth.getUserID().getValue()), 1, 1, 0, 1000);
-
-        // move file tree of user to old datasafe format. destination depending on dataservice config
         SO_SimpleDatasafeService oldService = createOldService(tempDir.toString() + "/0.6.1");
-        WriteOldUserFromLocal oldWriter = new WriteOldUserFromLocal(oldService, startDatadir);
-        oldWriter.migrateUser(userIDAuth);
+        DocumentDirectoryFQN startDatadir;
+        {
+            // Test preparation
 
-        // try to read old files with new datasafe
-        SimpleDatasafeService newDestService = createNewService(tempDir.toString() + "/0.7.1");
-        Assertions.assertThrows(IOException.class, () -> newDestService.list(
+            // create tree of files for one user on local disk (below tempDir)
+            startDatadir = new DocumentDirectoryFQN(tempDir.toString()).addDirectory("startupfiles");
+            createLocalFilesInFolder(startDatadir.addDirectory(userIDAuth.getUserID().getValue()), 3, 3, 2, 1000);
+
+            // move file tree of user to old datasafe format. destination depending on dataservice config
+            WriteOldUserFromLocal oldWriter = new WriteOldUserFromLocal(oldService, startDatadir);
+            oldWriter.migrateUser(userIDAuth);
+        }
+
+        SimpleDatasafeService newService = createNewService(tempDir.toString() + "/0.6.1");
+        Assertions.assertThrows(IOException.class, () -> newService.list(
                 userIDAuth,
                 new de.adorsys.datasafe_0_7_1.simple.adapter.api.types.DocumentDirectoryFQN("/"),
                 de.adorsys.datasafe_0_7_1.simple.adapter.api.types.ListRecursiveFlag.TRUE));
