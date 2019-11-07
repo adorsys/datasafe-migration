@@ -1,6 +1,8 @@
 package de.adorsys.datasafemigration.offline;
 
 import de.adorsys.datasafe_0_6_1.simple.adapter.api.SO_SimpleDatasafeService;
+import de.adorsys.datasafe_0_6_1.simple.adapter.api.types.SO_AmazonS3DFSCredentials;
+import de.adorsys.datasafe_0_6_1.simple.adapter.api.types.SO_DFSCredentials;
 import de.adorsys.datasafe_0_6_1.simple.adapter.impl.SO_SimpleDatasafeServiceImpl;
 import de.adorsys.datasafe_0_7_1.encrypiton.api.types.UserIDAuth;
 import de.adorsys.datasafe_0_7_1.encrypiton.api.types.encryption.MutableEncryptionConfig;
@@ -109,9 +111,9 @@ public class Main {
 
     }
 
-    private static de.adorsys.datasafe_0_6_1.simple.adapter.api.types.DFSCredentials getOldDfsCredentials(String[] args) {
+    private static SO_DFSCredentials getOldDfsCredentials(String[] args) {
         String prefix = OLD;
-        return de.adorsys.datasafe_0_6_1.simple.adapter.api.types.AmazonS3DFSCredentials.builder()
+        return SO_AmazonS3DFSCredentials.builder()
                 .accessKey(get(args, prefix + ACCESSKEY))
                 .secretKey(get(args, prefix + SECRETKEY))
                 .rootBucket(get(args, prefix + ROOTBUCKET))

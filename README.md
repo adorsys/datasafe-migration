@@ -10,6 +10,7 @@ File -> Invalidate Caches / Restart
 
 If you still have problems do
 ```
+mvn clean install -DskipTests
 select pom.xml of datasafe-migration-shaded-xxx project
 right click -> Maven -> ignore Projects
 select root pom.xml
