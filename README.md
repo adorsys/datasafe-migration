@@ -1,16 +1,16 @@
-This is tool for an offline migration of datasafe.
+This is tool for a silent migration of datasafe.
 
-To compile the code, the old datasafe has to be compiled with
-maven shade plugin. For that, datasafe has to be checked out:
+![Modules map](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/adorsys/datasafe-migration/develop/docs/diagrams/silent-migration.puml&fmt=svg&vvv=1&sanitize=true)
 
 
+If you use intellij and might have problems in finding classes of shades versions, do
 ```
-git checkout -b release-6.1 a2549140544925e861d7d895a7e72cec9a5ab7a3
-```
+File -> Invalidate Caches / Restart
+``` 
 
-This switched code back to relaase 6.1.
-Then the ```datasafe-simple-adapter/datasafe-simple-adapter-impl.pom.xml```
-has to get a final ```<plugin> ``` in the ```<build>``` section.
+Unclear yet
+<details>
+    <summary>To shade Datasafe 0.6.1 it is sufficiant to do:</summary>
 
 ```
             <plugin>
@@ -24,37 +24,34 @@ has to get a final ```<plugin> ``` in the ```<build>``` section.
                             <goal>shade</goal>
                         </goals>
                         <configuration>
-                            <relocations>
-                                <relocation>
-                                    <pattern>de.adorsys.datasafe</pattern>
-                                    <shadedPattern>de.adorsys.datasafe_0_6_1</shadedPattern>
-                                </relocation>
-                            </relocations>
+                            <minimizeJar>false</minimizeJar>
+                            <keepDependenciesWithProvidedScope>false</keepDependenciesWithProvidedScope>
+                            <createDependencyReducedPom>false</createDependencyReducedPom>
+                            <createSourcesJar>false</createSourcesJar>
 
                             <artifactSet>
-                                <excludes>
-                                    <exclude>com.*</exclude>
-                                    <exclude>org*</exclude>
-                                    <exclude>lombok.*</exclude>
-                                    <exclude>mozilla.*</exclude>
-                                    <exclude>javax.inject*</exclude>
-                                    <exclude>software.*</exclude>
-                                </excludes>
+                                <includes>
+                                    <include>de.adorsys:datasafe-simple-adapter-impl</include>
+                                </includes>
                             </artifactSet>
-
-                            <createDependencyReducedPom>true</createDependencyReducedPom>
-                            <shadedArtifactAttached>false</shadedArtifactAttached>
-                            <minimizeJar>true</minimizeJar>
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
 ```
+</details>
 
-For the current / latest release the same has to be done with
-the ```datasafe-simple-adapter/datasafe-simple-adapter-impl.pom.xml```
+All classes become shaded to directory datasafe_0_6_1 and the jar 
+contains all datasafeclasses including indirect dependencies but no classes which are not
+of datasafe project.
 
-```
+To shade Datasafe 0.7.1 the same configuration would lead to jar which is identically to the original
+datasafe-simple-adapter-impl.jar
+
+<details>
+    <summary>To achieve the same results the configuration has to look like:</summary>
+
+```    
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
@@ -66,6 +63,33 @@ the ```datasafe-simple-adapter/datasafe-simple-adapter-impl.pom.xml```
                             <goal>shade</goal>
                         </goals>
                         <configuration>
+                            <minimizeJar>false</minimizeJar>
+                            <keepDependenciesWithProvidedScope>false</keepDependenciesWithProvidedScope>
+                            <createDependencyReducedPom>false</createDependencyReducedPom>
+                            <createSourcesJar>false</createSourcesJar>
+
+                            <artifactSet>
+                                <includes>
+                                    <include>de.adorsys:datasafe-simple-adapter-impl</include>
+                                    <include>de.adorsys:datasafe-simple-adapter-api</include>
+                                    <include>de.adorsys:datasafe-encryption-api</include>
+                                    <include>de.adorsys:datasafe-business</include>
+                                    <include>de.adorsys:datasafe-directory-api</include>
+                                    <include>de.adorsys:datasafe-inbox-api</include>
+                                    <include>de.adorsys:datasafe-privatestore-api</include>
+                                    <include>de.adorsys:datasafe-storage-api</include>
+                                    <include>de.adorsys:datasafe-types-api</include>
+                                    <include>de.adorsys:datasafe-directory-impl</include>
+                                    <include>de.adorsys:datasafe-encryption-impl</include>
+                                    <include>de.adorsys:datasafe-inbox-impl</include>
+                                    <include>de.adorsys:datasafe-privatestore-impl</include>
+                                    <include>de.adorsys:datasafe-metainfo-version-api</include>
+                                    <include>de.adorsys:datasafe-metainfo-version-impl</include>
+                                    <include>de.adorsys:datasafe-storage-impl-s3</include>
+                                    <include>de.adorsys:datasafe-storage-impl-fs</include>
+                                </includes>
+                            </artifactSet>
+
                             <relocations>
                                 <relocation>
                                     <pattern>de.adorsys.datasafe</pattern>
@@ -73,27 +97,15 @@ the ```datasafe-simple-adapter/datasafe-simple-adapter-impl.pom.xml```
                                 </relocation>
                             </relocations>
 
-                            <artifactSet>
-                                <excludes>
-                                    <exclude>com.*</exclude>
-                                    <exclude>org*</exclude>
-                                    <exclude>lombok.*</exclude>
-                                    <exclude>mozilla.*</exclude>
-                                    <exclude>javax.inject*</exclude>
-                                    <exclude>software.*</exclude>
-                                </excludes>
-                            </artifactSet>
-
-                            <createDependencyReducedPom>true</createDependencyReducedPom>
-                            <shadedArtifactAttached>true</shadedArtifactAttached>
-                            <shadedClassifierName>datasafe-version-0-7-1</shadedClassifierName>
-                            <minimizeJar>true</minimizeJar>
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
+```   
+</details>
 
-```
+But though this is done, the shaded classes are not found in the test classes of this subproject.
 
-When the two shade-jar have been built, this project becomes compilable.
+ import de.adorsys.datasafe_0_7_1.simple.adapter.api.types.DFSCredentials;
+ import de.adorsys.datasafe_0_7_1.simple.adapter.impl.SimpleDatasafeServiceImpl;
 

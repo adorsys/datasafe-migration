@@ -1,0 +1,33 @@
+@startuml
+
+skinparam ranksep 55
+skinparam defaultTextAlignment center
+'skinparam nodesep 20
+skinparam shadowing false
+'skinparam linetype ortho
+
+actor user
+
+component "Datasafe 1.0\nUBER Jar\n\n\n" as UBER {
+  rectangle "Read/write/list file\n(SimpleDatasafeAdapter)" as proxy
+  component "Datasafe 0.6.3 core-jar (lazily loaded, shaded)" as reader
+  component "Datasafe 1.0.0 core-jar" as datasafe
+  reader -[hidden]down-> datasafe
+}
+
+database "S3 \nbucket" as bucket
+database "RDBMS/Mongo/Redis\nfor\nshedlock\nDistributed lock" as lock
+
+user --> proxy : 1. Read file
+proxy <-- bucket : 2. Read version
+proxy -left-> lock : 3. Old version? Obtain migration lock
+proxy --> reader : 4a. Read old version
+proxy --> datasafe : 4b. New version? \n Delegate call
+reader --> datasafe : 5. Write stream (old -> new)
+proxy -left-> lock : 6. Release lock
+proxy --> bucket : 7. Write new\nversion\nidentifier
+
+reader <-- bucket
+datasafe <--> bucket
+bucket -[hidden]left-> UBER
+@enduml
