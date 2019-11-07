@@ -3,12 +3,12 @@ This is tool for a silent migration of datasafe.
 ![Modules map](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/adorsys/datasafe-migration/develop/docs/diagrams/silent-migration.puml&fmt=svg&vvv=1&sanitize=true)
 
 
-If you use intellij and might have problems in finding classes of shades versions, do
+If you use intellij and might have problems in finding shaded classes do
 ```
 File -> Invalidate Caches / Restart
 ``` 
 
-Unclear yet
+#Unclear yet !
 <details>
     <summary>To shade Datasafe 0.6.1 it is sufficiant to do:</summary>
 
@@ -106,6 +106,8 @@ datasafe-simple-adapter-impl.jar
 
 But though this is done, the shaded classes are not found in the test classes of this subproject.
 
+```
  import de.adorsys.datasafe_0_7_1.simple.adapter.api.types.DFSCredentials;
  import de.adorsys.datasafe_0_7_1.simple.adapter.impl.SimpleDatasafeServiceImpl;
+```
 
