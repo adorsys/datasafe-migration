@@ -5,7 +5,8 @@ jdk:
 
 
 script:
-  - mvn test
+  # tests are not done with mvn test - dont know why
+  - mvn install
 
 before_deploy:
   - echo $GPG_SECRET_KEY | base64 --decode | $GPG_EXECUTABLE --import
