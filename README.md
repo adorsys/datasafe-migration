@@ -6,6 +6,14 @@ This is tool for a silent migration of datasafe.
 If you use intellij and might have problems in finding shaded classes do
 ```
 File -> Invalidate Caches / Restart
+```
+
+If you still have problems do
+```
+select pom.xml of datasafe-migration-shaded-xxx project
+right click -> Maven -> ignore Projects
+select root pom.xml
+right click -> Maven -> reimport
 ``` 
 
 #Unclear yet !

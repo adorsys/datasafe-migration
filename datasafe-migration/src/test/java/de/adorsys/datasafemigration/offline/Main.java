@@ -9,7 +9,6 @@ import de.adorsys.datasafe_0_7_1.simple.adapter.api.types.DocumentDirectoryFQN;
 import de.adorsys.datasafe_0_7_1.simple.adapter.impl.SimpleDatasafeServiceImpl;
 import de.adorsys.datasafemigration.withDFSonly.LoadUserNewToNewFormat;
 import de.adorsys.datasafemigration.withDFSonly.LoadUserOldToNewFormat;
-import de.adorsys.datasafemigration.withDFSonly.WriteUserNewFormat;
 import de.adorsys.datasafemigration.withlocalfilesystem.LoadNewUserToLocal;
 import de.adorsys.datasafemigration.withlocalfilesystem.LoadOldUserToLocal;
 import de.adorsys.datasafemigration.withlocalfilesystem.WriteNewUserFromLocal;
@@ -90,8 +89,7 @@ public class Main {
             SimpleDatasafeService intermediateService = new SimpleDatasafeServiceImpl(getNewDfsCredentials("intermediate", args), new MutableEncryptionConfig());
             de.adorsys.datasafe_0_6_1.simple.adapter.api.SimpleDatasafeService oldService = new de.adorsys.datasafe_0_6_1.simple.adapter.impl.SimpleDatasafeServiceImpl(getOldDfsCredentials(args));
 
-            WriteUserNewFormat intermediateWrite = new WriteUserNewFormat(intermediateService);
-            LoadUserOldToNewFormat old = new LoadUserOldToNewFormat(oldService, intermediateWrite);
+            LoadUserOldToNewFormat old = new LoadUserOldToNewFormat(oldService, intermediateService);
 
             for (UserIDAuth userIDAuth : usersToMigrate) {
                 old.migrateUser(userIDAuth);
@@ -100,8 +98,7 @@ public class Main {
         if (get(args, ACTION).equals(MIGRATE_DFS_FROM_INTERMEDIATE)) {
             SimpleDatasafeService intermediateService = new SimpleDatasafeServiceImpl(getNewDfsCredentials("intermediate", args), new MutableEncryptionConfig());
             SimpleDatasafeService newService = new SimpleDatasafeServiceImpl(getNewDfsCredentials(NEW, args), new MutableEncryptionConfig());
-            WriteUserNewFormat newWrite = new WriteUserNewFormat(newService);
-            LoadUserNewToNewFormat intermediateRead = new LoadUserNewToNewFormat(intermediateService, newWrite);
+            LoadUserNewToNewFormat intermediateRead = new LoadUserNewToNewFormat(intermediateService, newService);
 
             for (UserIDAuth userIDAuth : usersToMigrate) {
                 intermediateRead.migrateUser(userIDAuth);

@@ -8,9 +8,7 @@ import de.adorsys.datasafe_0_7_1.simple.adapter.api.SimpleDatasafeService;
 import de.adorsys.datasafe_0_7_1.simple.adapter.api.types.*;
 import de.adorsys.datasafe_0_7_1.simple.adapter.impl.SimpleDatasafeServiceImpl;
 import de.adorsys.datasafe_0_7_1.types.api.types.ReadKeyPassword;
-import de.adorsys.datasafemigration.withDFSonly.LoadUserNewToNewFormat;
 import de.adorsys.datasafemigration.withDFSonly.LoadUserOldToNewFormat;
-import de.adorsys.datasafemigration.withDFSonly.WriteUserNewFormat;
 import de.adorsys.datasafemigration.withlocalfilesystem.LoadNewUserToLocal;
 import de.adorsys.datasafemigration.withlocalfilesystem.WriteOldUserFromLocal;
 import lombok.SneakyThrows;
@@ -55,8 +53,7 @@ public class MigrationTest {
 
         // migrate old filetree to new filetree
         SimpleDatasafeService newService = createNewService(tempDir.toString() + "/0.7.1");
-        WriteUserNewFormat writer = new WriteUserNewFormat(newService);
-        LoadUserOldToNewFormat migrator = new LoadUserOldToNewFormat(oldService, writer);
+        LoadUserOldToNewFormat migrator = new LoadUserOldToNewFormat(oldService, newService);
         migrator.migrateUser(userIDAuth);
 
         // load all data from new filetree to local disk
@@ -82,11 +79,11 @@ public class MigrationTest {
         oldWriter.migrateUser(userIDAuth);
 
         // try to read old files with new datasafe
-        SimpleDatasafeService newSourceService = createNewService(tempDir.toString() + "/0.6.1");
         SimpleDatasafeService newDestService = createNewService(tempDir.toString() + "/0.7.1");
-        WriteUserNewFormat writer = new WriteUserNewFormat(newDestService);
-        LoadUserNewToNewFormat migrator = new LoadUserNewToNewFormat(newSourceService, writer);
-        Assertions.assertThrows(IOException.class, () -> migrator.migrateUser(userIDAuth));
+        Assertions.assertThrows(IOException.class, () -> newDestService.list(
+                userIDAuth,
+                new de.adorsys.datasafe_0_7_1.simple.adapter.api.types.DocumentDirectoryFQN("/"),
+                de.adorsys.datasafe_0_7_1.simple.adapter.api.types.ListRecursiveFlag.TRUE));
 
     }
 
