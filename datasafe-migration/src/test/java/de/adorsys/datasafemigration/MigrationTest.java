@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Slf4j
-public class MainTest {
+public class MigrationTest {
 
     private Path tempDir;
 

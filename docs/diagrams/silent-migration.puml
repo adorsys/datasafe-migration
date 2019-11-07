@@ -10,7 +10,7 @@ actor user
 
 component "Datasafe 1.0\nUBER Jar\n\n\n" as UBER {
   rectangle "Read/write/list file\n(SimpleDatasafeAdapter)" as proxy
-  component "Datasafe 0.6.3 core-jar (lazily loaded, shaded)" as reader
+  component "Datasafe 0.6.1 core-jar (lazily loaded, shaded)" as reader
   component "Datasafe 1.0.0 core-jar" as datasafe
   reader -[hidden]down-> datasafe
 }
