@@ -16,7 +16,7 @@ select root pom.xml
 right click -> Maven -> reimport
 ``` 
 
-#Unclear yet !
+# Unclear yet !
 <details>
     <summary>To shade Datasafe 0.6.1 it is sufficiant to do:</summary>
 
