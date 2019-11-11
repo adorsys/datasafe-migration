@@ -4,13 +4,13 @@ import de.adorsys.datasafe_0_6_1.simple.adapter.api.SO_SimpleDatasafeService;
 import de.adorsys.datasafe_0_6_1.simple.adapter.api.types.SO_AmazonS3DFSCredentials;
 import de.adorsys.datasafe_0_6_1.simple.adapter.api.types.SO_DFSCredentials;
 import de.adorsys.datasafe_0_6_1.simple.adapter.impl.SO_SimpleDatasafeServiceImpl;
-import de.adorsys.datasafe_0_7_1.encrypiton.api.types.UserIDAuth;
-import de.adorsys.datasafe_0_7_1.encrypiton.api.types.encryption.MutableEncryptionConfig;
-import de.adorsys.datasafe_0_7_1.simple.adapter.api.SimpleDatasafeService;
-import de.adorsys.datasafe_0_7_1.simple.adapter.api.types.AmazonS3DFSCredentials;
-import de.adorsys.datasafe_0_7_1.simple.adapter.api.types.DFSCredentials;
-import de.adorsys.datasafe_0_7_1.simple.adapter.api.types.DocumentDirectoryFQN;
-import de.adorsys.datasafe_0_7_1.simple.adapter.impl.SimpleDatasafeServiceImpl;
+import de.adorsys.datasafe_1_0_0.encrypiton.api.types.UserIDAuth;
+import de.adorsys.datasafe_1_0_0.encrypiton.api.types.encryption.MutableEncryptionConfig;
+import de.adorsys.datasafe_1_0_0.simple.adapter.api.SimpleDatasafeService;
+import de.adorsys.datasafe_1_0_0.simple.adapter.api.types.AmazonS3DFSCredentials;
+import de.adorsys.datasafe_1_0_0.simple.adapter.api.types.DFSCredentials;
+import de.adorsys.datasafe_1_0_0.simple.adapter.api.types.DocumentDirectoryFQN;
+import de.adorsys.datasafe_1_0_0.simple.adapter.impl.SN_SimpleDatasafeServiceImpl;
 import de.adorsys.datasafemigration.withDFSonly.LoadUserNewToNewFormat;
 import de.adorsys.datasafemigration.withDFSonly.LoadUserOldToNewFormat;
 import de.adorsys.datasafemigration.withlocalfilesystem.LoadNewUserToLocal;
@@ -67,7 +67,7 @@ public class Main {
         }
         if (get(args, ACTION).equals(LOAD_NEW_TO_LOCAL)) {
             DocumentDirectoryFQN localfolder = new DocumentDirectoryFQN(get(args, LOCALFOLDER));
-            SimpleDatasafeService simpleDatasafeService = new SimpleDatasafeServiceImpl(getNewDfsCredentials(NEW, args), new MutableEncryptionConfig());
+            SimpleDatasafeService simpleDatasafeService = new SN_SimpleDatasafeServiceImpl(getNewDfsCredentials(NEW, args), new MutableEncryptionConfig());
             LoadNewUserToLocal service = new LoadNewUserToLocal(simpleDatasafeService, localfolder);
             for (UserIDAuth userIDAuth : usersToMigrate) {
                 service.migrateUser(userIDAuth);
@@ -75,7 +75,7 @@ public class Main {
         }
         if (get(args, ACTION).equals(STORE_LOCAL_TO_NEW)) {
             DocumentDirectoryFQN localfolder = new DocumentDirectoryFQN(get(args, LOCALFOLDER));
-            SimpleDatasafeService simpleDatasafeService = new SimpleDatasafeServiceImpl(getNewDfsCredentials(NEW, args), new MutableEncryptionConfig());
+            SimpleDatasafeService simpleDatasafeService = new SN_SimpleDatasafeServiceImpl(getNewDfsCredentials(NEW, args), new MutableEncryptionConfig());
             WriteNewUserFromLocal service = new WriteNewUserFromLocal(simpleDatasafeService, localfolder);
             for (UserIDAuth userIDAuth : usersToMigrate) {
                 service.migrateUser(userIDAuth);
@@ -90,7 +90,7 @@ public class Main {
             }
         }
         if (get(args, ACTION).equals(MIGRATE_DFS_TO_INTERMEDIATE)) {
-            SimpleDatasafeService intermediateService = new SimpleDatasafeServiceImpl(getNewDfsCredentials("intermediate", args), new MutableEncryptionConfig());
+            SimpleDatasafeService intermediateService = new SN_SimpleDatasafeServiceImpl(getNewDfsCredentials("intermediate", args), new MutableEncryptionConfig());
             SO_SimpleDatasafeService oldService = new SO_SimpleDatasafeServiceImpl(getOldDfsCredentials(args));
 
             LoadUserOldToNewFormat old = new LoadUserOldToNewFormat(oldService, intermediateService);
@@ -100,8 +100,8 @@ public class Main {
             }
         }
         if (get(args, ACTION).equals(MIGRATE_DFS_FROM_INTERMEDIATE)) {
-            SimpleDatasafeService intermediateService = new SimpleDatasafeServiceImpl(getNewDfsCredentials("intermediate", args), new MutableEncryptionConfig());
-            SimpleDatasafeService newService = new SimpleDatasafeServiceImpl(getNewDfsCredentials(NEW, args), new MutableEncryptionConfig());
+            SimpleDatasafeService intermediateService = new SN_SimpleDatasafeServiceImpl(getNewDfsCredentials("intermediate", args), new MutableEncryptionConfig());
+            SimpleDatasafeService newService = new SN_SimpleDatasafeServiceImpl(getNewDfsCredentials(NEW, args), new MutableEncryptionConfig());
             LoadUserNewToNewFormat intermediateRead = new LoadUserNewToNewFormat(intermediateService, newService);
 
             for (UserIDAuth userIDAuth : usersToMigrate) {

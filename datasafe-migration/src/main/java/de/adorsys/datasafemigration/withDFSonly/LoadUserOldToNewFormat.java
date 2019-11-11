@@ -5,7 +5,7 @@ import de.adorsys.datasafe_0_6_1.simple.adapter.api.types.SO_DSDocument;
 import de.adorsys.datasafe_0_6_1.simple.adapter.api.types.SO_DocumentDirectoryFQN;
 import de.adorsys.datasafe_0_6_1.simple.adapter.api.types.SO_DocumentFQN;
 import de.adorsys.datasafe_0_6_1.simple.adapter.api.types.SO_ListRecursiveFlag;
-import de.adorsys.datasafe_0_7_1.simple.adapter.api.SimpleDatasafeService;
+import de.adorsys.datasafe_1_0_0.simple.adapter.api.SimpleDatasafeService;
 import de.adorsys.datasafemigration.common.SwitchVersion;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +19,7 @@ public class LoadUserOldToNewFormat {
     private final SO_SimpleDatasafeService sourceDatasafeService;
     private final SimpleDatasafeService destDatasafeService;
 
-    public void migrateUser(de.adorsys.datasafe_0_7_1.encrypiton.api.types.UserIDAuth userIDAuth) {
+    public void migrateUser(de.adorsys.datasafe_1_0_0.encrypiton.api.types.UserIDAuth userIDAuth) {
 
         createUser(userIDAuth);
 
@@ -30,7 +30,7 @@ public class LoadUserOldToNewFormat {
         }
     }
 
-    private void createUser(de.adorsys.datasafe_0_7_1.encrypiton.api.types.UserIDAuth userIDAuth) {
+    private void createUser(de.adorsys.datasafe_1_0_0.encrypiton.api.types.UserIDAuth userIDAuth) {
         if (destDatasafeService.userExists(userIDAuth.getUserID())) {
             throw new RuntimeException("user " + userIDAuth.getUserID().getValue() + " already exists");
         }
@@ -39,7 +39,7 @@ public class LoadUserOldToNewFormat {
         log.debug("created user {} in new format", userIDAuth.getUserID().getValue());
     }
 
-    private void storeDocument(de.adorsys.datasafe_0_7_1.encrypiton.api.types.UserIDAuth userIDAuth, de.adorsys.datasafe_0_7_1.simple.adapter.api.types.DSDocument dsDocument) {
+    private void storeDocument(de.adorsys.datasafe_1_0_0.encrypiton.api.types.UserIDAuth userIDAuth, de.adorsys.datasafe_1_0_0.simple.adapter.api.types.DSDocument dsDocument) {
         destDatasafeService.storeDocument(userIDAuth, dsDocument);
         log.debug("stored document of size {} in new format for user {}", dsDocument.getDocumentContent().getValue().length, userIDAuth.getUserID().getValue());
     }

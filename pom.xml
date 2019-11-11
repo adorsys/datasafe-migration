@@ -12,7 +12,7 @@
 
     <modules>
         <module>datasafe-migration-shaded-0.6.1</module>
-        <module>datasafe-migration-shaded-0.7.1</module>
+        <module>datasafe-migration-shaded-1.0.0</module>
         <module>datasafe-migration</module>
     </modules>
 

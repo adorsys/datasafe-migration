@@ -21,7 +21,7 @@
         </dependency>
         <dependency>
             <groupId>de.adorsys</groupId>
-            <artifactId>datasafe-migration-shaded-0.7.1</artifactId>
+            <artifactId>datasafe-migration-shaded-1.0.0</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
         <!-- this is brute force -->

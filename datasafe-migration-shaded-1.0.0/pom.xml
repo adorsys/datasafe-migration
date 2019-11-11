@@ -9,13 +9,13 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>datasafe-migration-shaded-0.7.1</artifactId>
+    <artifactId>datasafe-migration-shaded-1.0.0</artifactId>
 
     <dependencies>
         <dependency>
             <groupId>de.adorsys</groupId>
             <artifactId>datasafe-simple-adapter-impl</artifactId>
-            <version>0.7.1</version>
+            <version>1.0.0</version>
         </dependency>
     </dependencies>
     <build>
@@ -60,8 +60,23 @@
 
                             <relocations>
                                 <relocation>
+                                    <pattern>de.adorsys.datasafe.simple.adapter.spring.factory.SpringSimpleDatasafeServiceFactory
+                                    </pattern>
+                                    <shadedPattern>
+                                        de.adorsys.datasafe.simple.adapter_1_0_0.spring.factory.SN_SpringSimpleDatasafeServiceFactory
+                                    </shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>de.adorsys.datasafe.simple.adapter.impl.SimpleDatasafeServiceImpl
+                                    </pattern>
+                                    <shadedPattern>
+                                        de.adorsys.datasafe_1_0_0.simple.adapter.impl.SN_SimpleDatasafeServiceImpl
+                                    </shadedPattern>
+                                </relocation>
+
+                                <relocation>
                                     <pattern>de.adorsys.datasafe</pattern>
-                                    <shadedPattern>de.adorsys.datasafe_0_7_1</shadedPattern>
+                                    <shadedPattern>de.adorsys.datasafe_1_0_0</shadedPattern>
                                 </relocation>
                             </relocations>
 

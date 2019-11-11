@@ -6,11 +6,11 @@ import de.adorsys.datasafe_0_6_1.encrypiton.api.types.SO_UserIDAuth;
 import de.adorsys.datasafe_0_6_1.encrypiton.api.types.keystore.SO_ReadKeyPassword;
 import de.adorsys.datasafe_0_6_1.simple.adapter.api.types.SO_DSDocument;
 import de.adorsys.datasafe_0_6_1.simple.adapter.api.types.SO_DocumentDirectoryFQN;
-import de.adorsys.datasafe_0_7_1.encrypiton.api.types.UserIDAuth;
-import de.adorsys.datasafe_0_7_1.simple.adapter.api.types.DSDocument;
-import de.adorsys.datasafe_0_7_1.simple.adapter.api.types.DocumentContent;
-import de.adorsys.datasafe_0_7_1.simple.adapter.api.types.DocumentDirectoryFQN;
-import de.adorsys.datasafe_0_7_1.simple.adapter.api.types.DocumentFQN;
+import de.adorsys.datasafe_1_0_0.encrypiton.api.types.UserIDAuth;
+import de.adorsys.datasafe_1_0_0.simple.adapter.api.types.DSDocument;
+import de.adorsys.datasafe_1_0_0.simple.adapter.api.types.DocumentContent;
+import de.adorsys.datasafe_1_0_0.simple.adapter.api.types.DocumentDirectoryFQN;
+import de.adorsys.datasafe_1_0_0.simple.adapter.api.types.DocumentFQN;
 
 public class SwitchVersion {
     public static SO_UserIDAuth toOld(UserIDAuth newUserIDAuth) {
