@@ -38,7 +38,7 @@ public class MigrationTest extends WithStorageProvider {
 
     private Path tempDir;
     private String oldSubFolder = "0.6.1";
-    private String newSubFolder = "0.7.1";
+    private String newSubFolder = "1.0.0";
 
 
     @SneakyThrows

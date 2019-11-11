@@ -28,7 +28,7 @@
         <dependency>
             <groupId>de.adorsys</groupId>
             <artifactId>datasafe-simple-adapter-impl</artifactId>
-            <version>0.7.1</version>
+            <version>1.0.0</version>
         </dependency>
         <!-- end brute force -->
         <dependency>
@@ -76,6 +76,12 @@
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
             <version>${mockito.core.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>${apache.commons.lang.version}</version>
             <scope>test</scope>
         </dependency>
 
