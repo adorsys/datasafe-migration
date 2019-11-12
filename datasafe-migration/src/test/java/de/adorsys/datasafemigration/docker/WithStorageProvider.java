@@ -158,8 +158,8 @@ public abstract class WithStorageProvider extends BaseMockitoTest {
     @ValueSource
     protected static Stream<StorageDescriptor> allStorages() {
         return Stream.of(
-                fs(),
-                minio()
+                minio(),
+                fs()
 //                cephVersioned(),
 //                s3()
         ).filter(Objects::nonNull);
