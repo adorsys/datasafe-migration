@@ -14,19 +14,164 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-beans</artifactId>
-            <version>${spring.framework.version}</version>
-        </dependency>
-        <dependency>
             <groupId>de.adorsys</groupId>
             <artifactId>datasafe-migration-shaded-0.6.1</artifactId>
             <version>${project.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>de.adorsys</groupId>
+                    <artifactId>datasafe-simple-adapter-impl</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>de.adorsys</groupId>
+                    <artifactId>datasafe-simple-adapter-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>de.adorsys</groupId>
+                    <artifactId>datasafe-simple-adapter-spring</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>de.adorsys</groupId>
+                    <artifactId>datasafe-encryption-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>de.adorsys</groupId>
+                    <artifactId>datasafe-business</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>de.adorsys</groupId>
+                    <artifactId>datasafe-directory-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>de.adorsys</groupId>
+                    <artifactId>datasafe-inbox-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>de.adorsys</groupId>
+                    <artifactId>datasafe-privatestore-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>de.adorsys</groupId>
+                    <artifactId>datasafe-storage-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>de.adorsys</groupId>
+                    <artifactId>datasafe-types-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>de.adorsys</groupId>
+                    <artifactId>datasafe-directory-impl</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>de.adorsys</groupId>
+                    <artifactId>datasafe-encryption-impl</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>de.adorsys</groupId>
+                    <artifactId>datasafe-inbox-impl</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>de.adorsys</groupId>
+                    <artifactId>datasafe-privatestore-impl</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>de.adorsys</groupId>
+                    <artifactId>datasafe-metainfo-version-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>de.adorsys</groupId>
+                    <artifactId>datasafe-metainfo-version-impl</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>de.adorsys</groupId>
+                    <artifactId>datasafe-storage-impl-s3</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>de.adorsys</groupId>
+                    <artifactId>datasafe-storage-impl-fs</artifactId>
+                </exclusion>
+            </exclusions>
+
         </dependency>
         <dependency>
             <groupId>de.adorsys</groupId>
             <artifactId>datasafe-migration-shaded-1.0.0</artifactId>
             <version>${project.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>de.adorsys</groupId>
+                    <artifactId>datasafe-simple-adapter-impl</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>de.adorsys</groupId>
+                    <artifactId>datasafe-simple-adapter-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>de.adorsys</groupId>
+                    <artifactId>datasafe-simple-adapter-spring</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>de.adorsys</groupId>
+                    <artifactId>datasafe-encryption-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>de.adorsys</groupId>
+                    <artifactId>datasafe-business</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>de.adorsys</groupId>
+                    <artifactId>datasafe-directory-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>de.adorsys</groupId>
+                    <artifactId>datasafe-inbox-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>de.adorsys</groupId>
+                    <artifactId>datasafe-privatestore-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>de.adorsys</groupId>
+                    <artifactId>datasafe-storage-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>de.adorsys</groupId>
+                    <artifactId>datasafe-types-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>de.adorsys</groupId>
+                    <artifactId>datasafe-directory-impl</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>de.adorsys</groupId>
+                    <artifactId>datasafe-encryption-impl</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>de.adorsys</groupId>
+                    <artifactId>datasafe-inbox-impl</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>de.adorsys</groupId>
+                    <artifactId>datasafe-privatestore-impl</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>de.adorsys</groupId>
+                    <artifactId>datasafe-metainfo-version-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>de.adorsys</groupId>
+                    <artifactId>datasafe-metainfo-version-impl</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>de.adorsys</groupId>
+                    <artifactId>datasafe-storage-impl-s3</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>de.adorsys</groupId>
+                    <artifactId>datasafe-storage-impl-fs</artifactId>
+                </exclusion>
+            </exclusions>
+
         </dependency>
 <!--
         <dependency>
@@ -46,7 +191,15 @@
             <artifactId>lombok</artifactId>
             <version>${lombok.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-beans</artifactId>
+            <version>${spring.framework.version}</version>
+        </dependency>
 
+
+
+        <!-- general test classes -->
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
@@ -83,18 +236,18 @@
             <version>${assert.jcore.version}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>com.google.dagger</groupId>
+            <artifactId>dagger</artifactId>
+            <version>${dagger.version}</version>
+            <scope>test</scope>
+        </dependency>
 
-
+        <!-- Spring test section -->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
             <version>${spring.framework.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-params</artifactId>
-            <version>${jupiter.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -121,42 +274,11 @@
             <version>${spring.framework.version}</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>com.google.dagger</groupId>
-            <artifactId>dagger</artifactId>
-            <version>${dagger.version}</version>
-            <scope>test</scope>
-        </dependency>
 
     </dependencies>
 
     <build>
         <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>${maven.compiler.plugin.version}</version>
-                <configuration>
-                    <annotationProcessorPaths>
-                        <path>
-                            <groupId>com.google.dagger</groupId>
-                            <artifactId>dagger-compiler</artifactId>
-                            <version>${dagger.version}</version>
-                        </path>
-                        <path>
-                            <groupId>org.projectlombok</groupId>
-                            <artifactId>lombok</artifactId>
-                            <version>${lombok.version}</version>
-                        </path>
-                        <path>
-                            <groupId>de.adorsys</groupId>
-                            <artifactId>datasafe-runtime-delegate</artifactId>
-                            <version>${project.version}</version>
-                        </path>
-                    </annotationProcessorPaths>
-                </configuration>
-            </plugin>
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>

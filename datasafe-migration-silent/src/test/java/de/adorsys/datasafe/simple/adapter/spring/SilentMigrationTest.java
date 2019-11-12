@@ -1,6 +1,6 @@
 package de.adorsys.datasafe.simple.adapter.spring;
 
-import de.adorsys.datasafe.simple.adapter.api.SimpleDatasafeService;
+import de.adorsys.datasafe_1_0_0.simple.adapter.api.SimpleDatasafeService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

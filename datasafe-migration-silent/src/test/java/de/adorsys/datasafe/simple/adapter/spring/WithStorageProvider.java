@@ -1,4 +1,4 @@
-package de.adorsys.datasafemigration.docker;
+package de.adorsys.datasafe.simple.adapter.spring;
 
 import com.amazonaws.ClientConfiguration;
 import com.amazonaws.Protocol;
@@ -12,11 +12,11 @@ import com.amazonaws.services.s3.model.SetBucketVersioningConfigurationRequest;
 import com.amazonaws.util.StringUtils;
 import com.google.common.base.Strings;
 import com.google.common.base.Suppliers;
-import de.adorsys.datasafe.storage.api.StorageService;
-import de.adorsys.datasafe.storage.impl.fs.FileSystemStorageService;
-import de.adorsys.datasafe.storage.impl.s3.S3StorageService;
-import de.adorsys.datasafe.types.api.resource.Uri;
-import de.adorsys.datasafe.types.api.utils.ExecutorServiceUtil;
+import de.adorsys.datasafe_1_0_0.storage.api.StorageService;
+import de.adorsys.datasafe_1_0_0.storage.impl.fs.FileSystemStorageService;
+import de.adorsys.datasafe_1_0_0.storage.impl.s3.S3StorageService;
+import de.adorsys.datasafe_1_0_0.types.api.resource.Uri;
+import de.adorsys.datasafe_1_0_0.types.api.utils.ExecutorServiceUtil;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.SneakyThrows;

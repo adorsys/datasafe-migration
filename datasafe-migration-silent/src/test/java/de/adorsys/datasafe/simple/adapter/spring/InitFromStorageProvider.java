@@ -1,4 +1,4 @@
-package de.adorsys.datasafemigration.docker;
+package de.adorsys.datasafe.simple.adapter.spring;
 
 import de.adorsys.datasafe_0_6_1.simple.adapter.api.types.SO_AmazonS3DFSCredentials;
 import de.adorsys.datasafe_0_6_1.simple.adapter.api.types.SO_DFSCredentials;

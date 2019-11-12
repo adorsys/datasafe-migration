@@ -1,4 +1,4 @@
-package de.adorsys.datasafemigration.docker;
+package de.adorsys.datasafe.simple.adapter.spring;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;

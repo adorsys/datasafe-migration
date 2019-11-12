@@ -1,10 +1,11 @@
 package de.adorsys.datasafe.simple.adapter.impl;
 
-import de.adorsys.datasafe.encrypiton.api.types.UserID;
-import de.adorsys.datasafe.encrypiton.api.types.UserIDAuth;
-import de.adorsys.datasafe.simple.adapter.api.SimpleDatasafeService;
-import de.adorsys.datasafe.simple.adapter.api.types.*;
-import de.adorsys.datasafe.types.api.types.ReadKeyPassword;
+
+import de.adorsys.datasafe_1_0_0.encrypiton.api.types.UserID;
+import de.adorsys.datasafe_1_0_0.encrypiton.api.types.UserIDAuth;
+import de.adorsys.datasafe_1_0_0.simple.adapter.api.SimpleDatasafeService;
+import de.adorsys.datasafe_1_0_0.simple.adapter.api.types.*;
+import de.adorsys.datasafe_1_0_0.types.api.types.ReadKeyPassword;
 
 import java.io.OutputStream;
 import java.util.List;
