@@ -1,4 +1,4 @@
-package de.adorsys.datasafe.simple.adapter.spring.utils;
+package de.adorsys.datasafemigration.docker;
 
 import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;

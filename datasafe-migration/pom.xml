@@ -24,13 +24,6 @@
             <artifactId>datasafe-migration-shaded-1.0.0</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
-        <!-- this is brute force -->
-        <dependency>
-            <groupId>de.adorsys</groupId>
-            <artifactId>datasafe-simple-adapter-impl</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-        <!-- end brute force -->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
@@ -47,7 +40,14 @@
             <version>${lombok.version}</version>
         </dependency>
 
-
+        <!-- this is brute force to get all the needed classes of datasafe e.g. dagger, runtime delegate, bouncy castle and so on -->
+        <dependency>
+            <groupId>de.adorsys</groupId>
+            <artifactId>datasafe-simple-adapter-impl</artifactId>
+            <version>1.0.0</version>
+            <scope>test</scope>
+        </dependency>
+        <!-- end brute force -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>

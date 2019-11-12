@@ -1,7 +1,7 @@
 package de.adorsys.datasafe.simple.adapter.spring.factory;
 
-import de.adorsys.datasafe_1_0_0.simple.adapter.spring.properties.SpringDatasafeEncryptionProperties;
 import de.adorsys.datasafe_1_0_0.simple.adapter.api.SimpleDatasafeService;
+import de.adorsys.datasafe_1_0_0.simple.adapter.spring.properties.SpringDatasafeEncryptionProperties;
 import de.adorsys.datasafe_1_0_0.simple.adapter.api.exceptions.SimpleAdapterException;
 import de.adorsys.datasafe_1_0_0.simple.adapter.api.types.AmazonS3DFSCredentials;
 import de.adorsys.datasafe_1_0_0.simple.adapter.api.types.DFSCredentials;

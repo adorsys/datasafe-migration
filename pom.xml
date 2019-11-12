@@ -14,7 +14,9 @@
         <module>datasafe-migration-shaded-0.6.1</module>
         <module>datasafe-migration-shaded-1.0.0</module>
         <module>datasafe-migration</module>
+        <!--
         <module>datasafe-migration-silent</module>
+        -->
     </modules>
 
 
@@ -36,6 +38,9 @@
         <mockito.version>2.25.1</mockito.version>
         <assert.jcore.version>3.12.2</assert.jcore.version>
         <maven.compiler.plugin.version>3.7.0</maven.compiler.plugin.version>
+        <dagger.version>2.24</dagger.version>
+        <amazon.aws.version>1.11.538</amazon.aws.version>
+        <google.guava.version>27.1-jre</google.guava.version>
 
     </properties>
 

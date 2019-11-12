@@ -61,18 +61,12 @@
 
                             <relocations>
                                 <relocation>
-                                    <pattern>de.adorsys.datasafe.simple.adapter.spring.factory.SpringSimpleDatasafeServiceFactory
-                                    </pattern>
-                                    <shadedPattern>
-                                        de.adorsys.datasafe.simple.adapter_1_0_0.spring.factory.SN_SpringSimpleDatasafeServiceFactory
-                                    </shadedPattern>
+                                    <pattern>de.adorsys.datasafe.simple.adapter.spring.factory.SpringSimpleDatasafeServiceFactory</pattern>
+                                    <shadedPattern>de.adorsys.datasafe_1_0_0.simple.adapter.spring.factory.SN_SpringSimpleDatasafeServiceFactory</shadedPattern>
                                 </relocation>
                                 <relocation>
-                                    <pattern>de.adorsys.datasafe.simple.adapter.impl.SimpleDatasafeServiceImpl
-                                    </pattern>
-                                    <shadedPattern>
-                                        de.adorsys.datasafe_1_0_0.simple.adapter.impl.SN_SimpleDatasafeServiceImpl
-                                    </shadedPattern>
+                                    <pattern>de.adorsys.datasafe.simple.adapter.impl.SimpleDatasafeServiceImpl</pattern>
+                                    <shadedPattern>de.adorsys.datasafe_1_0_0.simple.adapter.impl.SN_SimpleDatasafeServiceImpl</shadedPattern>
                                 </relocation>
 
                                 <relocation>

@@ -1,4 +1,4 @@
-package de.adorsys.datasafe.simple.adapter.spring.utils;
+package de.adorsys.datasafemigration.docker;
 
 import com.amazonaws.ClientConfiguration;
 import com.amazonaws.Protocol;
@@ -153,40 +153,14 @@ public abstract class WithStorageProvider extends BaseMockitoTest {
         amazonS3 = null;
     }
 
-    @ValueSource
-    protected static Stream<StorageDescriptor> allLocalDefaultStorages() {
-        return Stream.of(
-                fs(),
-                minio()
-                /* No CEPH here because it is quite slow*/
-        ).filter(Objects::nonNull);
-    }
-
-    @ValueSource
-    protected static Stream<StorageDescriptor> allLocalStorages() {
-        return Stream.of(
-                fs(),
-                minio(),
-                cephVersioned()
-        ).filter(Objects::nonNull);
-    }
-
-    @ValueSource
-    protected static Stream<StorageDescriptor> allDefaultStorages() {
-        return Stream.of(
-                fs(),
-                minio(),
-                s3()
-        ).filter(Objects::nonNull);
-    }
 
     @ValueSource
     protected static Stream<StorageDescriptor> allStorages() {
         return Stream.of(
                 fs(),
-                minio(),
-                cephVersioned(),
-                s3()
+                minio()
+//                cephVersioned(),
+//                s3()
         ).filter(Objects::nonNull);
     }
 
