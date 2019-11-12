@@ -31,7 +31,12 @@
         <testcontainers.version>1.12.1</testcontainers.version>
         <mockito.core.version>2.25.1</mockito.core.version>
         <spring.framework.version>5.1.7.RELEASE</spring.framework.version>
+        <spring.boot.version>2.1.7.RELEASE</spring.boot.version>
         <apache.commons.lang.version>3.9</apache.commons.lang.version>
+        <mockito.version>2.25.1</mockito.version>
+        <assert.jcore.version>3.12.2</assert.jcore.version>
+        <maven.compiler.plugin.version>3.7.0</maven.compiler.plugin.version>
+
     </properties>
 
 </project>
