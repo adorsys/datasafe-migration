@@ -14,7 +14,6 @@ import java.util.function.Supplier;
 
 @Slf4j
 public class ReadUserPasswordFile {
-
     @SneakyThrows
     public static List<UserIDAuth> getAllUsers(String filename) {
         List<UserIDAuth> list = new ArrayList<>();

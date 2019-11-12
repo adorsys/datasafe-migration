@@ -18,12 +18,207 @@
             <groupId>de.adorsys</groupId>
             <artifactId>datasafe-migration-shaded-0.6.1</artifactId>
             <version>0.0.1-SNAPSHOT</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>de.adorsys</groupId>
+                    <artifactId>datasafe-simple-adapter-impl</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>de.adorsys</groupId>
+                    <artifactId>datasafe-simple-adapter-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>de.adorsys</groupId>
+                    <artifactId>datasafe-simple-adapter-spring</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>de.adorsys</groupId>
+                    <artifactId>datasafe-encryption-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>de.adorsys</groupId>
+                    <artifactId>datasafe-business</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>de.adorsys</groupId>
+                    <artifactId>datasafe-directory-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>de.adorsys</groupId>
+                    <artifactId>datasafe-inbox-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>de.adorsys</groupId>
+                    <artifactId>datasafe-privatestore-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>de.adorsys</groupId>
+                    <artifactId>datasafe-storage-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>de.adorsys</groupId>
+                    <artifactId>datasafe-types-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>de.adorsys</groupId>
+                    <artifactId>datasafe-directory-impl</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>de.adorsys</groupId>
+                    <artifactId>datasafe-encryption-impl</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>de.adorsys</groupId>
+                    <artifactId>datasafe-inbox-impl</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>de.adorsys</groupId>
+                    <artifactId>datasafe-privatestore-impl</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>de.adorsys</groupId>
+                    <artifactId>datasafe-metainfo-version-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>de.adorsys</groupId>
+                    <artifactId>datasafe-metainfo-version-impl</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>de.adorsys</groupId>
+                    <artifactId>datasafe-storage-impl-s3</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>de.adorsys</groupId>
+                    <artifactId>datasafe-storage-impl-fs</artifactId>
+                </exclusion>
+            </exclusions>
+
+
         </dependency>
         <dependency>
             <groupId>de.adorsys</groupId>
             <artifactId>datasafe-migration-shaded-1.0.0</artifactId>
             <version>0.0.1-SNAPSHOT</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>de.adorsys</groupId>
+                    <artifactId>datasafe-simple-adapter-impl</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>de.adorsys</groupId>
+                    <artifactId>datasafe-simple-adapter-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>de.adorsys</groupId>
+                    <artifactId>datasafe-simple-adapter-spring</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>de.adorsys</groupId>
+                    <artifactId>datasafe-encryption-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>de.adorsys</groupId>
+                    <artifactId>datasafe-business</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>de.adorsys</groupId>
+                    <artifactId>datasafe-directory-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>de.adorsys</groupId>
+                    <artifactId>datasafe-inbox-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>de.adorsys</groupId>
+                    <artifactId>datasafe-privatestore-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>de.adorsys</groupId>
+                    <artifactId>datasafe-storage-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>de.adorsys</groupId>
+                    <artifactId>datasafe-types-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>de.adorsys</groupId>
+                    <artifactId>datasafe-directory-impl</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>de.adorsys</groupId>
+                    <artifactId>datasafe-encryption-impl</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>de.adorsys</groupId>
+                    <artifactId>datasafe-inbox-impl</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>de.adorsys</groupId>
+                    <artifactId>datasafe-privatestore-impl</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>de.adorsys</groupId>
+                    <artifactId>datasafe-metainfo-version-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>de.adorsys</groupId>
+                    <artifactId>datasafe-metainfo-version-impl</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>de.adorsys</groupId>
+                    <artifactId>datasafe-storage-impl-s3</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>de.adorsys</groupId>
+                    <artifactId>datasafe-storage-impl-fs</artifactId>
+                </exclusion>
+            </exclusions>
+
+
         </dependency>
+
+        <!-- this is brute force to get all the needed classes of datasafe e.g. dagger, runtime delegate, bouncy castle and so on -->
+<!--
+        <dependency>
+            <groupId>de.adorsys</groupId>
+            <artifactId>datasafe-simple-adapter-impl</artifactId>
+            <version>1.0.0</version>
+            <scope>test</scope>
+        </dependency>
+-->
+        <!-- end brute force -->
+        <dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcprov-jdk15on</artifactId>
+            <version>${bcprov.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.amazonaws</groupId>
+            <artifactId>aws-java-sdk-core</artifactId>
+            <version>${amazon.aws.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.amazonaws</groupId>
+            <artifactId>aws-java-sdk-s3</artifactId>
+            <version>${amazon.aws.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>${google.guava.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.inject</groupId>
+            <artifactId>javax.inject</artifactId>
+            <version>1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.dagger</groupId>
+            <artifactId>dagger</artifactId>
+            <version>2.24</version>
+        </dependency>
+
+
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
@@ -39,15 +234,6 @@
             <artifactId>lombok</artifactId>
             <version>${lombok.version}</version>
         </dependency>
-
-        <!-- this is brute force to get all the needed classes of datasafe e.g. dagger, runtime delegate, bouncy castle and so on -->
-        <dependency>
-            <groupId>de.adorsys</groupId>
-            <artifactId>datasafe-simple-adapter-impl</artifactId>
-            <version>1.0.0</version>
-            <scope>test</scope>
-        </dependency>
-        <!-- end brute force -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
@@ -89,6 +275,25 @@
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven.compiler.plugin.version}</version>
+                <configuration>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>com.google.dagger</groupId>
+                            <artifactId>dagger-compiler</artifactId>
+                            <version>${dagger.version}</version>
+                        </path>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>${lombok.version}</version>
+                        </path>
+                    </annotationProcessorPaths>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>

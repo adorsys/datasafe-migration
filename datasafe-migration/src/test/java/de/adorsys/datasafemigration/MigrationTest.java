@@ -9,6 +9,7 @@ import de.adorsys.datasafe_1_0_0.encrypiton.api.types.encryption.MutableEncrypti
 import de.adorsys.datasafe_1_0_0.simple.adapter.api.SimpleDatasafeService;
 import de.adorsys.datasafe_1_0_0.simple.adapter.api.types.DocumentDirectoryFQN;
 import de.adorsys.datasafe_1_0_0.simple.adapter.api.types.DocumentFQN;
+import de.adorsys.datasafe_1_0_0.simple.adapter.api.types.ListRecursiveFlag;
 import de.adorsys.datasafe_1_0_0.simple.adapter.impl.SN_SimpleDatasafeServiceImpl;
 import de.adorsys.datasafe_1_0_0.types.api.types.ReadKeyPassword;
 import de.adorsys.datasafemigration.docker.InitFromStorageProvider;
@@ -111,8 +112,8 @@ public class MigrationTest extends WithStorageProvider {
         SimpleDatasafeService newService = new SN_SimpleDatasafeServiceImpl(dfsCredentialsTuple.getNewVersion(), new MutableEncryptionConfig());
         Assertions.assertThrows(IOException.class, () -> newService.list(
                 userIDAuth,
-                new de.adorsys.datasafe_1_0_0.simple.adapter.api.types.DocumentDirectoryFQN("/"),
-                de.adorsys.datasafe_1_0_0.simple.adapter.api.types.ListRecursiveFlag.TRUE));
+                new DocumentDirectoryFQN("/"),
+                ListRecursiveFlag.TRUE));
 
     }
 
