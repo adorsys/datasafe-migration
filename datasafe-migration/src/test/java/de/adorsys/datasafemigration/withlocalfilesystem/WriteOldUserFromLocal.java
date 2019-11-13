@@ -27,11 +27,11 @@ public class WriteOldUserFromLocal {
     @SneakyThrows
     public void migrateUser(UserIDAuth userIDAuth) {
 
-        if (simpleDatasafeService.userExists(SwitchVersion.toOld(userIDAuth).getUserID())) {
+        if (simpleDatasafeService.userExists(SwitchVersion.to_0_6_1(userIDAuth).getUserID())) {
             throw new RuntimeException("user " + userIDAuth.getUserID().getValue() + " already exists in old format");
         }
 
-        simpleDatasafeService.createUser(SwitchVersion.toOld(userIDAuth));
+        simpleDatasafeService.createUser(SwitchVersion.to_0_6_1(userIDAuth));
         log.debug("create user {} in old format", userIDAuth.getUserID().getValue());
 
         String sourcedir = src.addDirectory(userIDAuth.getUserID().getValue()).getDocusafePath();
@@ -41,7 +41,7 @@ public class WriteOldUserFromLocal {
             for (String path : result) {
                 SO_DocumentFQN fqn = new SO_DocumentFQN(path.substring(sourcedir.length()));
                 SO_DSDocument dsDocument = new SO_DSDocument(fqn, new SO_DocumentContent(Files.readAllBytes(Paths.get(path))));
-                simpleDatasafeService.storeDocument(SwitchVersion.toOld(userIDAuth), dsDocument);
+                simpleDatasafeService.storeDocument(SwitchVersion.to_0_6_1(userIDAuth), dsDocument);
                 log.debug("stored {} bytes for file {} in old format", dsDocument.getDocumentContent().getValue().length, dsDocument.getDocumentFQN().getDocusafePath());
             }
         }

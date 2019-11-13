@@ -26,10 +26,10 @@ public class LoadOldUserToLocal {
     public void migrateUser(de.adorsys.datasafe_1_0_0.encrypiton.api.types.UserIDAuth userIDAuth) {
         Security.addProvider(new BouncyCastleProvider());
 
-        List<SO_DocumentFQN> list = simpleDatasafeService.list(SwitchVersion.toOld(userIDAuth), new SO_DocumentDirectoryFQN("/"), SO_ListRecursiveFlag.TRUE);
+        List<SO_DocumentFQN> list = simpleDatasafeService.list(SwitchVersion.to_0_6_1(userIDAuth), new SO_DocumentDirectoryFQN("/"), SO_ListRecursiveFlag.TRUE);
         for (SO_DocumentFQN fqn : list) {
-            SO_DSDocument dsDocument = simpleDatasafeService.readDocument(SwitchVersion.toOld(userIDAuth), fqn);
-            store(dsDocument, SwitchVersion.toOld(dest).addDirectory(userIDAuth.getUserID().getValue()));
+            SO_DSDocument dsDocument = simpleDatasafeService.readDocument(SwitchVersion.to_0_6_1(userIDAuth), fqn);
+            store(dsDocument, SwitchVersion.to_0_6_1(dest).addDirectory(userIDAuth.getUserID().getValue()));
         }
     }
 

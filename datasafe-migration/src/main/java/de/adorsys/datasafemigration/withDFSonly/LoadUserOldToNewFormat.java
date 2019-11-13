@@ -25,10 +25,10 @@ public class LoadUserOldToNewFormat {
 
         createUser(userIDAuth);
 
-        List<SO_DocumentFQN> list = sourceDatasafeService.list(SwitchVersion.toOld(userIDAuth), new SO_DocumentDirectoryFQN("/"), SO_ListRecursiveFlag.TRUE);
+        List<SO_DocumentFQN> list = sourceDatasafeService.list(SwitchVersion.to_0_6_1(userIDAuth), new SO_DocumentDirectoryFQN("/"), SO_ListRecursiveFlag.TRUE);
         for (SO_DocumentFQN fqn : list) {
-            SO_DSDocument dsDocument = sourceDatasafeService.readDocument(SwitchVersion.toOld(userIDAuth), fqn);
-            storeDocument(userIDAuth, SwitchVersion.toNew(dsDocument));
+            SO_DSDocument dsDocument = sourceDatasafeService.readDocument(SwitchVersion.to_0_6_1(userIDAuth), fqn);
+            storeDocument(userIDAuth, SwitchVersion.to_1_0_0(dsDocument));
         }
     }
 

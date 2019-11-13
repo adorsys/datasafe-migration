@@ -13,19 +13,19 @@ import de.adorsys.datasafe_1_0_0.simple.adapter.api.types.DocumentDirectoryFQN;
 import de.adorsys.datasafe_1_0_0.simple.adapter.api.types.DocumentFQN;
 
 public class SwitchVersion {
-    public static SO_UserIDAuth toOld(UserIDAuth newUserIDAuth) {
+    public static SO_UserIDAuth to_0_6_1(UserIDAuth newUserIDAuth) {
         return new SO_UserIDAuth(
                 new SO_UserID(newUserIDAuth.getUserID().getValue()),
                 new SO_ReadKeyPassword(new String(newUserIDAuth.getReadKeyPassword().getValue())));
     }
 
-    public static DSDocument toNew(SO_DSDocument oldDSDocument) {
+    public static DSDocument to_1_0_0(SO_DSDocument oldDSDocument) {
         return new DSDocument(
                 new DocumentFQN(oldDSDocument.getDocumentFQN().getDocusafePath()),
                 new DocumentContent(oldDSDocument.getDocumentContent().getValue()));
     }
 
-    public static SO_DocumentDirectoryFQN toOld(DocumentDirectoryFQN newDocumentDirectoryFQN) {
+    public static SO_DocumentDirectoryFQN to_0_6_1(DocumentDirectoryFQN newDocumentDirectoryFQN) {
         return new SO_DocumentDirectoryFQN(newDocumentDirectoryFQN.getDocusafePath());
     }
 }

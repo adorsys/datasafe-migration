@@ -12,19 +12,18 @@ import de.adorsys.datasafe.simple.adapter.api.types.DocumentFQN;
 import de.adorsys.datasafe.simple.adapter.api.types.ListRecursiveFlag;
 import de.adorsys.datasafe.types.api.types.ReadKeyPassword;
 import de.adorsys.datasafe_0_6_1.encrypiton.api.types.SO_UserID;
-import de.adorsys.datasafe_0_6_1.encrypiton.api.types.SO_UserIDAuth;
 import de.adorsys.datasafe_0_6_1.simple.adapter.impl.SO_SimpleDatasafeServiceImpl;
 import de.adorsys.datasafe_1_0_0.encrypiton.api.types.encryption.MutableEncryptionConfig;
 import de.adorsys.datasafe_1_0_0.simple.adapter.api.types.DFSCredentials;
 import de.adorsys.datasafe_1_0_0.simple.adapter.impl.SimpleDatasafeServiceImpl;
+import de.adorsys.datasafemigration.common.SwitchVersion;
 
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import static de.adorsys.datasafe.datasafemigration.ExtendedSwitchVersion.*;
-import static de.adorsys.datasafe.datasafemigration.ExtendedSwitchVersion.toCurrentnewReal;
-import static de.adorsys.datasafemigration.common.SwitchVersion.toOld;
+import static de.adorsys.datasafe.datasafemigration.ExtendedSwitchVersion.toCurrent;
+import static de.adorsys.datasafemigration.common.SwitchVersion.to_0_6_1;
 
 public class SimpleDatasafeServiceWithMigration implements SimpleDatasafeService {
     private de.adorsys.datasafe_1_0_0.simple.adapter.api.SimpleDatasafeService newReal;
@@ -33,7 +32,7 @@ public class SimpleDatasafeServiceWithMigration implements SimpleDatasafeService
 
     public SimpleDatasafeServiceWithMigration(DFSCredentials dfsCredentials, MutableEncryptionConfig mutableEncryptionConfig) {
         newReal = new SimpleDatasafeServiceImpl(dfsCredentials, mutableEncryptionConfig);
-        oldReal = new SO_SimpleDatasafeServiceImpl(ExtendedSwitchVersion.toOld(dfsCredentials));
+        oldReal = new SO_SimpleDatasafeServiceImpl(ExtendedSwitchVersion.to_0_6_1(dfsCredentials));
     }
 
 
@@ -43,7 +42,7 @@ public class SimpleDatasafeServiceWithMigration implements SimpleDatasafeService
             newReal.createUser(userIDAuth.getReal());
             return;
         }
-        oldReal.createUser(toOld(userIDAuth.getReal()));
+        oldReal.createUser(SwitchVersion.to_0_6_1(userIDAuth.getReal()));
     }
 
 
@@ -53,7 +52,7 @@ public class SimpleDatasafeServiceWithMigration implements SimpleDatasafeService
             newReal.destroyUser(userIDAuth.getReal());
             return;
         }
-        oldReal.destroyUser(toOld(userIDAuth.getReal()));
+        oldReal.destroyUser(SwitchVersion.to_0_6_1(userIDAuth.getReal()));
     }
 
     @Override
@@ -81,16 +80,16 @@ public class SimpleDatasafeServiceWithMigration implements SimpleDatasafeService
             newReal.storeDocument(userIDAuth.getReal(), dsDocument.getReal());
             return;
         }
-        oldReal.storeDocument(toOld(userIDAuth.getReal()), ExtendedSwitchVersion.toOld(dsDocument.getReal()));
+        oldReal.storeDocument(SwitchVersion.to_0_6_1(userIDAuth.getReal()), ExtendedSwitchVersion.to_0_6_1(dsDocument.getReal()));
     }
 
     @Override
     public DSDocument readDocument(UserIDAuth userIDAuth, DocumentFQN documentFQN) {
         if (checkMigration(userIDAuth)) {
-            return toCurrentnewReal(newReal.readDocument(userIDAuth.getReal(), documentFQN.getReal()));
+            return ExtendedSwitchVersion.toCurrent(newReal.readDocument(userIDAuth.getReal(), documentFQN.getReal()));
         }
-        return toCurrentnewReal(
-                oldReal.readDocument(toOld(userIDAuth.getReal()), ExtendedSwitchVersion.toOld(documentFQN.getReal())));
+        return ExtendedSwitchVersion.toCurrent(
+                oldReal.readDocument(SwitchVersion.to_0_6_1(userIDAuth.getReal()), ExtendedSwitchVersion.to_0_6_1(documentFQN.getReal())));
     }
 
     @Override
@@ -98,17 +97,17 @@ public class SimpleDatasafeServiceWithMigration implements SimpleDatasafeService
         if (checkMigration(userIDAuth)) {
             return newReal.storeDocumentStream(userIDAuth.getReal(), documentFQN.getReal());
         }
-        return oldReal.storeDocumentStream(toOld(userIDAuth.getReal()), ExtendedSwitchVersion.toOld(documentFQN.getReal()));
+        return oldReal.storeDocumentStream(SwitchVersion.to_0_6_1(userIDAuth.getReal()), ExtendedSwitchVersion.to_0_6_1(documentFQN.getReal()));
     }
 
     @Override
     public DSDocumentStream readDocumentStream(UserIDAuth userIDAuth, DocumentFQN documentFQN) {
         if (checkMigration(userIDAuth)) {
-            return toCurrentnewReal(newReal.readDocumentStream(userIDAuth.getReal(), documentFQN.getReal()));
+            return ExtendedSwitchVersion.toCurrent(newReal.readDocumentStream(userIDAuth.getReal(), documentFQN.getReal()));
         }
-        return toCurrentnewReal(oldReal.readDocumentStream(
-                toOld(userIDAuth.getReal()),
-                ExtendedSwitchVersion.toOld(documentFQN.getReal())
+        return toCurrent(oldReal.readDocumentStream(
+                SwitchVersion.to_0_6_1(userIDAuth.getReal()),
+                ExtendedSwitchVersion.to_0_6_1(documentFQN.getReal())
         ));
     }
 
@@ -118,7 +117,7 @@ public class SimpleDatasafeServiceWithMigration implements SimpleDatasafeService
             newReal.storeDocumentStream(userIDAuth.getReal(), dsDocumentStream.getReal());
             return;
         }
-        oldReal.storeDocumentStream(toOld(userIDAuth.getReal()), ExtendedSwitchVersion.toOld(dsDocumentStream.getReal()));
+        oldReal.storeDocumentStream(SwitchVersion.to_0_6_1(userIDAuth.getReal()), ExtendedSwitchVersion.to_0_6_1(dsDocumentStream.getReal()));
 
     }
 
@@ -128,7 +127,7 @@ public class SimpleDatasafeServiceWithMigration implements SimpleDatasafeService
             newReal.deleteDocument(userIDAuth.getReal(), documentFQN.getReal());
             return;
         }
-        oldReal.deleteDocument(toOld(userIDAuth.getReal()), ExtendedSwitchVersion.toOld(documentFQN.getReal()));
+        oldReal.deleteDocument(SwitchVersion.to_0_6_1(userIDAuth.getReal()), ExtendedSwitchVersion.to_0_6_1(documentFQN.getReal()));
 
 
     }
@@ -138,7 +137,7 @@ public class SimpleDatasafeServiceWithMigration implements SimpleDatasafeService
         if (checkMigration(userIDAuth)) {
             return newReal.documentExists(userIDAuth.getReal(), documentFQN.getReal());
         }
-        return oldReal.documentExists(toOld(userIDAuth.getReal()), ExtendedSwitchVersion.toOld(documentFQN.getReal()));
+        return oldReal.documentExists(SwitchVersion.to_0_6_1(userIDAuth.getReal()), ExtendedSwitchVersion.to_0_6_1(documentFQN.getReal()));
     }
 
     @Override
@@ -147,20 +146,20 @@ public class SimpleDatasafeServiceWithMigration implements SimpleDatasafeService
             newReal.deleteFolder(userIDAuth.getReal(), documentDirectoryFQN.getReal());
             return;
         }
-        oldReal.deleteFolder(toOld(userIDAuth.getReal()), ExtendedSwitchVersion.toOld(documentDirectoryFQN.getReal()));
+        oldReal.deleteFolder(SwitchVersion.to_0_6_1(userIDAuth.getReal()), ExtendedSwitchVersion.to_0_6_1(documentDirectoryFQN.getReal()));
     }
 
     @Override
     public List<DocumentFQN> list(UserIDAuth userIDAuth, DocumentDirectoryFQN documentDirectoryFQN, ListRecursiveFlag listRecursiveFlag) {
         if (checkMigration(userIDAuth)) {
             List<DocumentFQN> result = new ArrayList<>();
-            newReal.list(userIDAuth.getReal(), documentDirectoryFQN.getReal(), toNew(listRecursiveFlag)).forEach(
+            newReal.list(userIDAuth.getReal(), documentDirectoryFQN.getReal(), ExtendedSwitchVersion.to_1_0_0(listRecursiveFlag)).forEach(
                     el -> result.add(new DocumentFQN(el.getDocusafePath()))
             );
             return result;
         }
         List<DocumentFQN> result = new ArrayList<>();
-        newReal.list(userIDAuth.getReal(), documentDirectoryFQN.getReal(), toNew(listRecursiveFlag)).forEach(
+        newReal.list(userIDAuth.getReal(), documentDirectoryFQN.getReal(), ExtendedSwitchVersion.to_1_0_0(listRecursiveFlag)).forEach(
                 el -> result.add(new DocumentFQN(el.getDocusafePath()))
         );
         return result;
@@ -183,7 +182,7 @@ public class SimpleDatasafeServiceWithMigration implements SimpleDatasafeService
             newReal.changeKeystorePassword(userIDAuth.getReal(), readKeyPassword.getReal());
             return;
         }
-        oldReal.changeKeystorePassword(toOld(userIDAuth.getReal()), ExtendedSwitchVersion.toOld(readKeyPassword.getReal()));
+        oldReal.changeKeystorePassword(SwitchVersion.to_0_6_1(userIDAuth.getReal()), ExtendedSwitchVersion.to_0_6_1(readKeyPassword.getReal()));
 
     }
 
