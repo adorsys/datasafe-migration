@@ -21,7 +21,7 @@ public class LoadUserOldToNewFormat {
     private final SO_SimpleDatasafeService sourceDatasafeService;
     private final SimpleDatasafeService destDatasafeService;
 
-    public void migrateUser(de.adorsys.datasafe_1_0_0.encrypiton.api.types.UserIDAuth userIDAuth) {
+    public void migrateUser(UserIDAuth userIDAuth) {
 
         createUser(userIDAuth);
 

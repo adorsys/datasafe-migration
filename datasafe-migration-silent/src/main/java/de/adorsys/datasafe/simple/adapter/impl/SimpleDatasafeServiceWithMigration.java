@@ -1,17 +1,29 @@
 package de.adorsys.datasafe.simple.adapter.impl;
 
 
-import de.adorsys.datasafe_1_0_0.encrypiton.api.types.UserID;
-import de.adorsys.datasafe_1_0_0.encrypiton.api.types.UserIDAuth;
-import de.adorsys.datasafe_1_0_0.simple.adapter.api.SimpleDatasafeService;
-import de.adorsys.datasafe_1_0_0.simple.adapter.api.types.*;
-import de.adorsys.datasafe_1_0_0.types.api.types.ReadKeyPassword;
+import de.adorsys.datasafe.encrypiton.api.types.UserID;
+import de.adorsys.datasafe.encrypiton.api.types.UserIDAuth;
+import de.adorsys.datasafe.simple.adapter.api.SimpleDatasafeService;
+import de.adorsys.datasafe.simple.adapter.api.types.DSDocument;
+import de.adorsys.datasafe.simple.adapter.api.types.DSDocumentStream;
+import de.adorsys.datasafe.simple.adapter.api.types.DocumentDirectoryFQN;
+import de.adorsys.datasafe.simple.adapter.api.types.DocumentFQN;
+import de.adorsys.datasafe.simple.adapter.api.types.ListRecursiveFlag;
+import de.adorsys.datasafe.types.api.types.ReadKeyPassword;
+import de.adorsys.datasafe_1_0_0.encrypiton.api.types.encryption.MutableEncryptionConfig;
+import de.adorsys.datasafe_1_0_0.simple.adapter.api.types.DFSCredentials;
 
 import java.io.OutputStream;
 import java.util.List;
 
 public class SimpleDatasafeServiceWithMigration implements SimpleDatasafeService {
-    private de.adorsys.datasafe_1_0_0.simple.adapter.api.SimpleDatasafeService originalSimpleDatasafeService;
+    private de.adorsys.datasafe_1_0_0.simple.adapter.api.SimpleDatasafeService newReal;
+    private de.adorsys.datasafe_0_6_1.simple.adapter.api.SO_SimpleDatasafeService oldReal;
+
+    public SimpleDatasafeServiceWithMigration(DFSCredentials dfsCredentials, MutableEncryptionConfig mutableEncryptionConfig) {
+
+    }
+
 
     @Override
     public void createUser(UserIDAuth userIDAuth) {

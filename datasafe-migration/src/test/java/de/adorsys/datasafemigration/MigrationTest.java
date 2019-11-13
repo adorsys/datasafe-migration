@@ -10,7 +10,7 @@ import de.adorsys.datasafe_1_0_0.simple.adapter.api.SimpleDatasafeService;
 import de.adorsys.datasafe_1_0_0.simple.adapter.api.types.DocumentDirectoryFQN;
 import de.adorsys.datasafe_1_0_0.simple.adapter.api.types.DocumentFQN;
 import de.adorsys.datasafe_1_0_0.simple.adapter.api.types.ListRecursiveFlag;
-import de.adorsys.datasafe_1_0_0.simple.adapter.impl.SN_SimpleDatasafeServiceImpl;
+import de.adorsys.datasafe_1_0_0.simple.adapter.impl.SimpleDatasafeServiceImpl;
 import de.adorsys.datasafe_1_0_0.types.api.types.ReadKeyPassword;
 import de.adorsys.datasafemigration.docker.InitFromStorageProvider;
 import de.adorsys.datasafemigration.docker.WithStorageProvider;
@@ -56,7 +56,7 @@ public class MigrationTest extends WithStorageProvider {
 
         UserIDAuth userIDAuth = new UserIDAuth(new UserID("peter"), new ReadKeyPassword("password"::toCharArray));
         SO_SimpleDatasafeService oldService = new SO_SimpleDatasafeServiceImpl(dfsCredentialsTuple.getOldVersion());
-        SimpleDatasafeService newService = new SN_SimpleDatasafeServiceImpl(dfsCredentialsTuple.getNewVersion(), new MutableEncryptionConfig());
+        SimpleDatasafeService newService = new SimpleDatasafeServiceImpl(dfsCredentialsTuple.getNewVersion(), new MutableEncryptionConfig());
         DocumentDirectoryFQN startDatadir;
         {
             // Test preparation
@@ -109,7 +109,7 @@ public class MigrationTest extends WithStorageProvider {
             oldWriter.migrateUser(userIDAuth);
         }
 
-        SimpleDatasafeService newService = new SN_SimpleDatasafeServiceImpl(dfsCredentialsTuple.getNewVersion(), new MutableEncryptionConfig());
+        SimpleDatasafeService newService = new SimpleDatasafeServiceImpl(dfsCredentialsTuple.getNewVersion(), new MutableEncryptionConfig());
         Assertions.assertThrows(IOException.class, () -> newService.list(
                 userIDAuth,
                 new DocumentDirectoryFQN("/"),

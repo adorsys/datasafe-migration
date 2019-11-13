@@ -1,14 +1,15 @@
 package de.adorsys.datasafe.simple.adapter.spring.factory;
 
-import de.adorsys.datasafe_1_0_0.simple.adapter.api.SimpleDatasafeService;
-import de.adorsys.datasafe_1_0_0.simple.adapter.spring.properties.SpringDatasafeEncryptionProperties;
-import de.adorsys.datasafe_1_0_0.simple.adapter.api.exceptions.SimpleAdapterException;
+
+import de.adorsys.datasafe.simple.adapter.api.SimpleDatasafeService;
+import de.adorsys.datasafe.simple.adapter.api.exceptions.SimpleAdapterException;
+import de.adorsys.datasafe.simple.adapter.impl.SimpleDatasafeServiceWithMigration;
+import de.adorsys.datasafe_1_0_0.encrypiton.api.types.encryption.MutableEncryptionConfig;
 import de.adorsys.datasafe_1_0_0.simple.adapter.api.types.AmazonS3DFSCredentials;
 import de.adorsys.datasafe_1_0_0.simple.adapter.api.types.DFSCredentials;
 import de.adorsys.datasafe_1_0_0.simple.adapter.api.types.FilesystemDFSCredentials;
-import de.adorsys.datasafe_1_0_0.encrypiton.api.types.encryption.MutableEncryptionConfig;
-import de.adorsys.datasafe_1_0_0.simple.adapter.impl.SN_SimpleDatasafeServiceImpl;
-
+import de.adorsys.datasafe_1_0_0.simple.adapter.impl.SimpleDatasafeServiceImpl;
+import de.adorsys.datasafe_1_0_0.simple.adapter.spring.properties.SpringDatasafeEncryptionProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
@@ -49,7 +50,7 @@ public class SpringSimpleDatasafeServiceFactory {
     public SimpleDatasafeService getSimpleDataSafeServiceWithSubdir(String subdirBelowRoot) {
         if (dfsCredentials instanceof AmazonS3DFSCredentials) {
             AmazonS3DFSCredentials amazonS3DFSCredentials = (AmazonS3DFSCredentials) dfsCredentials;
-            return new SN_SimpleDatasafeServiceImpl(
+            return new SimpleDatasafeServiceWithMigration(
                     amazonS3DFSCredentials.toBuilder().rootBucket(
                             amazonS3DFSCredentials.getRootBucket() + "/" + subdirBelowRoot
                     ).build(),
@@ -58,7 +59,7 @@ public class SpringSimpleDatasafeServiceFactory {
         }
         if (dfsCredentials instanceof FilesystemDFSCredentials) {
             FilesystemDFSCredentials filesystemDFSCredentials = (FilesystemDFSCredentials) dfsCredentials;
-            return new SN_SimpleDatasafeServiceImpl(
+            return new SimpleDatasafeServiceWithMigration(
                     filesystemDFSCredentials.toBuilder().root(
                             filesystemDFSCredentials.getRoot() + "/" + subdirBelowRoot
                     ).build(),
