@@ -1,8 +1,8 @@
 package de.adorsys.datasafemigration.withlocalfilesystem;
 
 import de.adorsys.datasafe_0_6_1.simple.adapter.api.SO_SimpleDatasafeService;
-import de.adorsys.datasafe_0_6_1.simple.adapter.api.types.DocumentContent;
 import de.adorsys.datasafe_0_6_1.simple.adapter.api.types.SO_DSDocument;
+import de.adorsys.datasafe_0_6_1.simple.adapter.api.types.SO_DocumentContent;
 import de.adorsys.datasafe_0_6_1.simple.adapter.api.types.SO_DocumentFQN;
 import de.adorsys.datasafe_1_0_0.encrypiton.api.types.UserIDAuth;
 import de.adorsys.datasafe_1_0_0.simple.adapter.api.types.DocumentDirectoryFQN;
@@ -40,7 +40,7 @@ public class WriteOldUserFromLocal {
 
             for (String path : result) {
                 SO_DocumentFQN fqn = new SO_DocumentFQN(path.substring(sourcedir.length()));
-                SO_DSDocument dsDocument = new SO_DSDocument(fqn, new DocumentContent(Files.readAllBytes(Paths.get(path))));
+                SO_DSDocument dsDocument = new SO_DSDocument(fqn, new SO_DocumentContent(Files.readAllBytes(Paths.get(path))));
                 simpleDatasafeService.storeDocument(SwitchVersion.toOld(userIDAuth), dsDocument);
                 log.debug("stored {} bytes for file {} in old format", dsDocument.getDocumentContent().getValue().length, dsDocument.getDocumentFQN().getDocusafePath());
             }
