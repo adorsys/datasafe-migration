@@ -1,7 +1,8 @@
 package de.adorsys.datasafe.simple.adapter.impl;
 
 
-import de.adorsys.datasafe.datasafemigration.ExtendedSwitchVersion;
+import de.adorsys.datasafe.simple.adapter.api.types.DocumentContent;
+import de.adorsys.datasafemigration.ExtendedSwitchVersion;
 import de.adorsys.datasafe.encrypiton.api.types.UserID;
 import de.adorsys.datasafe.encrypiton.api.types.UserIDAuth;
 import de.adorsys.datasafe.simple.adapter.api.SimpleDatasafeService;
@@ -16,23 +17,30 @@ import de.adorsys.datasafe_0_6_1.simple.adapter.impl.SO_SimpleDatasafeServiceImp
 import de.adorsys.datasafe_1_0_0.encrypiton.api.types.encryption.MutableEncryptionConfig;
 import de.adorsys.datasafe_1_0_0.simple.adapter.api.types.DFSCredentials;
 import de.adorsys.datasafe_1_0_0.simple.adapter.impl.SimpleDatasafeServiceImpl;
+import de.adorsys.datasafemigration.MigrationLogic;
 import de.adorsys.datasafemigration.common.SwitchVersion;
+import de.adorsys.datasafemigration.lockprovider.DistributedLocker;
+import de.adorsys.datasafemigration.lockprovider.TemporaryLockProviderFactory;
 
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
-import static de.adorsys.datasafe.datasafemigration.ExtendedSwitchVersion.toCurrent;
-import static de.adorsys.datasafemigration.common.SwitchVersion.to_0_6_1;
+import static de.adorsys.datasafemigration.ExtendedSwitchVersion.toCurrent;
 
 public class SimpleDatasafeServiceWithMigration implements SimpleDatasafeService {
     private de.adorsys.datasafe_1_0_0.simple.adapter.api.SimpleDatasafeService newReal;
     private de.adorsys.datasafe_0_6_1.simple.adapter.api.SO_SimpleDatasafeService oldReal;
+    private MigrationLogic migrationLogic;
 
 
     public SimpleDatasafeServiceWithMigration(DFSCredentials dfsCredentials, MutableEncryptionConfig mutableEncryptionConfig) {
         newReal = new SimpleDatasafeServiceImpl(dfsCredentials, mutableEncryptionConfig);
         oldReal = new SO_SimpleDatasafeServiceImpl(ExtendedSwitchVersion.to_0_6_1(dfsCredentials));
+
+        DistributedLocker distributedLocker = new DistributedLocker(TemporaryLockProviderFactory.get());
+        migrationLogic = new MigrationLogic(distributedLocker, GetStorage.get(dfsCredentials), oldReal, newReal);
     }
 
 
@@ -40,6 +48,7 @@ public class SimpleDatasafeServiceWithMigration implements SimpleDatasafeService
     public void createUser(UserIDAuth userIDAuth) {
         if (checkMigration(userIDAuth)) {
             newReal.createUser(userIDAuth.getReal());
+            migrationLogic.createFileForNewUser(userIDAuth);
             return;
         }
         oldReal.createUser(SwitchVersion.to_0_6_1(userIDAuth.getReal()));
@@ -186,17 +195,8 @@ public class SimpleDatasafeServiceWithMigration implements SimpleDatasafeService
 
     }
 
-    /**
-     * This is the magic method.
-     *
-     *
-     * @param userIDAuth
-     * @return If migration is alread done, it returns true.
-     *      If migration is not yet done. migration will be done here. After that true is returnd.
-     *      If migration can not be done, because schedlock credentials are not available, false is returned.
-     */
     private boolean checkMigration(UserIDAuth userIDAuth) {
-        return true;
+        return migrationLogic.checkMigration(userIDAuth);
     }
 
 }

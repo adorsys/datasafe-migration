@@ -40,6 +40,8 @@
         <amazon.aws.version>1.11.538</amazon.aws.version>
         <google.guava.version>27.1-jre</google.guava.version>
         <bcprov.version>1.64</bcprov.version>
+        <shedlock.version>3.0.0</shedlock.version>
+
 
     </properties>
 

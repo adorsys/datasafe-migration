@@ -22,7 +22,6 @@ import java.util.Random;
 public class SilentMigrationTest extends InjectionTest {
     @Autowired
     SimpleDatasafeService datasafeService;
-
     private static int DOCUMENT_SIZE = 1000;
 
     @Test

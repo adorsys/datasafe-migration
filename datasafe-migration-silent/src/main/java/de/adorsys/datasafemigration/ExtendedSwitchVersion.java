@@ -1,5 +1,6 @@
-package de.adorsys.datasafe.datasafemigration;
+package de.adorsys.datasafemigration;
 
+import de.adorsys.datasafe_0_6_1.encrypiton.api.types.SO_UserID;
 import de.adorsys.datasafe_0_6_1.encrypiton.api.types.keystore.SO_ReadKeyPassword;
 import de.adorsys.datasafe_0_6_1.simple.adapter.api.types.SO_AmazonS3DFSCredentials;
 import de.adorsys.datasafe_0_6_1.simple.adapter.api.types.SO_DFSCredentials;
@@ -9,6 +10,7 @@ import de.adorsys.datasafe_0_6_1.simple.adapter.api.types.SO_DocumentContent;
 import de.adorsys.datasafe_0_6_1.simple.adapter.api.types.SO_DocumentDirectoryFQN;
 import de.adorsys.datasafe_0_6_1.simple.adapter.api.types.SO_DocumentFQN;
 import de.adorsys.datasafe_0_6_1.simple.adapter.api.types.SO_FilesystemDFSCredentials;
+import de.adorsys.datasafe_1_0_0.encrypiton.api.types.UserID;
 import de.adorsys.datasafe_1_0_0.simple.adapter.api.types.AmazonS3DFSCredentials;
 import de.adorsys.datasafe_1_0_0.simple.adapter.api.types.DFSCredentials;
 import de.adorsys.datasafe_1_0_0.simple.adapter.api.types.DSDocument;
@@ -21,6 +23,10 @@ import de.adorsys.datasafe_1_0_0.types.api.types.ReadKeyPassword;
 import de.adorsys.datasafemigration.common.SwitchVersion;
 
 public class ExtendedSwitchVersion extends SwitchVersion {
+    public static SO_UserID to_0_6_1(UserID userID) {
+        return new SO_UserID(userID.getValue());
+    }
+
     public static SO_DSDocument to_0_6_1(DSDocument dsDocument) {
         return new SO_DSDocument(
                 new SO_DocumentFQN(dsDocument.getDocumentFQN().getDocusafePath()),
