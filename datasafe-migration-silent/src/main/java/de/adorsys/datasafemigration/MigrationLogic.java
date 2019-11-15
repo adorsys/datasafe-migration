@@ -3,9 +3,11 @@ package de.adorsys.datasafemigration;
 import de.adorsys.datasafe.encrypiton.api.types.UserID;
 import de.adorsys.datasafe.encrypiton.api.types.UserIDAuth;
 import de.adorsys.datasafe.simple.adapter.impl.GetStorage;
-import de.adorsys.datasafe_1_0_0.simple.adapter.api.types.DSDocument;
-import de.adorsys.datasafe_1_0_0.simple.adapter.api.types.DocumentContent;
-import de.adorsys.datasafe_1_0_0.simple.adapter.api.types.DocumentFQN;
+import de.adorsys.datasafe_0_6_1.simple.adapter.api.S061_SimpleDatasafeService;
+import de.adorsys.datasafe_1_0_0.simple.adapter.api.S100_SimpleDatasafeService;
+import de.adorsys.datasafe_1_0_0.simple.adapter.api.types.S100_DSDocument;
+import de.adorsys.datasafe_1_0_0.simple.adapter.api.types.S100_DocumentContent;
+import de.adorsys.datasafe_1_0_0.simple.adapter.api.types.S100_DocumentFQN;
 import de.adorsys.datasafemigration.lockprovider.DistributedLocker;
 import de.adorsys.datasafemigration.withDFSonly.LoadUserOldToNewFormat;
 import lombok.RequiredArgsConstructor;
@@ -25,12 +27,12 @@ public class MigrationLogic {
     private Set<UserID> migratedUsers = new HashSet<>();
 
     // this file has to exist for every user
-    private static DocumentFQN MIGRATION_CONFIRMATION = new DocumentFQN("DATASAFE_FORMAT_1_0_0");
+    private static S100_DocumentFQN MIGRATION_CONFIRMATION = new S100_DocumentFQN("DATASAFE_FORMAT_1_0_0");
 
     private final DistributedLocker distributedLocker;
     private final GetStorage.SystemRootAndStorageService systemRootAndStorageService;
-    private final de.adorsys.datasafe_0_6_1.simple.adapter.api.SO_SimpleDatasafeService oldService;
-    private final de.adorsys.datasafe_1_0_0.simple.adapter.api.SimpleDatasafeService newService;
+    private final S061_SimpleDatasafeService oldService;
+    private final S100_SimpleDatasafeService newService;
 
     /**
      * This is the magic method.
@@ -86,7 +88,7 @@ public class MigrationLogic {
                 new LoadUserOldToNewFormat(oldService, newService).migrateUser(userIDAuth.getReal());
                 sb.append("migration ends:").append(new Date().toString()).append("\n");
 
-                DSDocument dsDocument = new DSDocument(MIGRATION_CONFIRMATION, new DocumentContent(sb.toString().getBytes(sb.toString())));
+                S100_DSDocument dsDocument = new S100_DSDocument(MIGRATION_CONFIRMATION, new S100_DocumentContent(sb.toString().getBytes(sb.toString())));
                 newService.storeDocument(userIDAuth.getReal(), dsDocument);
 
                 log.info("NOW MIGRATION OF USER {} IS FINISHED", username);
@@ -133,7 +135,7 @@ public class MigrationLogic {
 
         StringBuilder sb = new StringBuilder();
         sb.append("user created (without migration at :").append(new Date().toString()).append("\n");
-        DSDocument dsDocument = new DSDocument(MIGRATION_CONFIRMATION, new DocumentContent(sb.toString().getBytes()));
+        S100_DSDocument dsDocument = new S100_DSDocument(MIGRATION_CONFIRMATION, new S100_DocumentContent(sb.toString().getBytes()));
         newService.storeDocument(userIDAuth.getReal(), dsDocument);
     }
 }

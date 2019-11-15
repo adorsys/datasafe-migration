@@ -5,10 +5,9 @@ import de.adorsys.datasafe.simple.adapter.api.SimpleDatasafeService;
 import de.adorsys.datasafe.simple.adapter.api.exceptions.SimpleAdapterException;
 import de.adorsys.datasafe.simple.adapter.impl.SimpleDatasafeServiceWithMigration;
 import de.adorsys.datasafe_1_0_0.encrypiton.api.types.encryption.MutableEncryptionConfig;
-import de.adorsys.datasafe_1_0_0.simple.adapter.api.types.AmazonS3DFSCredentials;
-import de.adorsys.datasafe_1_0_0.simple.adapter.api.types.DFSCredentials;
-import de.adorsys.datasafe_1_0_0.simple.adapter.api.types.FilesystemDFSCredentials;
-import de.adorsys.datasafe_1_0_0.simple.adapter.impl.SimpleDatasafeServiceImpl;
+import de.adorsys.datasafe_1_0_0.simple.adapter.api.types.S100_AmazonS3DFSCredentials;
+import de.adorsys.datasafe_1_0_0.simple.adapter.api.types.S100_DFSCredentials;
+import de.adorsys.datasafe_1_0_0.simple.adapter.api.types.S100_FilesystemDFSCredentials;
 import de.adorsys.datasafe_1_0_0.simple.adapter.spring.properties.SpringDatasafeEncryptionProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -16,12 +15,12 @@ import javax.annotation.PostConstruct;
 
 public class SpringSimpleDatasafeServiceFactory {
     @Autowired
-    DFSCredentials wiredDfsCredentials;
+    S100_DFSCredentials wiredDfsCredentials;
 
     @Autowired
     SpringDatasafeEncryptionProperties encryptionProperties;
 
-    DFSCredentials dfsCredentials;
+    S100_DFSCredentials dfsCredentials;
 
     boolean useWiredCredentials = true;
 
@@ -39,7 +38,7 @@ public class SpringSimpleDatasafeServiceFactory {
         useWiredCredentials = true;
     }
 
-    public SpringSimpleDatasafeServiceFactory(DFSCredentials credentials) {
+    public SpringSimpleDatasafeServiceFactory(S100_DFSCredentials credentials) {
         if (credentials == null) {
             throw new RuntimeException("dfs credentials passed in must not be null");
         }
@@ -48,8 +47,8 @@ public class SpringSimpleDatasafeServiceFactory {
     }
 
     public SimpleDatasafeService getSimpleDataSafeServiceWithSubdir(String subdirBelowRoot) {
-        if (dfsCredentials instanceof AmazonS3DFSCredentials) {
-            AmazonS3DFSCredentials amazonS3DFSCredentials = (AmazonS3DFSCredentials) dfsCredentials;
+        if (dfsCredentials instanceof S100_AmazonS3DFSCredentials) {
+            S100_AmazonS3DFSCredentials amazonS3DFSCredentials = (S100_AmazonS3DFSCredentials) dfsCredentials;
             return new SimpleDatasafeServiceWithMigration(
                     amazonS3DFSCredentials.toBuilder().rootBucket(
                             amazonS3DFSCredentials.getRootBucket() + "/" + subdirBelowRoot
@@ -57,8 +56,8 @@ public class SpringSimpleDatasafeServiceFactory {
                     null != encryptionProperties ? encryptionProperties.getEncryption() : new MutableEncryptionConfig()
             );
         }
-        if (dfsCredentials instanceof FilesystemDFSCredentials) {
-            FilesystemDFSCredentials filesystemDFSCredentials = (FilesystemDFSCredentials) dfsCredentials;
+        if (dfsCredentials instanceof S100_FilesystemDFSCredentials) {
+            S100_FilesystemDFSCredentials filesystemDFSCredentials = (S100_FilesystemDFSCredentials) dfsCredentials;
             return new SimpleDatasafeServiceWithMigration(
                     filesystemDFSCredentials.toBuilder().root(
                             filesystemDFSCredentials.getRoot() + "/" + subdirBelowRoot

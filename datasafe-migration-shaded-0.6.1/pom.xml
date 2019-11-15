@@ -62,55 +62,59 @@
                             <relocations>
                                 <relocation>
                                     <pattern>de.adorsys.datasafe.encrypiton.api.types.UserIDAuth</pattern>
-                                    <shadedPattern>de.adorsys.datasafe_0_6_1.encrypiton.api.types.SO_UserIDAuth</shadedPattern>
+                                    <shadedPattern>de.adorsys.datasafe_0_6_1.encrypiton.api.types.S061_UserIDAuth</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>de.adorsys.datasafe.simple.adapter.api.SimpleDatasafeService</pattern>
-                                    <shadedPattern>de.adorsys.datasafe_0_6_1.simple.adapter.api.SO_SimpleDatasafeService</shadedPattern>
+                                    <shadedPattern>de.adorsys.datasafe_0_6_1.simple.adapter.api.S061_SimpleDatasafeService</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>de.adorsys.datasafe.simple.adapter.api.types.DSDocument</pattern>
-                                    <shadedPattern>de.adorsys.datasafe_0_6_1.simple.adapter.api.types.SO_DSDocument</shadedPattern>
+                                    <shadedPattern>de.adorsys.datasafe_0_6_1.simple.adapter.api.types.S061_DSDocument</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>de.adorsys.datasafe.simple.adapter.api.types.DocumentDirectoryFQN</pattern>
-                                    <shadedPattern>de.adorsys.datasafe_0_6_1.simple.adapter.api.types.SO_DocumentDirectoryFQN</shadedPattern>
+                                    <shadedPattern>de.adorsys.datasafe_0_6_1.simple.adapter.api.types.S061_DocumentDirectoryFQN</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>de.adorsys.datasafe.simple.adapter.api.types.DocumentFQN</pattern>
-                                    <shadedPattern>de.adorsys.datasafe_0_6_1.simple.adapter.api.types.SO_DocumentFQN</shadedPattern>
+                                    <shadedPattern>de.adorsys.datasafe_0_6_1.simple.adapter.api.types.S061_DocumentFQN</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>de.adorsys.datasafe.simple.adapter.api.types.ListRecursiveFlag</pattern>
-                                    <shadedPattern>de.adorsys.datasafe_0_6_1.simple.adapter.api.types.SO_ListRecursiveFlag</shadedPattern>
+                                    <shadedPattern>de.adorsys.datasafe_0_6_1.simple.adapter.api.types.S061_ListRecursiveFlag</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>de.adorsys.datasafe.simple.adapter.impl.SimpleDatasafeServiceImpl</pattern>
-                                    <shadedPattern>de.adorsys.datasafe_0_6_1.simple.adapter.impl.SO_SimpleDatasafeServiceImpl</shadedPattern>
+                                    <shadedPattern>de.adorsys.datasafe_0_6_1.simple.adapter.impl.S061_SimpleDatasafeServiceImpl</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>de.adorsys.datasafe.encrypiton.api.types.UserID</pattern>
-                                    <shadedPattern>de.adorsys.datasafe_0_6_1.encrypiton.api.types.SO_UserID</shadedPattern>
+                                    <shadedPattern>de.adorsys.datasafe_0_6_1.encrypiton.api.types.S061_UserID</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>de.adorsys.datasafe.encrypiton.api.types.keystore.ReadKeyPassword</pattern>
-                                    <shadedPattern>de.adorsys.datasafe_0_6_1.encrypiton.api.types.keystore.SO_ReadKeyPassword</shadedPattern>
+                                    <shadedPattern>de.adorsys.datasafe_0_6_1.encrypiton.api.types.keystore.S061_ReadKeyPassword</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>de.adorsys.datasafe.simple.adapter.api.types.FilesystemDFSCredentials</pattern>
-                                    <shadedPattern>de.adorsys.datasafe_0_6_1.simple.adapter.api.types.SO_FilesystemDFSCredentials</shadedPattern>
+                                    <shadedPattern>de.adorsys.datasafe_0_6_1.simple.adapter.api.types.S061_FilesystemDFSCredentials</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>de.adorsys.datasafe.simple.adapter.api.types.AmazonS3DFSCredentials</pattern>
-                                    <shadedPattern>de.adorsys.datasafe_0_6_1.simple.adapter.api.types.SO_AmazonS3DFSCredentials</shadedPattern>
+                                    <shadedPattern>de.adorsys.datasafe_0_6_1.simple.adapter.api.types.S061_AmazonS3DFSCredentials</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>de.adorsys.datasafe.simple.adapter.api.types.DFSCredentials</pattern>
-                                    <shadedPattern>de.adorsys.datasafe_0_6_1.simple.adapter.api.types.SO_DFSCredentials</shadedPattern>
+                                    <shadedPattern>de.adorsys.datasafe_0_6_1.simple.adapter.api.types.S061_DFSCredentials</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>de.adorsys.datasafe.simple.adapter.api.types.DocumentContent</pattern>
-                                    <shadedPattern>de.adorsys.datasafe_0_6_1.simple.adapter.api.types.SO_DocumentContent</shadedPattern>
+                                    <shadedPattern>de.adorsys.datasafe_0_6_1.simple.adapter.api.types.S061_DocumentContent</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>de.adorsys.datasafe.types.api.types.ReadKeyPassword</pattern>
+                                    <shadedPattern>de.adorsys.datasafe_0_6_1.types.api.types.S061_ReadKeyPassword</shadedPattern>
                                 </relocation>
 
                                 <relocation>

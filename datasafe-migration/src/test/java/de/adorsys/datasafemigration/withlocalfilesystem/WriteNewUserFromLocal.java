@@ -1,11 +1,11 @@
 package de.adorsys.datasafemigration.withlocalfilesystem;
 
-import de.adorsys.datasafe_1_0_0.encrypiton.api.types.UserIDAuth;
-import de.adorsys.datasafe_1_0_0.simple.adapter.api.SimpleDatasafeService;
-import de.adorsys.datasafe_1_0_0.simple.adapter.api.types.DSDocument;
-import de.adorsys.datasafe_1_0_0.simple.adapter.api.types.DocumentContent;
-import de.adorsys.datasafe_1_0_0.simple.adapter.api.types.DocumentDirectoryFQN;
-import de.adorsys.datasafe_1_0_0.simple.adapter.api.types.DocumentFQN;
+import de.adorsys.datasafe_1_0_0.encrypiton.api.types.S100_UserIDAuth;
+import de.adorsys.datasafe_1_0_0.simple.adapter.api.S100_SimpleDatasafeService;
+import de.adorsys.datasafe_1_0_0.simple.adapter.api.types.S100_DSDocument;
+import de.adorsys.datasafe_1_0_0.simple.adapter.api.types.S100_DocumentContent;
+import de.adorsys.datasafe_1_0_0.simple.adapter.api.types.S100_DocumentDirectoryFQN;
+import de.adorsys.datasafe_1_0_0.simple.adapter.api.types.S100_DocumentFQN;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -20,11 +20,11 @@ import java.util.stream.Stream;
 @Slf4j
 @AllArgsConstructor
 public class WriteNewUserFromLocal {
-    private final SimpleDatasafeService simpleDatasafeService;
-    private final DocumentDirectoryFQN src;
+    private final S100_SimpleDatasafeService simpleDatasafeService;
+    private final S100_DocumentDirectoryFQN src;
 
     @SneakyThrows
-    public void migrateUser(UserIDAuth userIDAuth) {
+    public void migrateUser(S100_UserIDAuth userIDAuth) {
 
         if (simpleDatasafeService.userExists(userIDAuth.getUserID())) {
             throw new RuntimeException("user "+userIDAuth.getUserID().getValue()+" already exists in new format");
@@ -38,8 +38,8 @@ public class WriteNewUserFromLocal {
             List<String> result = walk.filter(Files::isRegularFile).map(x -> x.toString()).collect(Collectors.toList());
 
             for (String path : result) {
-                DocumentFQN fqn = new DocumentFQN(path.substring(sourcedir.length()));
-                DSDocument dsDocument = new DSDocument(fqn, new DocumentContent(Files.readAllBytes(Paths.get(path))));
+                S100_DocumentFQN fqn = new S100_DocumentFQN(path.substring(sourcedir.length()));
+                S100_DSDocument dsDocument = new S100_DSDocument(fqn, new S100_DocumentContent(Files.readAllBytes(Paths.get(path))));
                 simpleDatasafeService.storeDocument(userIDAuth, dsDocument);
                 log.debug("stored {} bytes for file {} in new format", dsDocument.getDocumentContent().getValue().length, dsDocument.getDocumentFQN().getDocusafePath());
             }

@@ -2,7 +2,7 @@ package de.adorsys.datasafe.simple.adapter.spring;
 
 import de.adorsys.datasafe.simple.adapter.api.SimpleDatasafeService;
 import de.adorsys.datasafe.simple.adapter.spring.factory.SpringSimpleDatasafeServiceFactory;
-import de.adorsys.datasafe_1_0_0.simple.adapter.api.types.DFSCredentials;
+import de.adorsys.datasafe_1_0_0.simple.adapter.api.types.S100_DFSCredentials;
 import de.adorsys.datasafe_1_0_0.simple.adapter.spring.SpringPropertiesToDFSCredentialsUtil;
 import de.adorsys.datasafe_1_0_0.simple.adapter.spring.properties.SpringAmazonS3DFSCredentialsProperties;
 import de.adorsys.datasafe_1_0_0.simple.adapter.spring.properties.SpringDFSCredentialProperties;
@@ -33,7 +33,7 @@ public class DatasafeSpringBeans {
     }
 
     @Bean
-    DFSCredentials dfsCredentials(SpringDFSCredentialProperties properties) {
+    S100_DFSCredentials dfsCredentials(SpringDFSCredentialProperties properties) {
         return SpringPropertiesToDFSCredentialsUtil.dfsCredentials(properties);
     }
 

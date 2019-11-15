@@ -1,12 +1,12 @@
 package de.adorsys.datasafe.simple.adapter.spring;
 
-import de.adorsys.datasafe_0_6_1.simple.adapter.api.types.SO_AmazonS3DFSCredentials;
-import de.adorsys.datasafe_0_6_1.simple.adapter.api.types.SO_DFSCredentials;
-import de.adorsys.datasafe_0_6_1.simple.adapter.api.types.SO_FilesystemDFSCredentials;
+import de.adorsys.datasafe_0_6_1.simple.adapter.api.types.S061_AmazonS3DFSCredentials;
+import de.adorsys.datasafe_0_6_1.simple.adapter.api.types.S061_DFSCredentials;
+import de.adorsys.datasafe_0_6_1.simple.adapter.api.types.S061_FilesystemDFSCredentials;
 import de.adorsys.datasafe_1_0_0.simple.adapter.api.exceptions.SimpleAdapterException;
-import de.adorsys.datasafe_1_0_0.simple.adapter.api.types.AmazonS3DFSCredentials;
-import de.adorsys.datasafe_1_0_0.simple.adapter.api.types.DFSCredentials;
-import de.adorsys.datasafe_1_0_0.simple.adapter.api.types.FilesystemDFSCredentials;
+import de.adorsys.datasafe_1_0_0.simple.adapter.api.types.S100_AmazonS3DFSCredentials;
+import de.adorsys.datasafe_1_0_0.simple.adapter.api.types.S100_DFSCredentials;
+import de.adorsys.datasafe_1_0_0.simple.adapter.api.types.S100_FilesystemDFSCredentials;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.experimental.UtilityClass;
@@ -38,8 +38,8 @@ public class InitFromStorageProvider {
             case FILESYSTEM: {
                 log.info("uri:" + descriptor.getRootBucket());
                 return new DFSCredentialsTuple(
-                        SO_FilesystemDFSCredentials.builder().root(descriptor.getRootBucket() + oldSubfolder).build(),
-                        FilesystemDFSCredentials.builder().root(descriptor.getRootBucket() + newSubfolder).build()
+                        S061_FilesystemDFSCredentials.builder().root(descriptor.getRootBucket() + oldSubfolder).build(),
+                        S100_FilesystemDFSCredentials.builder().root(descriptor.getRootBucket() + newSubfolder).build()
                 );
 
             }
@@ -56,14 +56,14 @@ public class InitFromStorageProvider {
                 log.info("mapped uri:" + descriptor.getMappedUrl());
 
                 return new DFSCredentialsTuple(
-                        SO_AmazonS3DFSCredentials.builder()
+                        S061_AmazonS3DFSCredentials.builder()
                                 .accessKey(descriptor.getAccessKey())
                                 .secretKey(descriptor.getSecretKey())
                                 .region(descriptor.getRegion())
                                 .rootBucket(descriptor.getRootBucket() + oldSubfolder)
                                 .url(descriptor.getMappedUrl())
                                 .build(),
-                        AmazonS3DFSCredentials.builder()
+                        S100_AmazonS3DFSCredentials.builder()
                                 .accessKey(descriptor.getAccessKey())
                                 .secretKey(descriptor.getSecretKey())
                                 .region(descriptor.getRegion())
@@ -79,8 +79,8 @@ public class InitFromStorageProvider {
     @AllArgsConstructor
     @Getter
     public static class DFSCredentialsTuple {
-        private final SO_DFSCredentials oldVersion;
-        private final DFSCredentials newVersion;
+        private final S061_DFSCredentials oldVersion;
+        private final S100_DFSCredentials newVersion;
 
     }
 }

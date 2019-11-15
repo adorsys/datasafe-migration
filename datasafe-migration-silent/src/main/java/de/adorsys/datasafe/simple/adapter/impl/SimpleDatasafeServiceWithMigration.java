@@ -1,8 +1,6 @@
 package de.adorsys.datasafe.simple.adapter.impl;
 
 
-import de.adorsys.datasafe.simple.adapter.api.types.DocumentContent;
-import de.adorsys.datasafemigration.ExtendedSwitchVersion;
 import de.adorsys.datasafe.encrypiton.api.types.UserID;
 import de.adorsys.datasafe.encrypiton.api.types.UserIDAuth;
 import de.adorsys.datasafe.simple.adapter.api.SimpleDatasafeService;
@@ -12,11 +10,14 @@ import de.adorsys.datasafe.simple.adapter.api.types.DocumentDirectoryFQN;
 import de.adorsys.datasafe.simple.adapter.api.types.DocumentFQN;
 import de.adorsys.datasafe.simple.adapter.api.types.ListRecursiveFlag;
 import de.adorsys.datasafe.types.api.types.ReadKeyPassword;
-import de.adorsys.datasafe_0_6_1.encrypiton.api.types.SO_UserID;
-import de.adorsys.datasafe_0_6_1.simple.adapter.impl.SO_SimpleDatasafeServiceImpl;
+import de.adorsys.datasafe_0_6_1.encrypiton.api.types.S061_UserID;
+import de.adorsys.datasafe_0_6_1.simple.adapter.api.S061_SimpleDatasafeService;
+import de.adorsys.datasafe_0_6_1.simple.adapter.impl.S061_SimpleDatasafeServiceImpl;
 import de.adorsys.datasafe_1_0_0.encrypiton.api.types.encryption.MutableEncryptionConfig;
-import de.adorsys.datasafe_1_0_0.simple.adapter.api.types.DFSCredentials;
-import de.adorsys.datasafe_1_0_0.simple.adapter.impl.SimpleDatasafeServiceImpl;
+import de.adorsys.datasafe_1_0_0.simple.adapter.api.S100_SimpleDatasafeService;
+import de.adorsys.datasafe_1_0_0.simple.adapter.api.types.S100_DFSCredentials;
+import de.adorsys.datasafe_1_0_0.simple.adapter.impl.S100_SimpleDatasafeServiceImpl;
+import de.adorsys.datasafemigration.ExtendedSwitchVersion;
 import de.adorsys.datasafemigration.MigrationLogic;
 import de.adorsys.datasafemigration.common.SwitchVersion;
 import de.adorsys.datasafemigration.lockprovider.DistributedLocker;
@@ -24,20 +25,19 @@ import de.adorsys.datasafemigration.lockprovider.TemporaryLockProviderFactory;
 
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import static de.adorsys.datasafemigration.ExtendedSwitchVersion.toCurrent;
 
 public class SimpleDatasafeServiceWithMigration implements SimpleDatasafeService {
-    private de.adorsys.datasafe_1_0_0.simple.adapter.api.SimpleDatasafeService newReal;
-    private de.adorsys.datasafe_0_6_1.simple.adapter.api.SO_SimpleDatasafeService oldReal;
+    private S100_SimpleDatasafeService newReal;
+    private S061_SimpleDatasafeService oldReal;
     private MigrationLogic migrationLogic;
 
 
-    public SimpleDatasafeServiceWithMigration(DFSCredentials dfsCredentials, MutableEncryptionConfig mutableEncryptionConfig) {
-        newReal = new SimpleDatasafeServiceImpl(dfsCredentials, mutableEncryptionConfig);
-        oldReal = new SO_SimpleDatasafeServiceImpl(ExtendedSwitchVersion.to_0_6_1(dfsCredentials));
+    public SimpleDatasafeServiceWithMigration(S100_DFSCredentials dfsCredentials, MutableEncryptionConfig mutableEncryptionConfig) {
+        newReal = new S100_SimpleDatasafeServiceImpl(dfsCredentials, mutableEncryptionConfig);
+        oldReal = new S061_SimpleDatasafeServiceImpl(ExtendedSwitchVersion.to_0_6_1(dfsCredentials));
 
         DistributedLocker distributedLocker = new DistributedLocker(TemporaryLockProviderFactory.get());
         migrationLogic = new MigrationLogic(distributedLocker, GetStorage.get(dfsCredentials), oldReal, newReal);
@@ -69,7 +69,7 @@ public class SimpleDatasafeServiceWithMigration implements SimpleDatasafeService
         boolean result = false;
         if (oldReal != null) {
             try {
-                result = oldReal.userExists(new SO_UserID(userID.getReal().getValue()));
+                result = oldReal.userExists(new S061_UserID(userID.getReal().getValue()));
             } catch (Exception e) {
                 // ignored by purpose
             }
