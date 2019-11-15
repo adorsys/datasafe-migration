@@ -8,6 +8,7 @@ import de.adorsys.datasafe.simple.adapter.api.types.DocumentContent;
 import de.adorsys.datasafe.simple.adapter.api.types.DocumentFQN;
 import de.adorsys.datasafe.simple.adapter.spring.annotations.UseDatasafeSpringConfiguration;
 import de.adorsys.datasafe.types.api.types.ReadKeyPassword;
+import de.adorsys.datasafemigration.docker.WithStorageProvider;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.extension.ExtendWith;

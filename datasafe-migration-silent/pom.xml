@@ -299,6 +299,17 @@
 
         <!-- temporary end -->
 
+        <!-- WithStorageProviderStuff -->
+        <dependency>
+            <groupId>de.adorsys</groupId>
+            <artifactId>datasafe-migration</artifactId>
+            <classifier>tests</classifier>
+            <type>test-jar</type>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+
         <!-- general test classes -->
         <dependency>
             <groupId>org.mockito</groupId>
