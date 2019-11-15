@@ -1,18 +1,18 @@
 package de.adorsys.datasafemigration;
 
-import com.googlecode.cqengine.query.simple.Has;
+import de.adorsys.datasafe_0_6_1.encrypiton.api.types.S061_UserID;
 import de.adorsys.datasafe_0_6_1.encrypiton.api.types.S061_UserIDAuth;
+import de.adorsys.datasafe_0_6_1.encrypiton.api.types.keystore.S061_ReadKeyPassword;
 import de.adorsys.datasafe_0_6_1.simple.adapter.api.S061_SimpleDatasafeService;
 import de.adorsys.datasafe_0_6_1.simple.adapter.api.types.S061_DSDocument;
 import de.adorsys.datasafe_0_6_1.simple.adapter.api.types.S061_DocumentContent;
 import de.adorsys.datasafe_0_6_1.simple.adapter.api.types.S061_DocumentDirectoryFQN;
-import de.adorsys.datasafemigration.withlocalfilesystem.WriteOldUserFromLocal;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
@@ -35,6 +35,16 @@ public class CreateStructureUtil {
             resultMap.put(s061_userIDAuth, docs);
         }
         return resultMap;
+    }
+
+    @NotNull
+    public static Set<S061_UserIDAuth> getS061_userIDAuths() {
+        Set<S061_UserIDAuth> listOfOldUsers = new HashSet<>();
+        for (int i = 0; i<3; i++) {
+            listOfOldUsers.add(new S061_UserIDAuth(new S061_UserID("user_" + i),
+                    new S061_ReadKeyPassword("password_" + i)));
+        }
+        return listOfOldUsers;
     }
 
     @SneakyThrows

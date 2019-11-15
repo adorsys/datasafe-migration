@@ -8,6 +8,13 @@ import de.adorsys.datasafe.simple.adapter.api.types.DocumentContent;
 import de.adorsys.datasafe.simple.adapter.api.types.DocumentFQN;
 import de.adorsys.datasafe.simple.adapter.spring.annotations.UseDatasafeSpringConfiguration;
 import de.adorsys.datasafe.types.api.types.ReadKeyPassword;
+import de.adorsys.datasafe_0_6_1.encrypiton.api.types.S061_UserIDAuth;
+import de.adorsys.datasafe_0_6_1.simple.adapter.api.S061_SimpleDatasafeService;
+import de.adorsys.datasafe_0_6_1.simple.adapter.api.types.S061_DSDocument;
+import de.adorsys.datasafe_0_6_1.simple.adapter.impl.S061_SimpleDatasafeServiceImpl;
+import de.adorsys.datasafemigration.CreateStructureUtil;
+import de.adorsys.datasafemigration.ExtendedSwitchVersion;
+import de.adorsys.datasafemigration.docker.InitFromStorageProvider;
 import de.adorsys.datasafemigration.docker.WithStorageProvider;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
@@ -17,7 +24,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 
 @Slf4j
 @SpringBootTest
@@ -65,5 +74,20 @@ public class SilentMigrationBaseTest extends WithStorageProvider {
         byte[] bytes = new byte[sizeOfDocument];
         new Random().nextBytes(bytes);
         return new DocumentContent(bytes);
+    }
+
+    public void migrationTest(SimpleDatasafeService simpleDatasafeService, WithStorageProvider.StorageDescriptor descriptor) {
+
+        InitFromStorageProvider.DFSCredentialsTuple dfsCredentialsTuple = InitFromStorageProvider.dfsFromDescriptor(descriptor, "", "");
+        S061_SimpleDatasafeService s061_simpleDatasafeService = new S061_SimpleDatasafeServiceImpl(dfsCredentialsTuple.getOldVersion());
+
+        Set<S061_UserIDAuth> s061_userIDAuths = CreateStructureUtil.getS061_userIDAuths();
+        Map<S061_UserIDAuth, Set<S061_DSDocument>> structure = CreateStructureUtil.create061Structure(s061_simpleDatasafeService, s061_userIDAuths);
+
+        for(S061_UserIDAuth oldUser : s061_userIDAuths) {
+            simpleDatasafeService.readDocument(
+                    ExtendedSwitchVersion.toCurrent(ExtendedSwitchVersion.to_1_0_0(oldUser)),
+                    ExtendedSwitchVersion.toCurrent(ExtendedSwitchVersion.to_1_0_0(structure.get(oldUser).stream().findFirst().get().getDocumentFQN())));
+        }
     }
 }

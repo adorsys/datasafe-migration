@@ -24,4 +24,5 @@ public class SilentMigrationMinioTest extends SilentMigrationBaseTest {
     public void testWithMinio() {
         basicTests(datasafeService);
     }
+
 }

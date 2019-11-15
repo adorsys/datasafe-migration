@@ -24,7 +24,7 @@ public class SwitchVersion {
 
     public static S100_DSDocument to_1_0_0(S061_DSDocument oldDSDocument) {
         return new S100_DSDocument(
-                new S100_DocumentFQN(oldDSDocument.getDocumentFQN().getDocusafePath()),
+                to_1_0_0(oldDSDocument.getDocumentFQN()),
                 new S100_DocumentContent(oldDSDocument.getDocumentContent().getValue()));
     }
 
@@ -42,4 +42,7 @@ public class SwitchVersion {
                 new S100_ReadKeyPassword(s061_userIDAuth.getReadKeyPassword().getValue()::toCharArray));
     }
 
+    public static S100_DocumentFQN to_1_0_0(S061_DocumentFQN s061_documentFQN) {
+        return new S100_DocumentFQN(s061_documentFQN.getDocusafePath());
+    }
 }

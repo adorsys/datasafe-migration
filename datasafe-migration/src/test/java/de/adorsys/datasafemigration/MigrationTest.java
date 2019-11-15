@@ -26,6 +26,7 @@ import de.adorsys.datasafemigration.withlocalfilesystem.LoadNewUserToLocal;
 import de.adorsys.datasafemigration.withlocalfilesystem.WriteOldUserFromLocal;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -104,11 +105,7 @@ public class MigrationTest extends WithStorageProvider {
     public void testMigrationWithMemory(WithStorageProvider.StorageDescriptor descriptor) {
         InitFromStorageProvider.DFSCredentialsTuple dfsCredentialsTuple = InitFromStorageProvider.dfsFromDescriptor(descriptor, oldSubFolder, newSubFolder);
 
-        Set<S061_UserIDAuth> listOfOldUsers = new HashSet<>();
-        for (int i = 0; i<3; i++) {
-            listOfOldUsers.add(new S061_UserIDAuth(new S061_UserID("user_" + i),
-            new S061_ReadKeyPassword("password_" + i)));
-        }
+        Set<S061_UserIDAuth> listOfOldUsers = CreateStructureUtil.getS061_userIDAuths();
         Set<S100_UserIDAuth> listOfNewUsers = new HashSet<>();
         listOfOldUsers.forEach(s061_userIDAuth -> listOfNewUsers.add(SwitchVersion.to_1_0_0(s061_userIDAuth)));
 
@@ -129,6 +126,7 @@ public class MigrationTest extends WithStorageProvider {
             compare(s061_dsDocuments, s100_dsDocuments);
         }
     }
+
 
     @ParameterizedTest
     @MethodSource("allStorages")
