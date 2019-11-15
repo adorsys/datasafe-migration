@@ -1,17 +1,24 @@
 package de.adorsys.datasafemigration;
 
 
+import de.adorsys.datasafe_0_6_1.encrypiton.api.types.S061_UserID;
+import de.adorsys.datasafe_0_6_1.encrypiton.api.types.S061_UserIDAuth;
+import de.adorsys.datasafe_0_6_1.encrypiton.api.types.keystore.S061_ReadKeyPassword;
 import de.adorsys.datasafe_0_6_1.simple.adapter.api.S061_SimpleDatasafeService;
+import de.adorsys.datasafe_0_6_1.simple.adapter.api.types.S061_DSDocument;
+import de.adorsys.datasafe_0_6_1.simple.adapter.api.types.S061_DocumentFQN;
 import de.adorsys.datasafe_0_6_1.simple.adapter.impl.S061_SimpleDatasafeServiceImpl;
 import de.adorsys.datasafe_1_0_0.encrypiton.api.types.S100_UserID;
 import de.adorsys.datasafe_1_0_0.encrypiton.api.types.S100_UserIDAuth;
 import de.adorsys.datasafe_1_0_0.encrypiton.api.types.encryption.MutableEncryptionConfig;
 import de.adorsys.datasafe_1_0_0.simple.adapter.api.S100_SimpleDatasafeService;
+import de.adorsys.datasafe_1_0_0.simple.adapter.api.types.S100_DSDocument;
 import de.adorsys.datasafe_1_0_0.simple.adapter.api.types.S100_DocumentDirectoryFQN;
 import de.adorsys.datasafe_1_0_0.simple.adapter.api.types.S100_DocumentFQN;
 import de.adorsys.datasafe_1_0_0.simple.adapter.api.types.S100_ListRecursiveFlag;
 import de.adorsys.datasafe_1_0_0.simple.adapter.impl.S100_SimpleDatasafeServiceImpl;
 import de.adorsys.datasafe_1_0_0.types.api.types.S100_ReadKeyPassword;
+import de.adorsys.datasafemigration.common.SwitchVersion;
 import de.adorsys.datasafemigration.docker.InitFromStorageProvider;
 import de.adorsys.datasafemigration.docker.WithStorageProvider;
 import de.adorsys.datasafemigration.withDFSonly.LoadUserOldToNewFormat;
@@ -29,8 +36,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -91,6 +101,37 @@ public class MigrationTest extends WithStorageProvider {
 
     @ParameterizedTest
     @MethodSource("allStorages")
+    public void testMigrationWithMemory(WithStorageProvider.StorageDescriptor descriptor) {
+        InitFromStorageProvider.DFSCredentialsTuple dfsCredentialsTuple = InitFromStorageProvider.dfsFromDescriptor(descriptor, oldSubFolder, newSubFolder);
+
+        Set<S061_UserIDAuth> listOfOldUsers = new HashSet<>();
+        for (int i = 0; i<3; i++) {
+            listOfOldUsers.add(new S061_UserIDAuth(new S061_UserID("user_" + i),
+            new S061_ReadKeyPassword("password_" + i)));
+        }
+        Set<S100_UserIDAuth> listOfNewUsers = new HashSet<>();
+        listOfOldUsers.forEach(s061_userIDAuth -> listOfNewUsers.add(SwitchVersion.to_1_0_0(s061_userIDAuth)));
+
+        S061_SimpleDatasafeService s061_simpleDatasafeService = new S061_SimpleDatasafeServiceImpl(dfsCredentialsTuple.getOldVersion());
+        S100_SimpleDatasafeService s100_simpleDatasafeService = new S100_SimpleDatasafeServiceImpl(dfsCredentialsTuple.getNewVersion(), new MutableEncryptionConfig());
+        Map<S061_UserIDAuth, Set<S061_DSDocument>> s061StructureMap = CreateStructureUtil.create061Structure(s061_simpleDatasafeService, listOfOldUsers);
+
+        for (S100_UserIDAuth s100_userIDAuth : listOfNewUsers ) {
+            LoadUserOldToNewFormat migrator = new LoadUserOldToNewFormat(s061_simpleDatasafeService, s100_simpleDatasafeService);
+            migrator.migrateUser(s100_userIDAuth);
+        }
+
+        Map<S100_UserIDAuth, Set<S100_DSDocument>> s100_Structuremap = LoadStructureUtil.loadS100Structure(s100_simpleDatasafeService, listOfNewUsers);
+
+        for (S061_UserIDAuth s061_userIDAuth : listOfOldUsers) {
+            Set<S061_DSDocument> s061_dsDocuments = s061StructureMap.get(s061_userIDAuth);
+            Set<S100_DSDocument> s100_dsDocuments = s100_Structuremap.get(SwitchVersion.to_1_0_0(s061_userIDAuth));
+            compare(s061_dsDocuments, s100_dsDocuments);
+        }
+    }
+
+    @ParameterizedTest
+    @MethodSource("allStorages")
     public void testIncompatibility(WithStorageProvider.StorageDescriptor descriptor) {
         InitFromStorageProvider.DFSCredentialsTuple dfsCredentialsTuple = InitFromStorageProvider.dfsFromDescriptor(descriptor, oldSubFolder, oldSubFolder);
 
@@ -115,6 +156,29 @@ public class MigrationTest extends WithStorageProvider {
                 new S100_DocumentDirectoryFQN("/"),
                 S100_ListRecursiveFlag.TRUE));
 
+    }
+
+    @SneakyThrows
+    private void compare(Set<S061_DSDocument> s061_dsDocuments, Set<S100_DSDocument> s100_dsDocuments) {
+        int counter = 0;
+        long bytecounter = 0;
+        for (S061_DSDocument s061_dsDocument : s061_dsDocuments) {
+            S061_DocumentFQN s061_dsDocumentDocumentFQN = s061_dsDocument.getDocumentFQN();
+            boolean documentFound = false;
+            for (S100_DSDocument s100_dsDocument : s100_dsDocuments ) {
+                if (SwitchVersion.to_0_6_1(s100_dsDocument.getDocumentFQN()).equals(s061_dsDocumentDocumentFQN)) {
+                    Assertions.assertArrayEquals(s061_dsDocument.getDocumentContent().getValue(),
+                            s100_dsDocument.getDocumentContent().getValue());
+                    documentFound = true;
+                    counter++;
+                    bytecounter += s061_dsDocument.getDocumentContent().getValue().length;
+                }
+            }
+            if (!documentFound) {
+                throw new RuntimeException("Did not find document "  + s061_dsDocumentDocumentFQN);
+            }
+        }
+        log.info("successfully compared {} documents with {} bytes in total", counter, bytecounter);
     }
 
     @SneakyThrows
@@ -154,11 +218,9 @@ public class MigrationTest extends WithStorageProvider {
             Assertions.assertArrayEquals(srcBytes, destBytes);
             counter++;
         }
-        ;
 
         log.info("all {} files have same content :-)", counter);
     }
-
 
 
     @SneakyThrows
