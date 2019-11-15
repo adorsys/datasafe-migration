@@ -95,7 +95,7 @@ public class ExtendedSwitchVersion extends SwitchVersion {
 
     public static DSDocumentStream toCurrent(S100_DSDocumentStream readDocumentStream) {
         return new DSDocumentStream (
-                new de.adorsys.datasafe.simple.adapter.api.types.DocumentFQN(readDocumentStream.getDocumentFQN().getDocusafePath()),
+                new DocumentFQN(readDocumentStream.getDocumentFQN().getDocusafePath()),
                 readDocumentStream.getDocumentStream());
 
     }

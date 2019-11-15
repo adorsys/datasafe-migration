@@ -34,7 +34,7 @@ public class SilentMigrationBaseTest extends WithStorageProvider {
 
         log.info("Service injected: {}", SimpleDatasafeService.class.toString());
 
-        de.adorsys.datasafe.encrypiton.api.types.UserIDAuth userIDAuth = new UserIDAuth(new UserID("peter"), new ReadKeyPassword("affe"::toCharArray));
+        UserIDAuth userIDAuth = new UserIDAuth(new UserID("peter"), new ReadKeyPassword("affe"::toCharArray));
 
         org.junit.jupiter.api.Assertions.assertFalse(datasafeService.userExists(userIDAuth.getUserID()));
         datasafeService.createUser(userIDAuth);
