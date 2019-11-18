@@ -2,14 +2,21 @@ package de.adorsys.datasafemigration;
 
 import de.adorsys.datasafe.encrypiton.api.types.UserID;
 import de.adorsys.datasafe.encrypiton.api.types.UserIDAuth;
+import de.adorsys.datasafe.simple.adapter.impl.GetStorage;
 import de.adorsys.datasafe_0_6_1.simple.adapter.api.S061_SimpleDatasafeService;
+import de.adorsys.datasafe_0_6_1.simple.adapter.api.types.S061_DFSCredentials;
+import de.adorsys.datasafe_0_6_1.simple.adapter.impl.S061_SimpleDatasafeServiceImpl;
+import de.adorsys.datasafe_1_0_0.encrypiton.api.types.encryption.MutableEncryptionConfig;
 import de.adorsys.datasafe_1_0_0.simple.adapter.api.S100_SimpleDatasafeService;
+import de.adorsys.datasafe_1_0_0.simple.adapter.api.types.S100_DFSCredentials;
 import de.adorsys.datasafe_1_0_0.simple.adapter.api.types.S100_DSDocument;
 import de.adorsys.datasafe_1_0_0.simple.adapter.api.types.S100_DocumentContent;
 import de.adorsys.datasafe_1_0_0.simple.adapter.api.types.S100_DocumentFQN;
+import de.adorsys.datasafe_1_0_0.simple.adapter.impl.S100_SimpleDatasafeServiceImpl;
 import de.adorsys.datasafemigration.lockprovider.DistributedLocker;
+import de.adorsys.datasafemigration.lockprovider.TemporaryLockProviderFactory;
+import de.adorsys.datasafemigration.withDFSonly.LoadUserNewToNewFormat;
 import de.adorsys.datasafemigration.withDFSonly.LoadUserOldToNewFormat;
-import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
@@ -19,7 +26,6 @@ import java.util.Set;
 
 
 @Slf4j
-@RequiredArgsConstructor
 public class MigrationLogic {
     private final static int TIMEOUT_FOR_MIGRATION = 3 * 1000;
 
@@ -29,9 +35,37 @@ public class MigrationLogic {
     private static S100_DocumentFQN MIGRATION_CONFIRMATION = new S100_DocumentFQN("DATASAFE_FORMAT_1_0_0");
 
     private final DistributedLocker distributedLocker;
-    //    private final GetStorage.SystemRootAndStorageService systemRootAndStorageService;
+    private final GetStorage.SystemRootAndStorageService oldSysService;
+    private final GetStorage.SystemRootAndStorageService newSysService;
     private final S061_SimpleDatasafeService oldService;
     private final S100_SimpleDatasafeService newService;
+    private final S100_SimpleDatasafeService finalService;
+    private final boolean withIntermediateFolder;
+
+    public MigrationLogic(S061_DFSCredentials oldDFS, S100_DFSCredentials newDFS, MutableEncryptionConfig mutableEncryptionConfig) {
+        distributedLocker = new DistributedLocker(TemporaryLockProviderFactory.get());
+        {
+            String oldRoot = ModifyDFSCredentials.getCurrentRootPath(ExtendedSwitchVersion.to_1_0_0(oldDFS));
+            String newRoot = ModifyDFSCredentials.getCurrentRootPath(newDFS);
+            withIntermediateFolder = oldRoot.equalsIgnoreCase(newRoot);
+        }
+
+        if (withIntermediateFolder) {
+            newDFS = ModifyDFSCredentials.appendToRootPath(newDFS, "tempForMigrationTo100");
+        }
+
+        oldService = new S061_SimpleDatasafeServiceImpl(oldDFS);
+        newService = new S100_SimpleDatasafeServiceImpl(newDFS, mutableEncryptionConfig);
+
+        if (withIntermediateFolder) {
+            finalService = new S100_SimpleDatasafeServiceImpl(ExtendedSwitchVersion.to_1_0_0(oldDFS), mutableEncryptionConfig);
+        } else {
+            finalService = null;
+        }
+
+        oldSysService = GetStorage.get(ExtendedSwitchVersion.to_1_0_0(oldDFS));
+        newSysService = GetStorage.get(newDFS);
+    }
 
     /**
      * This is the magic method.
@@ -92,6 +126,9 @@ public class MigrationLogic {
             S100_DSDocument dsDocument = new S100_DSDocument(MIGRATION_CONFIRMATION, new S100_DocumentContent(sb.toString().getBytes()));
             newService.storeDocument(userIDAuth.getReal(), dsDocument);
 
+            if (withIntermediateFolder) {
+                moveFromIntermediateToFinal(userIDAuth);
+            }
             log.info("NOW MIGRATION OF USER {} IS FINISHED", username);
 
             migratedUsers.add(userIDAuth.getUserID());
@@ -113,13 +150,16 @@ public class MigrationLogic {
      * @return
      */
     private boolean physicallyCheckMigrationWasDoneSuccessfully(UserIDAuth userIDAuth) {
-        if (! (oldService.userExists(ExtendedSwitchVersion.to_0_6_1(userIDAuth.getReal().getUserID()))) &&
-        ! (newService.userExists(userIDAuth.getReal().getUserID()))) {
+        if (!(oldService.userExists(ExtendedSwitchVersion.to_0_6_1(userIDAuth.getReal().getUserID()))) &&
+                !(newService.userExists(userIDAuth.getReal().getUserID()))) {
             return true;
         }
         try {
-//            log.info("check root is : " + systemRootAndStorageService.getSystemRoot());
-            // systemRootAndStorageService.getStorageService().objectExists()
+            // Hi Valentyn, here I need a check DIRECTLY to the DFS.
+            // The file to check should not be below user/files but directly below user
+
+
+            // newSysService is available with URI systemRoot and  StorageService storageService;
             return newService.documentExists(userIDAuth.getReal(), MIGRATION_CONFIRMATION);
         } catch (Exception e) {
             // if the document does not exist for whatever reason, the migration is not done yet.
@@ -135,11 +175,37 @@ public class MigrationLogic {
      * @return
      */
     public void createFileForNewUser(UserIDAuth userIDAuth) {
-//        log.info("createFileforNew root is : " + systemRootAndStorageService.getSystemRoot());
+        // Hi Valentyn, here I need a check DIRECTLY to the DFS.
+        // The file to create should not be below user/files but directly below user
+
+        // oldSysService is available with URI systemRoot and  StorageService storageService;
 
         StringBuilder sb = new StringBuilder();
         sb.append("user created (without migration at :").append(new Date().toString()).append("\n");
         S100_DSDocument dsDocument = new S100_DSDocument(MIGRATION_CONFIRMATION, new S100_DocumentContent(sb.toString().getBytes()));
-        newService.storeDocument(userIDAuth.getReal(), dsDocument);
+        if (withIntermediateFolder) {
+            finalService.storeDocument(userIDAuth.getReal(), dsDocument);
+        } else {
+            newService.storeDocument(userIDAuth.getReal(), dsDocument);
+        }
     }
+
+    private void moveFromIntermediateToFinal(UserIDAuth userIDAuth) {
+        // Hi Valentyn, here I need a check DIRECTLY to the DFS.
+        // Rather than decrypting all the files and encrypting again, the files should directly be moved
+        // from newSysService to oldSysService
+
+        // newSysService is available with URI systemRoot and  StorageService storageService;
+        // oldSysService is available with URI systemRoot and  StorageService storageService;
+
+        // As user is migrated yed, old user can be destroyed
+        oldService.destroyUser(ExtendedSwitchVersion.to_0_6_1(userIDAuth.getReal()));
+        // Files from tempFolder moved to destFolder which is oldFolder
+        LoadUserNewToNewFormat loadUserNewToNewFormat = new LoadUserNewToNewFormat(newService, finalService);
+        loadUserNewToNewFormat.migrateUser(userIDAuth.getReal());
+        // As Files have moved to final destination, tempFiles can be destroyed
+        newService.destroyUser(userIDAuth.getReal());
+    }
+
+
 }

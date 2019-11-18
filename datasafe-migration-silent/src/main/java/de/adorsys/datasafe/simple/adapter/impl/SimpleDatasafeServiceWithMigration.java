@@ -12,6 +12,7 @@ import de.adorsys.datasafe.simple.adapter.api.types.ListRecursiveFlag;
 import de.adorsys.datasafe.types.api.types.ReadKeyPassword;
 import de.adorsys.datasafe_0_6_1.encrypiton.api.types.S061_UserID;
 import de.adorsys.datasafe_0_6_1.simple.adapter.api.S061_SimpleDatasafeService;
+import de.adorsys.datasafe_0_6_1.simple.adapter.api.types.S061_DFSCredentials;
 import de.adorsys.datasafe_0_6_1.simple.adapter.impl.S061_SimpleDatasafeServiceImpl;
 import de.adorsys.datasafe_1_0_0.encrypiton.api.types.encryption.MutableEncryptionConfig;
 import de.adorsys.datasafe_1_0_0.simple.adapter.api.S100_SimpleDatasafeService;
@@ -21,8 +22,7 @@ import de.adorsys.datasafemigration.ExtendedSwitchVersion;
 import de.adorsys.datasafemigration.MigrationLogic;
 import de.adorsys.datasafemigration.ModifyDFSCredentials;
 import de.adorsys.datasafemigration.common.SwitchVersion;
-import de.adorsys.datasafemigration.lockprovider.DistributedLocker;
-import de.adorsys.datasafemigration.lockprovider.TemporaryLockProviderFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.OutputStream;
 import java.util.ArrayList;
@@ -30,29 +30,27 @@ import java.util.List;
 
 import static de.adorsys.datasafemigration.ExtendedSwitchVersion.toCurrent;
 
+@Slf4j
 public class SimpleDatasafeServiceWithMigration implements SimpleDatasafeService {
     private S100_SimpleDatasafeService newReal;
     private S061_SimpleDatasafeService oldReal;
     private MigrationLogic migrationLogic;
-    private S100_DFSCredentials credentialsToMigratedData;
-    private S100_DFSCredentials credentialsToNOTMigratedData;
+    private final S061_DFSCredentials credentialsToNOTMigratedData;
+    private final S100_DFSCredentials credentialsToMigratedData;
+    public static boolean migrateToNewFolder = false;
 
     public SimpleDatasafeServiceWithMigration(S100_DFSCredentials dfsCredentials, MutableEncryptionConfig mutableEncryptionConfig) {
-        credentialsToNOTMigratedData = dfsCredentials;
-        credentialsToMigratedData = ModifyDFSCredentials.getNewRootPath(dfsCredentials);
+        log.info("migrationToNewFolder :" + migrateToNewFolder);
+        credentialsToNOTMigratedData = ExtendedSwitchVersion.to_0_6_1(dfsCredentials);
+        credentialsToMigratedData = migrateToNewFolder ? ModifyDFSCredentials.getPathToMigratedData(dfsCredentials) : dfsCredentials;
 
+        oldReal = new S061_SimpleDatasafeServiceImpl(credentialsToNOTMigratedData);
         newReal = new S100_SimpleDatasafeServiceImpl(credentialsToMigratedData, mutableEncryptionConfig);
-        oldReal = new S061_SimpleDatasafeServiceImpl(ExtendedSwitchVersion.to_0_6_1(credentialsToNOTMigratedData));
 
-        DistributedLocker distributedLocker = new DistributedLocker(TemporaryLockProviderFactory.get());
-        migrationLogic = new MigrationLogic(distributedLocker, oldReal, newReal);
+        migrationLogic = new MigrationLogic(credentialsToNOTMigratedData, credentialsToMigratedData, mutableEncryptionConfig);
     }
 
-    public S100_DFSCredentials getCredentialsToMigratedData() {
-        return credentialsToMigratedData;
-    }
-
-    public S100_DFSCredentials getCredentialsToNOTMigratedData() {
+    public S061_DFSCredentials getCredentialsToNOTMigratedData() {
         return credentialsToNOTMigratedData;
     }
 
@@ -90,7 +88,7 @@ public class SimpleDatasafeServiceWithMigration implements SimpleDatasafeService
             }
         }
         if (newReal != null) {
-                return newReal.userExists(userID.getReal());
+            return newReal.userExists(userID.getReal());
         }
         throw new RuntimeException("dont know what to do");
     }

@@ -3,6 +3,7 @@ package de.adorsys.datasafe.simple.adapter.spring;
 import de.adorsys.datasafe.simple.adapter.api.SimpleDatasafeService;
 import de.adorsys.datasafe.simple.adapter.impl.SimpleDatasafeServiceWithMigration;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +18,15 @@ public class SilentMigrationFilesystemTest extends SilentMigrationBaseTest {
     SimpleDatasafeService datasafeService;
 
     @BeforeAll
-    static void startFs() {
-        log.info("fs test with root bucket {}", fs().getRootBucket());
+    static void beforeAllHere() {
+        SimpleDatasafeServiceWithMigration.migrateToNewFolder = true;
     }
+
+    @AfterAll
+    static void afterAllHere() {
+        SimpleDatasafeServiceWithMigration.migrateToNewFolder = false;
+    }
+
     @Test
     public void testwithFilesystem() {
         basicTests(datasafeService);

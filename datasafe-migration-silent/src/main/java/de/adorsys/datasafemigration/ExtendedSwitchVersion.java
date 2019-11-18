@@ -78,6 +78,29 @@ public class ExtendedSwitchVersion extends SwitchVersion {
         throw new RuntimeException("DFSCredentials have new class not known to the code: " + dfsCredentials.getClass().toString());
     }
 
+    public static S100_DFSCredentials to_1_0_0(S061_DFSCredentials dfsCredentials) {
+        if (dfsCredentials instanceof S061_AmazonS3DFSCredentials) {
+            S061_AmazonS3DFSCredentials d = (S061_AmazonS3DFSCredentials) dfsCredentials;
+            return S100_AmazonS3DFSCredentials.builder()
+                    .rootBucket(d.getRootBucket())
+                    .url(d.getUrl())
+                    .accessKey(d.getAccessKey())
+                    .secretKey(d.getSecretKey())
+                    .noHttps(d.isNoHttps())
+                    .region(d.getRegion())
+                    .threadPoolSize(d.getThreadPoolSize())
+                    .queueSize(d.getQueueSize()).build();
+        }
+        if (dfsCredentials instanceof S061_FilesystemDFSCredentials) {
+
+            S061_FilesystemDFSCredentials d = (S061_FilesystemDFSCredentials) dfsCredentials;
+            return S100_FilesystemDFSCredentials.builder()
+                    .root(d.getRoot()).build();
+
+        }
+        throw new RuntimeException("DFSCredentials have new class not known to the code: " + dfsCredentials.getClass().toString());
+    }
+
     public static S100_ListRecursiveFlag to_1_0_0(ListRecursiveFlag listRecursiveFlag) {
         return listRecursiveFlag.equals(ListRecursiveFlag.TRUE) ?
                 S100_ListRecursiveFlag.TRUE : S100_ListRecursiveFlag.FALSE;

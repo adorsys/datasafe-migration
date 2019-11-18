@@ -11,7 +11,27 @@ public class ModifyDFSCredentials {
     private static String BEST_CASE_NEW_SUFFIX = "datasafe/100/backend/";
     private static String DEFAULT_NEW_PATH_SUFFIX = "100/";
 
-    public static S100_DFSCredentials getNewRootPath(S100_DFSCredentials dfsCredentials) {
+    public static S100_DFSCredentials appendToRootPath(S100_DFSCredentials dfsCredentials, String pathToAppend) {
+        String currentRoot = getCurrentRootPath(dfsCredentials);
+        if (! (currentRoot.endsWith("/"))) {
+            currentRoot = currentRoot + "/";
+        }
+        if (pathToAppend.startsWith("/")) {
+            pathToAppend = pathToAppend.substring(1);
+        }
+        if (!pathToAppend.endsWith("/")) {
+            pathToAppend = pathToAppend + "/";
+        }
+
+        String newRootPath = currentRoot + pathToAppend;
+        return changeRootpath(dfsCredentials, newRootPath);
+    }
+
+    public static S100_DFSCredentials getPathToMigratedData(S100_DFSCredentials dfsCredentials) {
+        return changeRootpath(dfsCredentials, getModifiedRootPath(getCurrentRootPath(dfsCredentials)));
+    }
+
+    public static String getCurrentRootPath(S100_DFSCredentials dfsCredentials) {
         String currentRoot = null;
         if (dfsCredentials instanceof S100_AmazonS3DFSCredentials) {
             S100_AmazonS3DFSCredentials d = (S100_AmazonS3DFSCredentials) dfsCredentials;
@@ -24,10 +44,10 @@ public class ModifyDFSCredentials {
         if (currentRoot == null) {
             throw new RuntimeException("DFSCredentials have new class not known to the code: " + dfsCredentials.getClass().toString());
         }
-        return changeRootpath(dfsCredentials, getNewRootPath(currentRoot));
+        return currentRoot;
     }
 
-    public static String getNewRootPath(String currentRoot) {
+    private static String getModifiedRootPath(String currentRoot) {
         if (! (currentRoot.endsWith("/"))) {
             currentRoot = currentRoot + "/";
         }
@@ -48,7 +68,7 @@ public class ModifyDFSCredentials {
         return currentRoot + DEFAULT_NEW_PATH_SUFFIX;
     }
 
-    public static S100_DFSCredentials changeRootpath(S100_DFSCredentials dfsCredentials, String newRootPath) {
+    private static S100_DFSCredentials changeRootpath(S100_DFSCredentials dfsCredentials, String newRootPath) {
         if (dfsCredentials instanceof S100_AmazonS3DFSCredentials) {
             S100_AmazonS3DFSCredentials d = (S100_AmazonS3DFSCredentials) dfsCredentials;
             return S100_AmazonS3DFSCredentials.builder()
@@ -70,4 +90,7 @@ public class ModifyDFSCredentials {
         }
         throw new RuntimeException("DFSCredentials have new class not known to the code: " + dfsCredentials.getClass().toString());
     }
+
+
+
 }

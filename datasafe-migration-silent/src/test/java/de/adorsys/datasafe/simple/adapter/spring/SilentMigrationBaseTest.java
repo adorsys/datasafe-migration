@@ -10,6 +10,7 @@ import de.adorsys.datasafe.simple.adapter.spring.annotations.UseDatasafeSpringCo
 import de.adorsys.datasafe.types.api.types.ReadKeyPassword;
 import de.adorsys.datasafe_0_6_1.encrypiton.api.types.S061_UserIDAuth;
 import de.adorsys.datasafe_0_6_1.simple.adapter.api.S061_SimpleDatasafeService;
+import de.adorsys.datasafe_0_6_1.simple.adapter.api.types.S061_DFSCredentials;
 import de.adorsys.datasafe_0_6_1.simple.adapter.api.types.S061_DSDocument;
 import de.adorsys.datasafe_0_6_1.simple.adapter.impl.S061_SimpleDatasafeServiceImpl;
 import de.adorsys.datasafe_1_0_0.simple.adapter.api.types.S100_DFSCredentials;
@@ -74,9 +75,9 @@ public class SilentMigrationBaseTest extends WithStorageProvider {
         return new DocumentContent(bytes);
     }
 
-    public void migrationTest(SimpleDatasafeService simpleDatasafeService, S100_DFSCredentials dfsCredentialsToNotMigratedData) {
+    public void migrationTest(SimpleDatasafeService simpleDatasafeService, S061_DFSCredentials dfsCredentialsToNotMigratedData) {
 
-        S061_SimpleDatasafeService s061_simpleDatasafeService = new S061_SimpleDatasafeServiceImpl(ExtendedSwitchVersion.to_0_6_1(dfsCredentialsToNotMigratedData));
+        S061_SimpleDatasafeService s061_simpleDatasafeService = new S061_SimpleDatasafeServiceImpl(dfsCredentialsToNotMigratedData);
 
         Set<S061_UserIDAuth> s061_userIDAuths = CreateStructureUtil.getS061_userIDAuths();
         Map<S061_UserIDAuth, Set<S061_DSDocument>> structure = CreateStructureUtil.create061Structure(s061_simpleDatasafeService, s061_userIDAuths);
@@ -86,5 +87,7 @@ public class SilentMigrationBaseTest extends WithStorageProvider {
                     ExtendedSwitchVersion.toCurrent(ExtendedSwitchVersion.to_1_0_0(oldUser)),
                     ExtendedSwitchVersion.toCurrent(ExtendedSwitchVersion.to_1_0_0(structure.get(oldUser).stream().findFirst().get().getDocumentFQN())));
         }
+
+        simpleDatasafeService.cleanupDb();
     }
 }
