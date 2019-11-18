@@ -1,6 +1,7 @@
 package de.adorsys.datasafe.simple.adapter.spring;
 
 import de.adorsys.datasafe.simple.adapter.api.SimpleDatasafeService;
+import de.adorsys.datasafe.simple.adapter.impl.SimpleDatasafeServiceWithMigration;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -23,6 +24,11 @@ public class SilentMigrationMinioTest extends SilentMigrationBaseTest {
     @Test
     public void testWithMinio() {
         basicTests(datasafeService);
+    }
+
+    @Test
+    public void testMigrationwithFilesystem() {
+        migrationTest(datasafeService, ((SimpleDatasafeServiceWithMigration) datasafeService).getCredentialsToNOTMigratedData());
     }
 
 }

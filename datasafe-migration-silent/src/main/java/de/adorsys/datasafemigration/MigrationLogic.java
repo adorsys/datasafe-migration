@@ -2,7 +2,6 @@ package de.adorsys.datasafemigration;
 
 import de.adorsys.datasafe.encrypiton.api.types.UserID;
 import de.adorsys.datasafe.encrypiton.api.types.UserIDAuth;
-import de.adorsys.datasafe.simple.adapter.impl.GetStorage;
 import de.adorsys.datasafe_0_6_1.simple.adapter.api.S061_SimpleDatasafeService;
 import de.adorsys.datasafe_1_0_0.simple.adapter.api.S100_SimpleDatasafeService;
 import de.adorsys.datasafe_1_0_0.simple.adapter.api.types.S100_DSDocument;
@@ -30,7 +29,7 @@ public class MigrationLogic {
     private static S100_DocumentFQN MIGRATION_CONFIRMATION = new S100_DocumentFQN("DATASAFE_FORMAT_1_0_0");
 
     private final DistributedLocker distributedLocker;
-    private final GetStorage.SystemRootAndStorageService systemRootAndStorageService;
+    //    private final GetStorage.SystemRootAndStorageService systemRootAndStorageService;
     private final S061_SimpleDatasafeService oldService;
     private final S100_SimpleDatasafeService newService;
 
@@ -79,20 +78,21 @@ public class MigrationLogic {
                 return true;
             }
 
-            // now we to the migration
+            // now we do the migration
             if (newService.userExists(userIDAuth.getUserID().getReal())) {
-                log.info("NOW MIGRATION OF USER {} IS STARTED", username);
-
-                StringBuilder sb = new StringBuilder();
-                sb.append("migration starts:").append(new Date().toString()).append("\n");
-                new LoadUserOldToNewFormat(oldService, newService).migrateUser(userIDAuth.getReal());
-                sb.append("migration ends:").append(new Date().toString()).append("\n");
-
-                S100_DSDocument dsDocument = new S100_DSDocument(MIGRATION_CONFIRMATION, new S100_DocumentContent(sb.toString().getBytes(sb.toString())));
-                newService.storeDocument(userIDAuth.getReal(), dsDocument);
-
-                log.info("NOW MIGRATION OF USER {} IS FINISHED", username);
+                throw new MigrationException("user " + userIDAuth.getUserID().getValue() + " already exists in migrated dfs, but is not yet migrated");
             }
+            log.info("NOW MIGRATION OF USER {} IS STARTED", username);
+
+            StringBuilder sb = new StringBuilder();
+            sb.append("migration starts:").append(new Date().toString()).append("\n");
+            new LoadUserOldToNewFormat(oldService, newService).migrateUser(userIDAuth.getReal());
+            sb.append("migration ends:").append(new Date().toString()).append("\n");
+
+            S100_DSDocument dsDocument = new S100_DSDocument(MIGRATION_CONFIRMATION, new S100_DocumentContent(sb.toString().getBytes()));
+            newService.storeDocument(userIDAuth.getReal(), dsDocument);
+
+            log.info("NOW MIGRATION OF USER {} IS FINISHED", username);
 
             migratedUsers.add(userIDAuth.getUserID());
             return true;
@@ -113,8 +113,12 @@ public class MigrationLogic {
      * @return
      */
     private boolean physicallyCheckMigrationWasDoneSuccessfully(UserIDAuth userIDAuth) {
+        if (! (oldService.userExists(ExtendedSwitchVersion.to_0_6_1(userIDAuth.getReal().getUserID()))) &&
+        ! (newService.userExists(userIDAuth.getReal().getUserID()))) {
+            return true;
+        }
         try {
-            log.info("check root is : " + systemRootAndStorageService.getSystemRoot());
+//            log.info("check root is : " + systemRootAndStorageService.getSystemRoot());
             // systemRootAndStorageService.getStorageService().objectExists()
             return newService.documentExists(userIDAuth.getReal(), MIGRATION_CONFIRMATION);
         } catch (Exception e) {
@@ -131,7 +135,7 @@ public class MigrationLogic {
      * @return
      */
     public void createFileForNewUser(UserIDAuth userIDAuth) {
-        log.info("createFileforNew root is : " + systemRootAndStorageService.getSystemRoot());
+//        log.info("createFileforNew root is : " + systemRootAndStorageService.getSystemRoot());
 
         StringBuilder sb = new StringBuilder();
         sb.append("user created (without migration at :").append(new Date().toString()).append("\n");

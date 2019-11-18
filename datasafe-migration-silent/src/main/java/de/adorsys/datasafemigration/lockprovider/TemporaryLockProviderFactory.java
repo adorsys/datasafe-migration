@@ -9,6 +9,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 public class TemporaryLockProviderFactory {
     public static LockProvider get() {
         Server server = new Server();
+        server.setSilent(true);
         server.setDatabaseName(0, "test");
         server.setDatabasePath(0, "./test");
         server.start();

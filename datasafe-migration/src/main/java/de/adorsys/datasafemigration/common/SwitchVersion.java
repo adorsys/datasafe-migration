@@ -18,8 +18,12 @@ import de.adorsys.datasafe_1_0_0.types.api.types.S100_ReadKeyPassword;
 public class SwitchVersion {
     public static S061_UserIDAuth to_0_6_1(S100_UserIDAuth newUserIDAuth) {
         return new S061_UserIDAuth(
-                new S061_UserID(newUserIDAuth.getUserID().getValue()),
+                to_0_6_1(newUserIDAuth.getUserID()),
                 new S061_ReadKeyPassword(new String(newUserIDAuth.getReadKeyPassword().getValue())));
+    }
+
+    public static S061_UserID to_0_6_1(S100_UserID newUserID) {
+        return new S061_UserID(newUserID.getValue());
     }
 
     public static S100_DSDocument to_1_0_0(S061_DSDocument oldDSDocument) {

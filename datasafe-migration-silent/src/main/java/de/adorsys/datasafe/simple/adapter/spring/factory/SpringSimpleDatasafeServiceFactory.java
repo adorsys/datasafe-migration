@@ -51,7 +51,7 @@ public class SpringSimpleDatasafeServiceFactory {
             S100_AmazonS3DFSCredentials amazonS3DFSCredentials = (S100_AmazonS3DFSCredentials) dfsCredentials;
             return new SimpleDatasafeServiceWithMigration(
                     amazonS3DFSCredentials.toBuilder().rootBucket(
-                            amazonS3DFSCredentials.getRootBucket() + "/" + subdirBelowRoot + "/061"
+                            amazonS3DFSCredentials.getRootBucket() + "/" + subdirBelowRoot
                     ).build(),
                     null != encryptionProperties ? encryptionProperties.getEncryption() : new MutableEncryptionConfig()
             );
@@ -60,7 +60,7 @@ public class SpringSimpleDatasafeServiceFactory {
             S100_FilesystemDFSCredentials filesystemDFSCredentials = (S100_FilesystemDFSCredentials) dfsCredentials;
             return new SimpleDatasafeServiceWithMigration(
                     filesystemDFSCredentials.toBuilder().root(
-                            filesystemDFSCredentials.getRoot() + "/" + subdirBelowRoot + "/100"
+                            filesystemDFSCredentials.getRoot() + "/" + subdirBelowRoot
                     ).build(),
                     null != encryptionProperties ? encryptionProperties.getEncryption() : new MutableEncryptionConfig()
             );

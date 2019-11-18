@@ -12,6 +12,7 @@ import de.adorsys.datasafe_0_6_1.encrypiton.api.types.S061_UserIDAuth;
 import de.adorsys.datasafe_0_6_1.simple.adapter.api.S061_SimpleDatasafeService;
 import de.adorsys.datasafe_0_6_1.simple.adapter.api.types.S061_DSDocument;
 import de.adorsys.datasafe_0_6_1.simple.adapter.impl.S061_SimpleDatasafeServiceImpl;
+import de.adorsys.datasafe_1_0_0.simple.adapter.api.types.S100_DFSCredentials;
 import de.adorsys.datasafemigration.CreateStructureUtil;
 import de.adorsys.datasafemigration.ExtendedSwitchVersion;
 import de.adorsys.datasafemigration.docker.InitFromStorageProvider;
@@ -38,11 +39,8 @@ public class SilentMigrationBaseTest extends WithStorageProvider {
     private static int DOCUMENT_SIZE = 1000;
 
     public void basicTests(SimpleDatasafeService datasafeService) {
-        log.info("DO ASSERT NOW");
         org.junit.jupiter.api.Assertions.assertNotNull(datasafeService);
-        log.info("ASSERT OK");
-
-        log.info("Service injected: {}", SimpleDatasafeService.class.toString());
+        log.info("Service successfully injected: {}", SimpleDatasafeService.class.toString());
 
         UserIDAuth userIDAuth = new UserIDAuth(new UserID("peter"), new ReadKeyPassword("affe"::toCharArray));
 
@@ -76,10 +74,9 @@ public class SilentMigrationBaseTest extends WithStorageProvider {
         return new DocumentContent(bytes);
     }
 
-    public void migrationTest(SimpleDatasafeService simpleDatasafeService, WithStorageProvider.StorageDescriptor descriptor) {
+    public void migrationTest(SimpleDatasafeService simpleDatasafeService, S100_DFSCredentials dfsCredentialsToNotMigratedData) {
 
-        InitFromStorageProvider.DFSCredentialsTuple dfsCredentialsTuple = InitFromStorageProvider.dfsFromDescriptor(descriptor, "", "");
-        S061_SimpleDatasafeService s061_simpleDatasafeService = new S061_SimpleDatasafeServiceImpl(dfsCredentialsTuple.getOldVersion());
+        S061_SimpleDatasafeService s061_simpleDatasafeService = new S061_SimpleDatasafeServiceImpl(ExtendedSwitchVersion.to_0_6_1(dfsCredentialsToNotMigratedData));
 
         Set<S061_UserIDAuth> s061_userIDAuths = CreateStructureUtil.getS061_userIDAuths();
         Map<S061_UserIDAuth, Set<S061_DSDocument>> structure = CreateStructureUtil.create061Structure(s061_simpleDatasafeService, s061_userIDAuths);

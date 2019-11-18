@@ -19,6 +19,7 @@ import de.adorsys.datasafe_1_0_0.simple.adapter.api.types.S100_DFSCredentials;
 import de.adorsys.datasafe_1_0_0.simple.adapter.impl.S100_SimpleDatasafeServiceImpl;
 import de.adorsys.datasafemigration.ExtendedSwitchVersion;
 import de.adorsys.datasafemigration.MigrationLogic;
+import de.adorsys.datasafemigration.ModifyDFSCredentials;
 import de.adorsys.datasafemigration.common.SwitchVersion;
 import de.adorsys.datasafemigration.lockprovider.DistributedLocker;
 import de.adorsys.datasafemigration.lockprovider.TemporaryLockProviderFactory;
@@ -33,16 +34,27 @@ public class SimpleDatasafeServiceWithMigration implements SimpleDatasafeService
     private S100_SimpleDatasafeService newReal;
     private S061_SimpleDatasafeService oldReal;
     private MigrationLogic migrationLogic;
-
+    private S100_DFSCredentials credentialsToMigratedData;
+    private S100_DFSCredentials credentialsToNOTMigratedData;
 
     public SimpleDatasafeServiceWithMigration(S100_DFSCredentials dfsCredentials, MutableEncryptionConfig mutableEncryptionConfig) {
-        newReal = new S100_SimpleDatasafeServiceImpl(dfsCredentials, mutableEncryptionConfig);
-        oldReal = new S061_SimpleDatasafeServiceImpl(ExtendedSwitchVersion.to_0_6_1(dfsCredentials));
+        credentialsToNOTMigratedData = dfsCredentials;
+        credentialsToMigratedData = ModifyDFSCredentials.getNewRootPath(dfsCredentials);
+
+        newReal = new S100_SimpleDatasafeServiceImpl(credentialsToMigratedData, mutableEncryptionConfig);
+        oldReal = new S061_SimpleDatasafeServiceImpl(ExtendedSwitchVersion.to_0_6_1(credentialsToNOTMigratedData));
 
         DistributedLocker distributedLocker = new DistributedLocker(TemporaryLockProviderFactory.get());
-        migrationLogic = new MigrationLogic(distributedLocker, GetStorage.get(dfsCredentials), oldReal, newReal);
+        migrationLogic = new MigrationLogic(distributedLocker, oldReal, newReal);
     }
 
+    public S100_DFSCredentials getCredentialsToMigratedData() {
+        return credentialsToMigratedData;
+    }
+
+    public S100_DFSCredentials getCredentialsToNOTMigratedData() {
+        return credentialsToNOTMigratedData;
+    }
 
     @Override
     public void createUser(UserIDAuth userIDAuth) {

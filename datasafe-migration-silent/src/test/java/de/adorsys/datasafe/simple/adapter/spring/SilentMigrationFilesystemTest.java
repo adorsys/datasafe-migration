@@ -1,6 +1,7 @@
 package de.adorsys.datasafe.simple.adapter.spring;
 
 import de.adorsys.datasafe.simple.adapter.api.SimpleDatasafeService;
+import de.adorsys.datasafe.simple.adapter.impl.SimpleDatasafeServiceWithMigration;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -24,10 +25,9 @@ public class SilentMigrationFilesystemTest extends SilentMigrationBaseTest {
         basicTests(datasafeService);
     }
 
-    // @Test
-    // does not run yet because SimpleDatasafeService initializes from spring
-    // but S061_simpledatasafeservice inializes from fs, which does not has same values as sspring
-
-    public void testMigrationwithFilesystem() { migrationTest(datasafeService, fs()); }
+    @Test
+    public void testMigrationwithFilesystem() {
+        migrationTest(datasafeService, ((SimpleDatasafeServiceWithMigration) datasafeService).getCredentialsToNOTMigratedData());
+    }
 
 }
