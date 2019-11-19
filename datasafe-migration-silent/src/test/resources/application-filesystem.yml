@@ -1,4 +1,4 @@
 datasafe:
   storeconnection:
     filesystem:
-      rootbucket: target/test-filesystem
+      rootbucket: target/test-filesystem/filetest/

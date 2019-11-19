@@ -5,6 +5,7 @@ import de.adorsys.datasafe.encrypiton.api.types.UserIDAuth;
 import de.adorsys.datasafe.simple.adapter.api.types.DSDocument;
 import de.adorsys.datasafe.simple.adapter.api.types.DSDocumentStream;
 import de.adorsys.datasafe.simple.adapter.api.types.DocumentContent;
+import de.adorsys.datasafe.simple.adapter.api.types.DocumentDirectoryFQN;
 import de.adorsys.datasafe.simple.adapter.api.types.DocumentFQN;
 import de.adorsys.datasafe.simple.adapter.api.types.ListRecursiveFlag;
 import de.adorsys.datasafe.types.api.types.ReadKeyPassword;
@@ -144,5 +145,9 @@ public class ExtendedSwitchVersion extends SwitchVersion {
 
     public static DocumentFQN toCurrent(S100_DocumentFQN s100_documentFQN) {
         return new DocumentFQN(s100_documentFQN.getDocusafePath());
+    }
+
+    public static DocumentDirectoryFQN toCurrent(S100_DocumentDirectoryFQN s100_documentDirectoryFQN) {
+        return new DocumentDirectoryFQN(s100_documentDirectoryFQN.getDocusafePath());
     }
 }

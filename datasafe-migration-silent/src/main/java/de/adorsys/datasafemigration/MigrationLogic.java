@@ -107,7 +107,7 @@ public class MigrationLogic {
             }
 
             if (physicallyCheckMigrationWasDoneSuccessfully(userIDAuth)) {
-                log.debug("migration for {} was already done, looks like first time using the user yet", username);
+                log.debug("migration for {} was already done, looks like first duration using the user yet", username);
                 migratedUsers.add(userIDAuth.getUserID());
                 return true;
             }

@@ -53,6 +53,9 @@ public class SimpleDatasafeServiceWithMigration implements SimpleDatasafeService
     public S061_DFSCredentials getCredentialsToNOTMigratedData() {
         return credentialsToNOTMigratedData;
     }
+    public S100_DFSCredentials getCredentialsToMigratedData() {
+        return credentialsToMigratedData;
+    }
 
     @Override
     public void createUser(UserIDAuth userIDAuth) {
