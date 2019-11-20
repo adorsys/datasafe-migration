@@ -14,11 +14,9 @@ import de.adorsys.datasafe_0_6_1.simple.adapter.api.S061_SimpleDatasafeService;
 import de.adorsys.datasafe_0_6_1.simple.adapter.api.types.S061_DFSCredentials;
 import de.adorsys.datasafe_0_6_1.simple.adapter.api.types.S061_DSDocument;
 import de.adorsys.datasafe_0_6_1.simple.adapter.impl.S061_SimpleDatasafeServiceImpl;
-import de.adorsys.datasafe_1_0_0.simple.adapter.api.types.S100_DFSCredentials;
 import de.adorsys.datasafemigration.CreateStructureUtil;
 import de.adorsys.datasafemigration.DirectDFSAccess;
 import de.adorsys.datasafemigration.ExtendedSwitchVersion;
-import de.adorsys.datasafemigration.docker.InitFromStorageProvider;
 import de.adorsys.datasafemigration.docker.WithStorageProvider;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
@@ -43,7 +41,7 @@ public class SilentMigrationBaseTest extends WithStorageProvider {
 
     public void basicTests(SimpleDatasafeService datasafeService) {
         org.junit.jupiter.api.Assertions.assertNotNull(datasafeService);
-        log.info("Service successfully injected: {}", SimpleDatasafeService.class.toString());
+        log.debug("Service successfully injected: {}", SimpleDatasafeService.class.toString());
 
         UserIDAuth userIDAuth = new UserIDAuth(new UserID("peter"), new ReadKeyPassword("affe"::toCharArray));
 
@@ -84,15 +82,15 @@ public class SilentMigrationBaseTest extends WithStorageProvider {
         Set<S061_UserIDAuth> s061_userIDAuths = CreateStructureUtil.getS061_userIDAuths();
         Map<S061_UserIDAuth, Set<S061_DSDocument>> structure = CreateStructureUtil.create061Structure(s061_simpleDatasafeService, s061_userIDAuths);
 
-        log.info("before migration");
-        DirectDFSAccess.listAllFiles(GetStorage.get(ExtendedSwitchVersion.to_1_0_0(dfsCredentialsToNotMigratedData))).forEach(el -> log.info(el));
+        log.debug("before migration");
+        DirectDFSAccess.listAllFiles(GetStorage.get(ExtendedSwitchVersion.to_1_0_0(dfsCredentialsToNotMigratedData))).forEach(el -> log.debug(el));
 
         for(S061_UserIDAuth oldUser : s061_userIDAuths) {
             simpleDatasafeService.readDocument(
                     ExtendedSwitchVersion.toCurrent(ExtendedSwitchVersion.to_1_0_0(oldUser)),
                     ExtendedSwitchVersion.toCurrent(ExtendedSwitchVersion.to_1_0_0(structure.get(oldUser).stream().findFirst().get().getDocumentFQN())));
-            log.info("after migration of user {}", oldUser.getUserID().getValue());
-            DirectDFSAccess.listAllFiles(GetStorage.get(ExtendedSwitchVersion.to_1_0_0(dfsCredentialsToNotMigratedData))).forEach(el -> log.info(el));
+            log.debug("after migration of user {}", oldUser.getUserID().getValue());
+            DirectDFSAccess.listAllFiles(GetStorage.get(ExtendedSwitchVersion.to_1_0_0(dfsCredentialsToNotMigratedData))).forEach(el -> log.debug(el));
         }
 
         simpleDatasafeService.cleanupDb();

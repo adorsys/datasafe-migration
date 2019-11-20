@@ -7,6 +7,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 @ActiveProfiles("filesystem")
 public class FilesystemDirectDFSAccessTest extends DirectDFSAccessBaseTest {
+
     @Autowired
     SimpleDatasafeService datasafeService;
 

@@ -107,8 +107,6 @@ public class DirectDFSAccess {
 
         log.debug("copy from {}",sourcePath);
         log.debug("copy   to {}",destPath);
-        log.debug("with uri copy from {}",sourceLocation.location().asURI().toASCIIString());
-        log.debug("with uri copy   to {}",destLocation.location().asURI().toASCIIString());
         try (InputStream read = source.getStorageService().read(sourceLocation)) {
             try (OutputStream write = dest.getStorageService().write(WithCallback.noCallback(destLocation))) {
                 return IOUtils.copy(read, write);

@@ -149,6 +149,9 @@ public class MigrationLogic {
 
         if (withIntermediateFolder) {
             moveFromIntermediateToFinal(userIDAuth);
+        } else {
+            int destroyedInOld = DirectDFSAccess.destroyAllFileInUsersRootDir(oldStorage, userIDAuth.getUserID());
+            log.debug("destroyed user in old location. deleted {} files.", destroyedInOld);
         }
         log.debug("NOW MIGRATION OF USER {} IS FINISHED", userIDAuth.getUserID().getValue());
     }

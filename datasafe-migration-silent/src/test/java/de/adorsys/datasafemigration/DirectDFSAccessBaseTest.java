@@ -60,7 +60,7 @@ public class DirectDFSAccessBaseTest extends WithStorageProvider {
             DSDocument dsDocument = new DSDocument(fqn, createDocumentContent("content of file " + fqn.getDocusafePath() + ".", 10000));
             DirectDFSAccess.storeFileInUsersRootDir(source, userID, dsDocument);
         }
-        log.info(DirectDFSAccess.moveAllFiles(source, dest, userID).toString());
+        log.debug(DirectDFSAccess.moveAllFiles(source, dest, userID).toString());
         datasafeService.cleanupDb();
     }
 
