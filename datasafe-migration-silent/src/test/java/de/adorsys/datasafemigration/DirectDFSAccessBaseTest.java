@@ -9,14 +9,12 @@ import de.adorsys.datasafe.simple.adapter.api.types.DocumentFQN;
 import de.adorsys.datasafe.simple.adapter.impl.GetStorage;
 import de.adorsys.datasafe.simple.adapter.impl.SimpleDatasafeServiceWithMigration;
 import de.adorsys.datasafe.simple.adapter.spring.annotations.UseDatasafeSpringConfiguration;
-import de.adorsys.datasafe_0_6_1.simple.adapter.api.types.S061_DFSCredentials;
 import de.adorsys.datasafe_1_0_0.simple.adapter.api.types.S100_DFSCredentials;
 import de.adorsys.datasafemigration.docker.WithStorageProvider;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
@@ -35,12 +33,17 @@ import java.util.Set;
 @UseDatasafeSpringConfiguration
 public class DirectDFSAccessBaseTest extends WithStorageProvider {
 
-    public void writeFilesToDFS(SimpleDatasafeService datasafeService) {
+    public void testWriteFilesToDFS(SimpleDatasafeService datasafeService) {
         S100_DFSCredentials s100_dfsCredentials = ((SimpleDatasafeServiceWithMigration) datasafeService).getCredentialsToMigratedData();
         GetStorage.SystemRootAndStorageService systemRootAndStorageService = GetStorage.get(s100_dfsCredentials);
         DSDocument dsDocument = new DSDocument(new DocumentFQN("filename.txt"), new DocumentContent("content of file".getBytes()));
         UserID userID = new UserID("peter");
+        Assertions.assertTrue(DirectDFSAccess.listAllFiles(systemRootAndStorageService).isEmpty());
         DirectDFSAccess.storeFileInUsersRootDir(systemRootAndStorageService, userID, dsDocument);
+        Assertions.assertFalse(DirectDFSAccess.listAllFiles(systemRootAndStorageService).isEmpty());
+        DirectDFSAccess.destroyAllFileInUsersRootDir(systemRootAndStorageService, userID);
+        Assertions.assertTrue(DirectDFSAccess.listAllFiles(systemRootAndStorageService).isEmpty());
+        datasafeService.cleanupDb();
     }
 
     @SneakyThrows
@@ -58,6 +61,7 @@ public class DirectDFSAccessBaseTest extends WithStorageProvider {
             DirectDFSAccess.storeFileInUsersRootDir(source, userID, dsDocument);
         }
         log.info(DirectDFSAccess.moveAllFiles(source, dest, userID).toString());
+        datasafeService.cleanupDb();
     }
 
     private void createNames(Set<DocumentFQN> result, DocumentDirectoryFQN dir, int numberOfFilesPerFolder, int numberOfDirsPerFolder, int depthOfFolders) {
@@ -65,7 +69,7 @@ public class DirectDFSAccessBaseTest extends WithStorageProvider {
             return;
         }
         for (int i = 0; i < numberOfFilesPerFolder; i++) {
-            result.add(ExtendedSwitchVersion.toCurrent(dir.addName("file" + i)));
+            result.add(ExtendedSwitchVersion.toCurrent(dir.addName("file== =" + i)));
         }
         for (int i = 0; i < numberOfDirsPerFolder; i++) {
             createNames(result, dir.addDirectory("dir" + i), numberOfFilesPerFolder, numberOfDirsPerFolder, depthOfFolders-1);

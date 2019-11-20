@@ -28,12 +28,12 @@ public class SilentMigrationFilesystemTest extends SilentMigrationBaseTest {
     }
 
     @Test
-    public void testwithFilesystem() {
+    public void doBasicTest() {
         basicTests(datasafeService);
     }
 
     @Test
-    public void testMigrationwithFilesystem() {
+    public void doMigrationTest() {
         migrationTest(datasafeService, ((SimpleDatasafeServiceWithMigration) datasafeService).getCredentialsToNOTMigratedData());
     }
 

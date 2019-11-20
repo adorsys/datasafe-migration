@@ -6,6 +6,7 @@ import de.adorsys.datasafe.simple.adapter.api.SimpleDatasafeService;
 import de.adorsys.datasafe.simple.adapter.api.types.DSDocument;
 import de.adorsys.datasafe.simple.adapter.api.types.DocumentContent;
 import de.adorsys.datasafe.simple.adapter.api.types.DocumentFQN;
+import de.adorsys.datasafe.simple.adapter.impl.GetStorage;
 import de.adorsys.datasafe.simple.adapter.spring.annotations.UseDatasafeSpringConfiguration;
 import de.adorsys.datasafe.types.api.types.ReadKeyPassword;
 import de.adorsys.datasafe_0_6_1.encrypiton.api.types.S061_UserIDAuth;
@@ -15,6 +16,7 @@ import de.adorsys.datasafe_0_6_1.simple.adapter.api.types.S061_DSDocument;
 import de.adorsys.datasafe_0_6_1.simple.adapter.impl.S061_SimpleDatasafeServiceImpl;
 import de.adorsys.datasafe_1_0_0.simple.adapter.api.types.S100_DFSCredentials;
 import de.adorsys.datasafemigration.CreateStructureUtil;
+import de.adorsys.datasafemigration.DirectDFSAccess;
 import de.adorsys.datasafemigration.ExtendedSwitchVersion;
 import de.adorsys.datasafemigration.docker.InitFromStorageProvider;
 import de.adorsys.datasafemigration.docker.WithStorageProvider;
@@ -82,10 +84,15 @@ public class SilentMigrationBaseTest extends WithStorageProvider {
         Set<S061_UserIDAuth> s061_userIDAuths = CreateStructureUtil.getS061_userIDAuths();
         Map<S061_UserIDAuth, Set<S061_DSDocument>> structure = CreateStructureUtil.create061Structure(s061_simpleDatasafeService, s061_userIDAuths);
 
+        log.info("before migration");
+        DirectDFSAccess.listAllFiles(GetStorage.get(ExtendedSwitchVersion.to_1_0_0(dfsCredentialsToNotMigratedData))).forEach(el -> log.info(el));
+
         for(S061_UserIDAuth oldUser : s061_userIDAuths) {
             simpleDatasafeService.readDocument(
                     ExtendedSwitchVersion.toCurrent(ExtendedSwitchVersion.to_1_0_0(oldUser)),
                     ExtendedSwitchVersion.toCurrent(ExtendedSwitchVersion.to_1_0_0(structure.get(oldUser).stream().findFirst().get().getDocumentFQN())));
+            log.info("after migration of user {}", oldUser.getUserID().getValue());
+            DirectDFSAccess.listAllFiles(GetStorage.get(ExtendedSwitchVersion.to_1_0_0(dfsCredentialsToNotMigratedData))).forEach(el -> log.info(el));
         }
 
         simpleDatasafeService.cleanupDb();

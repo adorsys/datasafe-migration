@@ -12,7 +12,7 @@ public class FilesystemDirectDFSAccessTest extends DirectDFSAccessBaseTest {
 
     @Test
     public void writeFilesToDFS() {
-        super.writeFilesToDFS(datasafeService);
+        super.testWriteFilesToDFS(datasafeService);
     }
 
     @Test

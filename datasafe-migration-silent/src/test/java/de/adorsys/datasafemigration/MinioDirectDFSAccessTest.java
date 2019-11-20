@@ -21,7 +21,7 @@ public class MinioDirectDFSAccessTest extends DirectDFSAccessBaseTest {
 
     @Test
     public void writeFilesToDFS() {
-        super.writeFilesToDFS(datasafeService);
+        super.testWriteFilesToDFS(datasafeService);
     }
 
     @Test

@@ -29,12 +29,12 @@ public class SilentMigrationMinioTest extends SilentMigrationBaseTest {
     }
 
     @Test
-    public void testWithMinio() {
+    public void doBasicTest() {
         basicTests(datasafeService);
     }
 
     @Test
-    public void testMigrationwithFilesystem() {
+    public void doMigrationTest() {
         migrationTest(datasafeService, ((SimpleDatasafeServiceWithMigration) datasafeService).getCredentialsToNOTMigratedData());
     }
 
