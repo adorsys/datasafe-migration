@@ -22,6 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -29,11 +30,14 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
+import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD;
+
 @Slf4j
 @SpringBootTest
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration
 @UseDatasafeSpringConfiguration
+@DirtiesContext(classMode=AFTER_EACH_TEST_METHOD)
 public class SilentMigrationBaseTest extends WithStorageProvider {
     private static int DOCUMENT_SIZE = 1000;
 
