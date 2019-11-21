@@ -1,4 +1,4 @@
-package de.adorsys.datasafe.simple.adapter.spring;
+package de.adorsys.datasafemigration;
 
 import de.adorsys.datasafe.simple.adapter.api.SimpleDatasafeService;
 import de.adorsys.datasafe.simple.adapter.impl.SimpleDatasafeServiceWithMigration;
@@ -10,17 +10,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ActiveProfiles;
 
 @Slf4j
-@ActiveProfiles("minio")
-public class SilentMigrationMinioTest extends SilentMigrationBaseTest {
+@ActiveProfiles("filesystem")
+public class AdvancedSilentMigrationFilesystemTest extends SilentMigrationBaseTest {
 
     @Autowired
     SimpleDatasafeService datasafeService;
 
     @BeforeAll
     static void beforeAllHere() {
-        SimpleDatasafeServiceWithMigration.migrateToNewFolder = true;
-        minio().getStorageService().get();
-        System.setProperty("MINIO_URL",  minio().getMappedUrl());
+        log.debug("beforeAll sets static member of SimpleDatasafeService");
+        SimpleDatasafeServiceWithMigration.migrateToNewFolder = false;
     }
 
     @AfterAll
@@ -37,5 +36,4 @@ public class SilentMigrationMinioTest extends SilentMigrationBaseTest {
     public void doMigrationTest() {
         migrationTest(datasafeService, ((SimpleDatasafeServiceWithMigration) datasafeService).getCredentialsToNOTMigratedData());
     }
-
 }

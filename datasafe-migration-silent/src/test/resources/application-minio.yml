@@ -5,5 +5,11 @@ datasafe:
       accesskey: admin
       secretkey: password
       rootbucket: adorsys
+      threadpoolsize: 15
 
 
+  migration:
+    lockprovider:
+      jdbc:
+        url: jdbc:hsqldb:hsql://localhost/test
+        username: SA

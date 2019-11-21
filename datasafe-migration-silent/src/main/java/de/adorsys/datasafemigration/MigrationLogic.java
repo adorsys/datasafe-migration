@@ -11,15 +11,17 @@ import de.adorsys.datasafe_0_6_1.simple.adapter.impl.S061_SimpleDatasafeServiceI
 import de.adorsys.datasafe_1_0_0.encrypiton.api.types.encryption.MutableEncryptionConfig;
 import de.adorsys.datasafe_1_0_0.simple.adapter.api.S100_SimpleDatasafeService;
 import de.adorsys.datasafe_1_0_0.simple.adapter.api.types.S100_DFSCredentials;
+import de.adorsys.datasafe_1_0_0.simple.adapter.impl.LogStringFrame;
 import de.adorsys.datasafe_1_0_0.simple.adapter.impl.S100_SimpleDatasafeServiceImpl;
 import de.adorsys.datasafemigration.lockprovider.DistributedLocker;
-import de.adorsys.datasafemigration.lockprovider.TemporaryLockProviderFactory;
 import de.adorsys.datasafemigration.withDFSonly.LoadUserOldToNewFormat;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import net.javacrumbs.shedlock.core.LockProvider;
 
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 
@@ -39,39 +41,58 @@ public class MigrationLogic {
     private final S061_SimpleDatasafeService oldService;
     private final S100_SimpleDatasafeService newService;
     private final boolean withIntermediateFolder;
+    private final boolean migrationPossible;
 
-    public MigrationLogic(S061_DFSCredentials oldDFS, S100_DFSCredentials newDFS, MutableEncryptionConfig mutableEncryptionConfig) {
-        distributedLocker = new DistributedLocker(TemporaryLockProviderFactory.get());
-        {
-            String oldRoot = ModifyDFSCredentials.getCurrentRootPath(ExtendedSwitchVersion.to_1_0_0(oldDFS));
-            String newRoot = ModifyDFSCredentials.getCurrentRootPath(newDFS);
-            withIntermediateFolder = oldRoot.equalsIgnoreCase(newRoot);
-        }
+    public MigrationLogic(Optional<LockProvider> lockProviderOptional, S061_DFSCredentials oldDFS, S100_DFSCredentials newDFS, MutableEncryptionConfig mutableEncryptionConfig) {
+        LogStringFrame lsf = new LogStringFrame();
+        if (lockProviderOptional.isPresent()) {
+            distributedLocker = new DistributedLocker(lockProviderOptional.get());
+            migrationPossible = true;
 
-        if (withIntermediateFolder) {
-            newDFS = ModifyDFSCredentials.appendToRootPath(newDFS, "tempForMigrationTo100");
-        }
+            {
+                String oldRoot = ModifyDFSCredentials.getCurrentRootPath(ExtendedSwitchVersion.to_1_0_0(oldDFS));
+                String newRoot = ModifyDFSCredentials.getCurrentRootPath(newDFS);
+                withIntermediateFolder = oldRoot.equalsIgnoreCase(newRoot);
+            }
 
-        oldService = new S061_SimpleDatasafeServiceImpl(oldDFS);
-        newService = new S100_SimpleDatasafeServiceImpl(newDFS, mutableEncryptionConfig);
+            if (withIntermediateFolder) {
+                newDFS = ModifyDFSCredentials.appendToRootPath(newDFS, "tempForMigrationTo100");
+            }
 
-        if (withIntermediateFolder) {
-            finalStorage = GetStorage.get(ExtendedSwitchVersion.to_1_0_0(oldDFS));
+            oldService = new S061_SimpleDatasafeServiceImpl(oldDFS);
+            newService = new S100_SimpleDatasafeServiceImpl(newDFS, mutableEncryptionConfig);
+
+            if (withIntermediateFolder) {
+                finalStorage = GetStorage.get(ExtendedSwitchVersion.to_1_0_0(oldDFS));
+            } else {
+                finalStorage = null;
+            }
+
+            oldStorage = GetStorage.get(ExtendedSwitchVersion.to_1_0_0(oldDFS));
+            newStorage = GetStorage.get(newDFS);
+
+
+            lsf.add("MigrationLogic      : ENABLED");
+            lsf.add("intermediate folder : " + (withIntermediateFolder ? "YES" : "NO"));
+            lsf.add("           old root : " + oldStorage.getSystemRoot());
+            if (withIntermediateFolder) {
+                lsf.add("  intermediate root : " + newStorage.getSystemRoot());
+                lsf.add("           new root : " + finalStorage.getSystemRoot());
+            } else {
+                lsf.add("           new root : " + newStorage.getSystemRoot());
+            }
         } else {
+            oldStorage = null;
+            newStorage = null;
             finalStorage = null;
+            oldService = null;
+            newService = null;
+            withIntermediateFolder = false;
+            distributedLocker = null;
+            migrationPossible = false;
+            lsf.add("MigrationLogic      : DISABLED");
         }
-
-        oldStorage = GetStorage.get(ExtendedSwitchVersion.to_1_0_0(oldDFS));
-        newStorage = GetStorage.get(newDFS);
-
-        log.debug("construction of migration logic {} intermediate folder", withIntermediateFolder ? "with" : "without");
-        log.debug("         old root {}", oldStorage.getSystemRoot());
-        if (withIntermediateFolder) {
-            log.debug("intermediate root {}", newStorage.getSystemRoot());
-            log.debug("         new root {}", finalStorage.getSystemRoot());
-        } else {
-            log.debug("         new root {}", newStorage.getSystemRoot());
-        }
+        log.info(lsf.toString());
     }
 
     /**
@@ -84,6 +105,10 @@ public class MigrationLogic {
      */
     @SneakyThrows
     public boolean checkMigration(UserIDAuth userIDAuth) {
+        if (!migrationPossible) {
+            return false;
+        }
+
         String username = userIDAuth.getUserID().getValue();
         if (migratedUsers.contains(username)) {
             return true;
@@ -134,6 +159,28 @@ public class MigrationLogic {
         }
     }
 
+    /**
+     * should used direct storage to be able to place the migration file in another location
+     * and unencrypyted
+     *
+     * @param userIDAuth
+     * @return
+     */
+    public void createFileForNewUser(UserIDAuth userIDAuth) {
+        if (!migrationPossible) {
+            throw new MigrationException("create new File must not be called if migration is not enabled");
+        }
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("user created (without migration at :").append(new Date().toString()).append("\n");
+        DSDocument dsDocument = new DSDocument(MIGRATION_CONFIRMATION, new DocumentContent(sb.toString().getBytes()));
+        if (withIntermediateFolder) {
+            DirectDFSAccess.storeFileInUsersRootDir(finalStorage, userIDAuth.getUserID(), dsDocument);
+        } else {
+            DirectDFSAccess.storeFileInUsersRootDir(newStorage, userIDAuth.getUserID(), dsDocument);
+        }
+    }
+
     private void migrateUser(UserIDAuth userIDAuth) {
         // now we do the migration
         if (newService.userExists(userIDAuth.getUserID().getReal())) {
@@ -173,24 +220,6 @@ public class MigrationLogic {
         } catch (Exception e) {
             // if the document does not exist for whatever reason, the migration is not done yet.
             return false;
-        }
-    }
-
-    /**
-     * should used direct storage to be able to place the migration file in another location
-     * and unencrypyted
-     *
-     * @param userIDAuth
-     * @return
-     */
-    public void createFileForNewUser(UserIDAuth userIDAuth) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("user created (without migration at :").append(new Date().toString()).append("\n");
-        DSDocument dsDocument = new DSDocument(MIGRATION_CONFIRMATION, new DocumentContent(sb.toString().getBytes()));
-        if (withIntermediateFolder) {
-            DirectDFSAccess.storeFileInUsersRootDir(finalStorage, userIDAuth.getUserID(), dsDocument);
-        } else {
-            DirectDFSAccess.storeFileInUsersRootDir(newStorage, userIDAuth.getUserID(), dsDocument);
         }
     }
 

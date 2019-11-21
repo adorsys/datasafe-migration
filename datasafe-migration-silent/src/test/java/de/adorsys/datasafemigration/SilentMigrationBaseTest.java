@@ -1,4 +1,4 @@
-package de.adorsys.datasafe.simple.adapter.spring;
+package de.adorsys.datasafemigration;
 
 import de.adorsys.datasafe.encrypiton.api.types.UserID;
 import de.adorsys.datasafe.encrypiton.api.types.UserIDAuth;
@@ -21,7 +21,6 @@ import de.adorsys.datasafemigration.docker.WithStorageProvider;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -34,12 +33,12 @@ import java.util.Set;
 @SpringBootTest
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration
-@SpringBootConfiguration
 @UseDatasafeSpringConfiguration
 public class SilentMigrationBaseTest extends WithStorageProvider {
     private static int DOCUMENT_SIZE = 1000;
 
-    public void basicTests(SimpleDatasafeService datasafeService) {
+    protected void basicTests(SimpleDatasafeService datasafeService) {
+        log.info("START BASIC TEST");
         org.junit.jupiter.api.Assertions.assertNotNull(datasafeService);
         log.debug("Service successfully injected: {}", SimpleDatasafeService.class.toString());
 
@@ -69,13 +68,8 @@ public class SilentMigrationBaseTest extends WithStorageProvider {
         datasafeService.cleanupDb();
     }
 
-    public static DocumentContent createDocumentContent(int sizeOfDocument) {
-        byte[] bytes = new byte[sizeOfDocument];
-        new Random().nextBytes(bytes);
-        return new DocumentContent(bytes);
-    }
-
-    public void migrationTest(SimpleDatasafeService simpleDatasafeService, S061_DFSCredentials dfsCredentialsToNotMigratedData) {
+    protected void migrationTest(SimpleDatasafeService simpleDatasafeService, S061_DFSCredentials dfsCredentialsToNotMigratedData) {
+        log.info("START MIGRATION TEST");
 
         S061_SimpleDatasafeService s061_simpleDatasafeService = new S061_SimpleDatasafeServiceImpl(dfsCredentialsToNotMigratedData);
 
@@ -95,4 +89,11 @@ public class SilentMigrationBaseTest extends WithStorageProvider {
 
         simpleDatasafeService.cleanupDb();
     }
+
+    private static DocumentContent createDocumentContent(int sizeOfDocument) {
+        byte[] bytes = new byte[sizeOfDocument];
+        new Random().nextBytes(bytes);
+        return new DocumentContent(bytes);
+    }
+
 }

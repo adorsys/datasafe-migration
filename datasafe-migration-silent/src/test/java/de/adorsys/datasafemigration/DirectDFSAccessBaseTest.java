@@ -29,7 +29,6 @@ import java.util.Set;
 @SpringBootTest
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration
-@SpringBootConfiguration
 @UseDatasafeSpringConfiguration
 public class DirectDFSAccessBaseTest extends WithStorageProvider {
 

@@ -1,4 +1,4 @@
-package de.adorsys.datasafe.simple.adapter.spring;
+package de.adorsys.datasafemigration;
 
 import de.adorsys.datasafe.simple.adapter.api.SimpleDatasafeService;
 import de.adorsys.datasafe.simple.adapter.impl.SimpleDatasafeServiceWithMigration;
@@ -19,6 +19,7 @@ public class SilentMigrationFilesystemTest extends SilentMigrationBaseTest {
 
     @BeforeAll
     static void beforeAllHere() {
+        log.debug("beforeAll sets static member of SimpleDatasafeService");
         SimpleDatasafeServiceWithMigration.migrateToNewFolder = true;
     }
 

@@ -23,10 +23,12 @@ import de.adorsys.datasafemigration.MigrationLogic;
 import de.adorsys.datasafemigration.ModifyDFSCredentials;
 import de.adorsys.datasafemigration.common.SwitchVersion;
 import lombok.extern.slf4j.Slf4j;
+import net.javacrumbs.shedlock.core.LockProvider;
 
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static de.adorsys.datasafemigration.ExtendedSwitchVersion.toCurrent;
 
@@ -39,7 +41,7 @@ public class SimpleDatasafeServiceWithMigration implements SimpleDatasafeService
     private final S100_DFSCredentials credentialsToMigratedData;
     public static boolean migrateToNewFolder = false;
 
-    public SimpleDatasafeServiceWithMigration(S100_DFSCredentials dfsCredentials, MutableEncryptionConfig mutableEncryptionConfig) {
+    public SimpleDatasafeServiceWithMigration(Optional<LockProvider> lockProviderOptional, S100_DFSCredentials dfsCredentials, MutableEncryptionConfig mutableEncryptionConfig) {
         log.info("migrationToNewFolder :" + migrateToNewFolder);
         credentialsToNOTMigratedData = ExtendedSwitchVersion.to_0_6_1(dfsCredentials);
         credentialsToMigratedData = migrateToNewFolder ? ModifyDFSCredentials.getPathToMigratedData(dfsCredentials) : dfsCredentials;
@@ -47,7 +49,7 @@ public class SimpleDatasafeServiceWithMigration implements SimpleDatasafeService
         oldReal = new S061_SimpleDatasafeServiceImpl(credentialsToNOTMigratedData);
         newReal = new S100_SimpleDatasafeServiceImpl(credentialsToMigratedData, mutableEncryptionConfig);
 
-        migrationLogic = new MigrationLogic(credentialsToNOTMigratedData, credentialsToMigratedData, mutableEncryptionConfig);
+        migrationLogic = new MigrationLogic(lockProviderOptional, credentialsToNOTMigratedData, credentialsToMigratedData, mutableEncryptionConfig);
     }
 
     public S061_DFSCredentials getCredentialsToNOTMigratedData() {
