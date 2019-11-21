@@ -15,7 +15,6 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -32,7 +31,7 @@ import java.util.Set;
 @UseDatasafeSpringConfiguration
 public class DirectDFSAccessBaseTest extends WithStorageProvider {
 
-    public void testWriteFilesToDFS(SimpleDatasafeService datasafeService) {
+    protected void testWriteFilesToDFS(SimpleDatasafeService datasafeService) {
         S100_DFSCredentials s100_dfsCredentials = ((SimpleDatasafeServiceWithMigration) datasafeService).getCredentialsToMigratedData();
         GetStorage.SystemRootAndStorageService systemRootAndStorageService = GetStorage.get(s100_dfsCredentials);
         DSDocument dsDocument = new DSDocument(new DocumentFQN("filename.txt"), new DocumentContent("content of file".getBytes()));
@@ -46,7 +45,7 @@ public class DirectDFSAccessBaseTest extends WithStorageProvider {
     }
 
     @SneakyThrows
-    public void testMoveFiles(SimpleDatasafeService datasafeService) {
+    protected void testMoveFiles(SimpleDatasafeService datasafeService) {
         S100_DFSCredentials s100_dfsCredentials = ((SimpleDatasafeServiceWithMigration) datasafeService).getCredentialsToMigratedData();
         GetStorage.SystemRootAndStorageService base = GetStorage.get(s100_dfsCredentials);
 
@@ -75,8 +74,7 @@ public class DirectDFSAccessBaseTest extends WithStorageProvider {
         }
     }
 
-
-    public static DocumentContent createDocumentContent(String seed, int sizeOfDocument) {
+    private static DocumentContent createDocumentContent(String seed, int sizeOfDocument) {
         if (sizeOfDocument < seed.length()) {
             sizeOfDocument = seed.length();
         }
