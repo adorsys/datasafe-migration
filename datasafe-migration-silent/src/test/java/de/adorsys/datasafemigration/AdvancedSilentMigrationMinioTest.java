@@ -19,10 +19,10 @@ public class AdvancedSilentMigrationMinioTest extends SilentMigrationBaseTest {
 
     @BeforeAll
     static void beforeAllHere() {
-        log.debug("beforeAll sets static member of SimpleDatasafeService");
-        SimpleDatasafeServiceWithMigration.migrateToNewFolder = false;
         minio().getStorageService().get();
         System.setProperty("MINIO_URL",  minio().getMappedUrl());
+        log.debug("beforeAll sets static member of SimpleDatasafeService");
+        SimpleDatasafeServiceWithMigration.migrateToNewFolder = false;
     }
 
     @AfterAll
