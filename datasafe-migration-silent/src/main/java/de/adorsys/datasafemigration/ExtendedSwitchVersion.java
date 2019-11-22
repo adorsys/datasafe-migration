@@ -18,6 +18,7 @@ import de.adorsys.datasafe_0_6_1.simple.adapter.api.types.S061_DocumentContent;
 import de.adorsys.datasafe_0_6_1.simple.adapter.api.types.S061_DocumentDirectoryFQN;
 import de.adorsys.datasafe_0_6_1.simple.adapter.api.types.S061_DocumentFQN;
 import de.adorsys.datasafe_0_6_1.simple.adapter.api.types.S061_FilesystemDFSCredentials;
+import de.adorsys.datasafe_0_6_1.simple.adapter.api.types.S061_ListRecursiveFlag;
 import de.adorsys.datasafe_1_0_0.encrypiton.api.types.S100_UserIDAuth;
 import de.adorsys.datasafe_1_0_0.simple.adapter.api.types.S100_AmazonS3DFSCredentials;
 import de.adorsys.datasafe_1_0_0.simple.adapter.api.types.S100_DFSCredentials;
@@ -78,6 +79,13 @@ public class ExtendedSwitchVersion extends SwitchVersion {
         }
         throw new RuntimeException("DFSCredentials have new class not known to the code: " + dfsCredentials.getClass().toString());
     }
+
+    public static S061_ListRecursiveFlag to_0_6_1(ListRecursiveFlag listRecursiveFlag) {
+        return listRecursiveFlag.equals(ListRecursiveFlag.TRUE) ?
+                S061_ListRecursiveFlag.TRUE : S061_ListRecursiveFlag.FALSE;
+    }
+
+
 
     public static S100_DFSCredentials to_1_0_0(S061_DFSCredentials dfsCredentials) {
         if (dfsCredentials instanceof S061_AmazonS3DFSCredentials) {

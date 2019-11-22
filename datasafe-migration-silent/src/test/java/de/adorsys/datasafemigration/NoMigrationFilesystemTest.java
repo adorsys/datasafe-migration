@@ -7,9 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ActiveProfiles;
 
 @Slf4j
-@ActiveProfiles("filesystem")
-public class SilentMigrationFilesystemTest extends NotDistinctSilentMigrationTest {
-
+@ActiveProfiles("no-migration-filesystem")
+public class NoMigrationFilesystemTest extends NoMigrationTest{
     @Autowired
     SimpleDatasafeService datasafeService;
 

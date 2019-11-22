@@ -7,6 +7,7 @@ import de.adorsys.datasafe.simple.adapter.api.types.DSDocument;
 import de.adorsys.datasafe.simple.adapter.api.types.DocumentContent;
 import de.adorsys.datasafe.simple.adapter.api.types.DocumentFQN;
 import de.adorsys.datasafe.simple.adapter.impl.GetStorage;
+import de.adorsys.datasafe.simple.adapter.impl.SimpleDatasafeServiceWithMigration;
 import de.adorsys.datasafe.simple.adapter.spring.annotations.UseDatasafeSpringConfiguration;
 import de.adorsys.datasafe.types.api.types.ReadKeyPassword;
 import de.adorsys.datasafe_0_6_1.encrypiton.api.types.S061_UserIDAuth;
@@ -42,6 +43,7 @@ abstract public class SilentMigrationBaseTest extends WithStorageProvider {
 
     public abstract void checkBeforeMigration(UserID userID, GetStorage.SystemRootAndStorageService service, int numberOfDocumentsOfUser);
     public abstract void checkAfterMigration(UserID userID, GetStorage.SystemRootAndStorageService service, int numberOfDocumentsOfUser);
+    public abstract void checkAfterLastMigration(SimpleDatasafeService simpleDatasafeService, Map<S061_UserIDAuth, Set<S061_DSDocument>> oldStructure);
 
     private static int DOCUMENT_SIZE = 1000;
 
@@ -76,10 +78,11 @@ abstract public class SilentMigrationBaseTest extends WithStorageProvider {
         datasafeService.cleanupDb();
     }
 
-    protected void migrationTest(SimpleDatasafeService simpleDatasafeService, S061_DFSCredentials dfsCredentialsToNotMigratedData) {
+    protected void migrationTest(SimpleDatasafeService simpleDatasafeService) {
         log.info("START MIGRATION TEST");
 
-        S061_SimpleDatasafeService s061_simpleDatasafeService = new S061_SimpleDatasafeServiceImpl(dfsCredentialsToNotMigratedData);
+        S061_DFSCredentials credentialsToNOTMigratedData = ((SimpleDatasafeServiceWithMigration) simpleDatasafeService).getCredentialsToNOTMigratedData();
+        S061_SimpleDatasafeService s061_simpleDatasafeService = new S061_SimpleDatasafeServiceImpl(credentialsToNOTMigratedData);
         s061_simpleDatasafeService.cleanupDb();
 
         Set<S061_UserIDAuth> s061_userIDAuths = CreateStructureUtil.getS061_userIDAuths();
@@ -87,7 +90,7 @@ abstract public class SilentMigrationBaseTest extends WithStorageProvider {
 
 
         for(S061_UserIDAuth oldUser : s061_userIDAuths) {
-            GetStorage.SystemRootAndStorageService systemRootAndStorageService = GetStorage.get(ExtendedSwitchVersion.to_1_0_0(dfsCredentialsToNotMigratedData));
+            GetStorage.SystemRootAndStorageService systemRootAndStorageService = GetStorage.get(ExtendedSwitchVersion.to_1_0_0(credentialsToNOTMigratedData));
             UserID userID = ExtendedSwitchVersion.toCurrent(ExtendedSwitchVersion.to_1_0_0(oldUser)).getUserID();
             checkBeforeMigration(userID, systemRootAndStorageService, structure.get(oldUser).size());
             simpleDatasafeService.readDocument(
@@ -95,6 +98,9 @@ abstract public class SilentMigrationBaseTest extends WithStorageProvider {
                     ExtendedSwitchVersion.toCurrent(ExtendedSwitchVersion.to_1_0_0(structure.get(oldUser).stream().findFirst().get().getDocumentFQN())));
             checkAfterMigration(userID, systemRootAndStorageService, structure.get(oldUser).size());
         }
+
+        checkAfterLastMigration(simpleDatasafeService, structure);
+
 
         simpleDatasafeService.cleanupDb();
     }

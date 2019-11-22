@@ -179,7 +179,7 @@ public class SimpleDatasafeServiceWithMigration implements SimpleDatasafeService
             return result;
         }
         List<DocumentFQN> result = new ArrayList<>();
-        newReal.list(userIDAuth.getReal(), documentDirectoryFQN.getReal(), ExtendedSwitchVersion.to_1_0_0(listRecursiveFlag)).forEach(
+        oldReal.list(SwitchVersion.to_0_6_1(userIDAuth.getReal()), SwitchVersion.to_0_6_1(documentDirectoryFQN.getReal()), ExtendedSwitchVersion.to_0_6_1(listRecursiveFlag)).forEach(
                 el -> result.add(new DocumentFQN(el.getDocusafePath()))
         );
         return result;

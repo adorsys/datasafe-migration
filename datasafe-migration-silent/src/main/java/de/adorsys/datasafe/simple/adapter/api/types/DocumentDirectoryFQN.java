@@ -1,10 +1,12 @@
 package de.adorsys.datasafe.simple.adapter.api.types;
 
 import de.adorsys.datasafe_1_0_0.simple.adapter.api.types.S100_DocumentDirectoryFQN;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.experimental.Delegate;
 
 @Getter
+@EqualsAndHashCode
 public class DocumentDirectoryFQN {
     @Delegate (excludes = Without.class)
     S100_DocumentDirectoryFQN real;

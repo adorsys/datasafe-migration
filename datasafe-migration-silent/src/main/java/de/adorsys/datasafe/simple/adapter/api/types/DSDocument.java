@@ -1,19 +1,17 @@
 package de.adorsys.datasafe.simple.adapter.api.types;
 
 import de.adorsys.datasafe_1_0_0.simple.adapter.api.types.S100_DSDocument;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.experimental.Delegate;
 
 @Getter
+@AllArgsConstructor
 public class DSDocument {
-    @Delegate
-    S100_DSDocument real;
+    private DocumentFQN documentFQN;
+    private DocumentContent documentContent;
 
-    public DSDocument(DocumentFQN documentFQN, DocumentContent documentContent) {
-        real = new S100_DSDocument(
-                documentFQN.getReal(),
-                documentContent.getReal()
-        );
+    public S100_DSDocument getReal() {
+        return new S100_DSDocument(documentFQN.getReal(), documentContent.getReal());
     }
-
 }

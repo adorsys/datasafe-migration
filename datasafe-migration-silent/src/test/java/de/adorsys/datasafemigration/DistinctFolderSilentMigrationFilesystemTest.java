@@ -1,7 +1,6 @@
 package de.adorsys.datasafemigration;
 
 import de.adorsys.datasafe.simple.adapter.api.SimpleDatasafeService;
-import de.adorsys.datasafe.simple.adapter.impl.SimpleDatasafeServiceWithMigration;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +20,7 @@ public class DistinctFolderSilentMigrationFilesystemTest extends DistinctSilentM
 
     @Test
     public void doMigrationTest() {
-        migrationTest(datasafeService, ((SimpleDatasafeServiceWithMigration) datasafeService).getCredentialsToNOTMigratedData());
+        migrationTest(datasafeService);
     }
 
 }
