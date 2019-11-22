@@ -3,6 +3,7 @@ package de.adorsys.datasafe.simple.adapter.spring.factory;
 
 import de.adorsys.datasafe.simple.adapter.api.SimpleDatasafeService;
 import de.adorsys.datasafe.simple.adapter.api.exceptions.SimpleAdapterException;
+import de.adorsys.datasafe.simple.adapter.impl.DatasafeMigrationConfig;
 import de.adorsys.datasafe.simple.adapter.impl.SimpleDatasafeServiceWithMigration;
 import de.adorsys.datasafe_1_0_0.encrypiton.api.types.encryption.MutableEncryptionConfig;
 import de.adorsys.datasafe_1_0_0.simple.adapter.api.types.S100_AmazonS3DFSCredentials;
@@ -26,7 +27,7 @@ public class SpringSimpleDatasafeServiceFactory {
     SpringDatasafeEncryptionProperties encryptionProperties;
 
     @Autowired
-    LockProviderFactory.LockProviderWrapper lockProviderForMigration;
+    DatasafeMigrationConfig datasafeMigrationConfig;
 
     S100_DFSCredentials dfsCredentials;
 
@@ -41,7 +42,7 @@ public class SpringSimpleDatasafeServiceFactory {
             }
             dfsCredentials = wiredDfsCredentials;
         }
-        if (lockProviderForMigration == null) {
+        if (datasafeMigrationConfig == null) {
             throw new MigrationException("Injection for LockProvider did not work");
         }
     }
@@ -60,14 +61,10 @@ public class SpringSimpleDatasafeServiceFactory {
     }
 
     public SimpleDatasafeService getSimpleDataSafeServiceWithSubdir(String subdirBelowRoot) {
-        Optional<LockProvider> lockProvider = Optional.empty();
-        if (lockProviderForMigration.getLockProvider() != null) {
-            lockProvider = Optional.of(lockProviderForMigration.getLockProvider());
-        }
         if (dfsCredentials instanceof S100_AmazonS3DFSCredentials) {
             S100_AmazonS3DFSCredentials amazonS3DFSCredentials = (S100_AmazonS3DFSCredentials) dfsCredentials;
             return new SimpleDatasafeServiceWithMigration(
-                    lockProvider,
+                    datasafeMigrationConfig,
                     amazonS3DFSCredentials.toBuilder().rootBucket(
                             amazonS3DFSCredentials.getRootBucket() + "/" + subdirBelowRoot
                     ).build(),
@@ -77,7 +74,7 @@ public class SpringSimpleDatasafeServiceFactory {
         if (dfsCredentials instanceof S100_FilesystemDFSCredentials) {
             S100_FilesystemDFSCredentials filesystemDFSCredentials = (S100_FilesystemDFSCredentials) dfsCredentials;
             return new SimpleDatasafeServiceWithMigration(
-                    lockProvider,
+                    datasafeMigrationConfig,
                     filesystemDFSCredentials.toBuilder().root(
                             filesystemDFSCredentials.getRoot() + "/" + subdirBelowRoot
                     ).build(),

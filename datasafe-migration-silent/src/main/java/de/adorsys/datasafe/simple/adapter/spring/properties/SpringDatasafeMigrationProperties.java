@@ -13,7 +13,7 @@ import javax.annotation.Nullable;
 @Getter
 @Setter
 @ToString
-public class SpringLockProviderProperties {
+public class SpringDatasafeMigrationProperties {
 
     @Nullable
     private String url;
@@ -23,4 +23,7 @@ public class SpringLockProviderProperties {
 
     @Nullable
     private String password;
+
+    @Nullable
+    private Boolean distinctfolder;
 }

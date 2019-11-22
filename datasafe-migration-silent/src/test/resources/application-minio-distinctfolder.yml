@@ -1,0 +1,16 @@
+datasafe:
+  storeconnection:
+    amazons3:
+      url: ${MINIO_URL}
+      accesskey: admin
+      secretkey: password
+      rootbucket: adorsys
+      threadpoolsize: 15
+
+
+  migration:
+    lockprovider:
+      jdbc:
+        url: jdbc:hsqldb:hsql://localhost/test
+        username: SA
+        distinctfolder: true

@@ -43,10 +43,10 @@ public class MigrationLogic {
     private final boolean withIntermediateFolder;
     private final boolean migrationPossible;
 
-    public MigrationLogic(Optional<LockProvider> lockProviderOptional, S061_DFSCredentials oldDFS, S100_DFSCredentials newDFS, MutableEncryptionConfig mutableEncryptionConfig) {
+    public MigrationLogic(LockProvider lockProvider, S061_DFSCredentials oldDFS, S100_DFSCredentials newDFS, MutableEncryptionConfig mutableEncryptionConfig) {
         LogStringFrame lsf = new LogStringFrame();
-        if (lockProviderOptional.isPresent()) {
-            distributedLocker = new DistributedLocker(lockProviderOptional.get());
+        if (lockProvider != null) {
+            distributedLocker = new DistributedLocker(lockProvider);
             migrationPossible = true;
 
             {

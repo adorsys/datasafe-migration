@@ -1,0 +1,12 @@
+datasafe:
+  storeconnection:
+    filesystem:
+      rootbucket: target/test-filesystem/filetest/
+
+
+  migration:
+    lockprovider:
+      jdbc:
+        url: jdbc:hsqldb:hsql://localhost/test
+        username: SA
+        distinctfolder: true
