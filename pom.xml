@@ -6,7 +6,7 @@
 
     <groupId>de.adorsys</groupId>
     <artifactId>datasafe-migration-root</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.1</version>
 
     <name>datasafe-migration-root</name>
     <description>simple datasafe adapter with silent migration under the hood</description>
