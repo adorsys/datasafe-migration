@@ -8,6 +8,30 @@
     <artifactId>datasafe-migration-root</artifactId>
     <version>0.0.1-SNAPSHOT</version>
 
+    <name>datasafe-migration-root</name>
+    <description>simple datasafe adapter with silent migration under the hood</description>
+    <url>https://github.com/adorsys/datasafe-migration</url>
+    <scm>
+        <connection>scm:git@github.com:adorsys/datasafe-migration.git</connection>
+        <developerConnection>scm:git:git@github.com:adorsys/datasafe-migration.git</developerConnection>
+        <url>git@github.com:adorsys/datasafe-migration.git</url>
+        <tag>HEAD</tag>
+    </scm>
+    <licenses>
+        <license>
+            <name>The Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
+    <developers>
+        <developer>
+            <name>Peter Spiessbach</name>
+            <email>psp@adorsys.de</email>
+            <organization>adorsys</organization>
+            <organizationUrl>https://adorsys.de/</organizationUrl>
+        </developer>
+    </developers>
+
     <packaging>pom</packaging>
 
     <modules>
