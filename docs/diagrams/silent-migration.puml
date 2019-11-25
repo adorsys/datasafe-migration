@@ -8,10 +8,10 @@ skinparam shadowing false
 
 actor user
 
-component "Datasafe 1.0\nUBER Jar\n\n\n" as UBER {
-  rectangle "Read/write/list file\n(SimpleDatasafeAdapter)" as proxy
-  component "Datasafe 0.6.1 core-jar (lazily loaded, shaded)" as reader
-  component "Datasafe 1.0.0 core-jar" as datasafe
+component "Datasafe-Migration-Silent 1.0.0\n\n\n" as UBER {
+  rectangle "Read/write/list file\n(SimpleDatasafeService)\nSimpleDatasafeServiceWithMigration" as proxy
+  component "(0_6_1_SimpleDatasafeService) shaded datasafe 0_6_1.jar" as reader
+  component "(1_0_0 SimpleDatasafeService) shaded datasafe 1.0.0.jar" as datasafe
   reader -[hidden]down-> datasafe
 }
 
