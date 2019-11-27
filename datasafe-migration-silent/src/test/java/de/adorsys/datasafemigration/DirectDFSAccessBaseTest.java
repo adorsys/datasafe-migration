@@ -66,6 +66,25 @@ public class DirectDFSAccessBaseTest extends WithStorageProvider {
         datasafeService.cleanupDb();
     }
 
+    @SneakyThrows
+    protected void testUserExists(SimpleDatasafeService datasafeService) {
+        S100_DFSCredentials s100_dfsCredentials = ((SimpleDatasafeServiceWithMigration) datasafeService).getCredentialsToMigratedData();
+        GetStorage.SystemRootAndStorageService base = GetStorage.get(s100_dfsCredentials);
+
+        GetStorage.SystemRootAndStorageService source = new GetStorage.SystemRootAndStorageService(new URI(base.getSystemRoot().toString() + ("source")), base.getStorageService());
+        UserID userID = new UserID("peter");
+
+
+        Assertions.assertFalse(DirectDFSAccess.doesUserExist(source, userID));
+        DocumentFQN fqn = new DocumentFQN("rootfile.txt");
+        DSDocument dsDocument = new DSDocument(fqn, createDocumentContent("content of file " + fqn.getDocusafePath() + ".", 10000));
+        DirectDFSAccess.storeFileInUsersRootDir(source, userID, dsDocument);
+        Assertions.assertTrue(DirectDFSAccess.doesUserExist(source, userID));
+        DirectDFSAccess.destroyAllFileInUsersRootDir(source, userID);
+        Assertions.assertFalse(DirectDFSAccess.doesUserExist(source, userID));
+        datasafeService.cleanupDb();
+    }
+
     private void createNames(Set<DocumentFQN> result, DocumentDirectoryFQN dir, int numberOfFilesPerFolder, int numberOfDirsPerFolder, int depthOfFolders) {
         if (depthOfFolders == 0) {
             return;

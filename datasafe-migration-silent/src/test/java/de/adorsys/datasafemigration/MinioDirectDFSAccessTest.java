@@ -29,5 +29,7 @@ public class MinioDirectDFSAccessTest extends DirectDFSAccessBaseTest {
         super.testMoveFiles(datasafeService);
     }
 
-
+    @Test void testUserExists() {
+        super.testUserExists(datasafeService);
+    }
 }

@@ -1,5 +1,6 @@
 package de.adorsys.datasafemigration;
 
+import de.adorsys.datasafe.encrypiton.api.types.UserID;
 import de.adorsys.datasafe.encrypiton.api.types.UserIDAuth;
 import de.adorsys.datasafe.simple.adapter.api.types.DSDocument;
 import de.adorsys.datasafe.simple.adapter.api.types.DocumentContent;
@@ -15,13 +16,13 @@ import de.adorsys.datasafe_1_0_0.simple.adapter.impl.LogStringFrame;
 import de.adorsys.datasafe_1_0_0.simple.adapter.impl.S100_SimpleDatasafeServiceImpl;
 import de.adorsys.datasafemigration.lockprovider.DistributedLocker;
 import de.adorsys.datasafemigration.withDFSonly.LoadUserOldToNewFormat;
+import jdk.nashorn.internal.ir.annotations.Ignore;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import net.javacrumbs.shedlock.core.LockProvider;
 
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Optional;
 import java.util.Set;
 
 
@@ -122,7 +123,7 @@ public class MigrationLogic {
                 log.debug("as another thread/server seems to be busy with the migration of {}, we now wait at most {} millisecs", username, TIMEOUT_FOR_MIGRATION);
                 for (int i = 0; i < TIMEOUT_FOR_MIGRATION * 2; i++) {
                     Thread.currentThread().sleep(500);
-                    if (physicallyCheckMigrationWasDoneSuccessfully(userIDAuth)) {
+                    if (physicallyCheckMigrationWasDoneSuccessfully(userIDAuth.getUserID())) {
                         log.debug("another thread successfully migrated user {} in the meantime", username);
                         migratedUsers.add(username);
                         return true;
@@ -130,7 +131,7 @@ public class MigrationLogic {
                     // we did not get a lock, so we continue to wait
                 }
                 // we waited long enough. Migration should be finished.
-                if (!physicallyCheckMigrationWasDoneSuccessfully(userIDAuth)) {
+                if (!physicallyCheckMigrationWasDoneSuccessfully(userIDAuth.getUserID())) {
                     throw new MigrationException("we have waitet " + TIMEOUT_FOR_MIGRATION + " millisecs, but migration is not finished yet, what shall we do?");
                 }
                 log.debug("another thread successfully migrated user {} in the meantime", username);
@@ -141,7 +142,7 @@ public class MigrationLogic {
 
             log.debug("check migration does block now for {}", username);
 
-            if (physicallyCheckMigrationWasDoneSuccessfully(userIDAuth)) {
+            if (physicallyCheckMigrationWasDoneSuccessfully(userIDAuth.getUserID())) {
                 log.debug("migration for {} was already done, or user did not exist", username);
                 migratedUsers.add(username);
                 return true;
@@ -207,18 +208,32 @@ public class MigrationLogic {
      * should used direct storage to be able to place the migration file in another location
      * and unencrypyted
      *
-     * @param userIDAuth
+     * @param userID
      * @return
      */
-    private boolean physicallyCheckMigrationWasDoneSuccessfully(UserIDAuth userIDAuth) {
-        if (!(oldService.userExists(ExtendedSwitchVersion.to_0_6_1(userIDAuth.getReal().getUserID()))) &&
-                !(newService.userExists(userIDAuth.getReal().getUserID()))) {
-            return true;
-        }
-        try {
-            return DirectDFSAccess.doesDocumentExistInUsersRootDir(newStorage, userIDAuth.getUserID(), MIGRATION_CONFIRMATION);
-        } catch (Exception e) {
-            // if the document does not exist for whatever reason, the migration is not done yet.
+    @SuppressWarnings("Duplicates")
+    private boolean physicallyCheckMigrationWasDoneSuccessfully(UserID userID) {
+        if (withIntermediateFolder) {
+            if (DirectDFSAccess.doesDocumentExistInUsersRootDir(finalStorage, userID, MIGRATION_CONFIRMATION)) {
+                log.debug("user {} is already migrated");
+                return true;
+            }
+            if (!DirectDFSAccess.doesUserExist(finalStorage, userID)) {
+                log.debug("user {} does not exist at all and thus is to be regarded as migrated");
+                return true;
+            }
+            log.debug("user {} is not yet migrated", userID);
+            return false;
+        } else {
+            if (DirectDFSAccess.doesDocumentExistInUsersRootDir(newStorage, userID, MIGRATION_CONFIRMATION)) {
+                log.debug("user {} is already migrated");
+                return true;
+            }
+            if (!DirectDFSAccess.doesUserExist(oldStorage, userID)) {
+                log.debug("user {} does not exist at all and thus is to be regarded as migrated");
+                return true;
+            }
+            log.debug("user {} is not yet migrated", userID);
             return false;
         }
     }

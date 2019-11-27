@@ -20,4 +20,8 @@ public class FilesystemDirectDFSAccessTest extends DirectDFSAccessBaseTest {
     public void testMoveFiles() {
         super.testMoveFiles(datasafeService);
     }
+
+    @Test void testUserExists() {
+        super.testUserExists(datasafeService);
+    }
 }

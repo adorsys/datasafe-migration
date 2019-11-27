@@ -50,9 +50,13 @@ public class DirectDFSAccess {
         try (Stream<AbsoluteLocation<ResolvedResource>> list = source.getStorageService().list(sourceLocation)) {
             list.forEach(el -> {
                 source.getStorageService().remove(el);
+                log.info("destroy :" + el.toString());
                 numberOfFilesDestoyed.incrementAndGet();
             });
         }
+        source.getStorageService().remove(sourceLocation);
+        numberOfFilesDestoyed.incrementAndGet();
+
         return numberOfFilesDestoyed.get();
     }
 
@@ -93,6 +97,22 @@ public class DirectDFSAccess {
             list.forEach(el -> result.add(el.location().asURI().toASCIIString()));
         }
         return result.stream().sorted().collect(Collectors.toList());
+    }
+
+    @SneakyThrows
+    static public boolean doesUserExist(GetStorage.SystemRootAndStorageService source, UserID userID) {
+        String root = getSystemRootDirOfUsers(source.getSystemRoot(), userID);
+        AbsoluteLocation<PrivateResource> sourceLocation = BasePrivateResource.forAbsolutePrivate(root);
+        // different behaviour of filesystem and minio
+        if (source.getStorageService().objectExists(sourceLocation)) {
+            return true;
+        }
+        try (Stream<AbsoluteLocation<ResolvedResource>> list = source.getStorageService().list(sourceLocation)) {
+            if (list.count() > 0) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @SneakyThrows
