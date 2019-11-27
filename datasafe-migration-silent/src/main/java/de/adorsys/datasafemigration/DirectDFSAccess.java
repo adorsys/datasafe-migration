@@ -50,7 +50,7 @@ public class DirectDFSAccess {
         try (Stream<AbsoluteLocation<ResolvedResource>> list = source.getStorageService().list(sourceLocation)) {
             list.forEach(el -> {
                 source.getStorageService().remove(el);
-                log.info("destroy :" + el.toString());
+                log.debug("destroy :" + el.toString());
                 numberOfFilesDestoyed.incrementAndGet();
             });
         }

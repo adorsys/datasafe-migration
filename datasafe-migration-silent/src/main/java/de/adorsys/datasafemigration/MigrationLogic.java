@@ -21,6 +21,8 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import net.javacrumbs.shedlock.core.LockProvider;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -188,6 +190,7 @@ public class MigrationLogic {
             throw new MigrationException("user " + userIDAuth.getUserID().getValue() + " already exists in migrated dfs, but is not yet migrated");
         }
         log.debug("NOW MIGRATION OF USER {} IS STARTED", userIDAuth.getUserID().getValue());
+        Instant start = Instant.now();
 
         LoadUserOldToNewFormat.MigrationInfo migrationInfo = new LoadUserOldToNewFormat(oldService, newService).migrateUser(userIDAuth.getReal());
         log.info(migrationInfo.toString());
@@ -195,13 +198,21 @@ public class MigrationLogic {
         DSDocument dsDocument = new DSDocument(MIGRATION_CONFIRMATION, new DocumentContent(migrationInfo.toString().getBytes()));
         DirectDFSAccess.storeFileInUsersRootDir(newStorage, userIDAuth.getUserID(), dsDocument);
 
+        DirectDFSAccess.MoveInfo moveInfo = null;
         if (withIntermediateFolder) {
-            moveFromIntermediateToFinal(userIDAuth);
+            moveInfo = moveFromIntermediateToFinal(userIDAuth);
         } else {
             int destroyedInOld = DirectDFSAccess.destroyAllFileInUsersRootDir(oldStorage, userIDAuth.getUserID());
             log.debug("destroyed user in old location. deleted {} files.", destroyedInOld);
         }
+
+        Duration totalTimeOfMigration = Duration.between(start, Instant.now());
+
         log.debug("NOW MIGRATION OF USER {} IS FINISHED", userIDAuth.getUserID().getValue());
+        long totalMillis = totalTimeOfMigration.toMillis();
+        long migrationMillis = migrationInfo.getDuration().toMillis();
+        long filemovementMillis = totalMillis - migrationMillis;
+        log.info("MIGRATION OF {} FILES FOR USER {} TOOK {} MILLIS. Migration itself took {} millis and relocation of files took {} millis.", migrationInfo.getFiles(), userIDAuth.getUserID().getValue(), totalMillis, migrationMillis, filemovementMillis);
     }
 
     /**
@@ -238,13 +249,14 @@ public class MigrationLogic {
         }
     }
 
-    private void moveFromIntermediateToFinal(UserIDAuth userIDAuth) {
+    private DirectDFSAccess.MoveInfo moveFromIntermediateToFinal(UserIDAuth userIDAuth) {
         int destroyedInOld = DirectDFSAccess.destroyAllFileInUsersRootDir(oldStorage, userIDAuth.getUserID());
         DirectDFSAccess.MoveInfo moveInfo = DirectDFSAccess.moveAllFiles(newStorage, oldStorage, userIDAuth.getUserID());
         int destroyedInNew = DirectDFSAccess.destroyAllFileInUsersRootDir(newStorage, userIDAuth.getUserID());
         log.info("destroyed {} files in old format of user {} ", destroyedInOld, userIDAuth.getUserID().getValue());
         log.info("moveinfo {} for user {}", moveInfo.toString(), userIDAuth.getUserID().getValue());
         log.info("destroyed {} files in new format of user {} ", destroyedInNew, userIDAuth.getUserID().getValue());
+        return moveInfo;
     }
 
 
