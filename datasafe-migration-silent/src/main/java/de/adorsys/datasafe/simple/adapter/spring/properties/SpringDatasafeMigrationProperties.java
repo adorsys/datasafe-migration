@@ -25,5 +25,8 @@ public class SpringDatasafeMigrationProperties {
     private String password;
 
     @Nullable
+    private String createtablecommand;
+
+    @Nullable
     private Boolean distinctfolder;
 }

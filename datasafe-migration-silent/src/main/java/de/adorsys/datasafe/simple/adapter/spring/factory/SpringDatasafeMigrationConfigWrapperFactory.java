@@ -34,7 +34,10 @@ public class SpringDatasafeMigrationConfigWrapperFactory {
         }
 
         JdbcTemplate jdbcTemplate = new JdbcTemplate(datasource);
-        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS shedlock(name VARCHAR(64), lock_until TIMESTAMP(3), locked_at TIMESTAMP(3), locked_by  VARCHAR(255), PRIMARY KEY (name))");
+        String createTableCommand = springDatasafeMigrationProperties.getCreatetablecommand();
+        if (createTableCommand != null) {
+            jdbcTemplate.execute(createTableCommand);
+        }
         LockProvider lockProvider = new JdbcTemplateLockProvider(datasource);
         return new DatasafeMigrationConfig(lockProvider, migrationDoNewFolder);
     }
