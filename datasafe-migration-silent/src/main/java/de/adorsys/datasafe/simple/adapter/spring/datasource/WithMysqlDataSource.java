@@ -14,12 +14,15 @@ public class WithMysqlDataSource {
     public static DataSource get(SpringMysqlDatasourceProperties props) {
 
         MysqlDataSource datasource = new MysqlDataSource();
-        datasource.setURL(props.getUrl());
+        log.debug("set url to mysql connection");
+        datasource.setUrl(props.getUrl());
         datasource.setUser(props.getUsername());
-        datasource.setPassword(props.getUsername());
+        datasource.setPassword(props.getPassword());
+
 
         JdbcTemplate jdbcTemplate = new JdbcTemplate(datasource);
         jdbcTemplate.execute(createTable);
+
 
         return datasource;
     }

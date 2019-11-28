@@ -26,6 +26,7 @@ public class TestWithMysql {
     @Autowired
     SimpleDatasafeService datasafeService;
 
+    // Needs external provided MySql will be tested manually
     // @Test
     public void checkAutowire() {
         Assertions.assertNotNull(datasafeService);

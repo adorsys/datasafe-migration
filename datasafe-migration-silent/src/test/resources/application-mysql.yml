@@ -7,6 +7,6 @@ datasafe:
     lockprovider:
       jdbc:
         mysql:
-          url: jdbc:mysql://locahost:3333/shedlock
+          url: jdbc:mysql://localhost:3333/shedlock
           username: root
           password: my-secret-pw
