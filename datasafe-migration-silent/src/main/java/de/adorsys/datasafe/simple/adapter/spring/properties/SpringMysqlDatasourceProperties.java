@@ -13,6 +13,7 @@ import org.springframework.validation.annotation.Validated;
 @ToString
 public class SpringMysqlDatasourceProperties {
     private String url;
+    private Integer port;
     private String username;
     private String password;
 

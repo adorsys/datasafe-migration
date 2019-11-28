@@ -24,9 +24,11 @@ public class SpringDatasafeMigrationConfigWrapperFactory {
 
         DataSource dataSource = null;
         if (jdbc.getHikari() != null) {
+            log.debug("choose hikari datasource");
             dataSource = WithHikariDataSource.get(jdbc.getHikari());
         }
         if (jdbc.getMysql() != null) {
+            log.debug("choose mysql datasource");
             dataSource = WithMysqlDataSource.get(jdbc.getMysql());
         }
         if (dataSource == null) {

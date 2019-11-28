@@ -16,6 +16,7 @@ public class WithMysqlDataSource {
         datasource.setUser(props.getUsername());
         datasource.setPassword(props.getUsername());
 
+        datasource.setPort(props.getPort());
         JdbcTemplate jdbcTemplate = new JdbcTemplate(datasource);
         jdbcTemplate.execute(createTable);
 
