@@ -1,0 +1,12 @@
+datasafe:
+  storeconnection:
+    filesystem:
+      rootbucket: target/test-filesystem/filetest/
+
+  migration:
+    lockprovider:
+      jdbc:
+        mysql:
+          url: jdbc:mysql://locahost:3333/shedlock
+          username: root
+          password: my-secret-pw
