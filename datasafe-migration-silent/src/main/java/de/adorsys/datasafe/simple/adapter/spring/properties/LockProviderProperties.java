@@ -6,17 +6,11 @@ import lombok.ToString;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.validation.annotation.Validated;
 
-import javax.annotation.Nullable;
-
-@ConfigurationProperties(prefix = "datasafe.migration")
+@ConfigurationProperties(prefix = "datasafe.migration.lockprovider")
 @Validated
 @Getter
 @Setter
 @ToString
-public class SpringDatasafeMigrationProperties {
-    @Nullable
-    private Boolean distinctfolder;
-
-    @Nullable
-    private LockProviderProperties lockprovider;
+public class LockProviderProperties {
+    private JdbcProperties jdbc;
 }

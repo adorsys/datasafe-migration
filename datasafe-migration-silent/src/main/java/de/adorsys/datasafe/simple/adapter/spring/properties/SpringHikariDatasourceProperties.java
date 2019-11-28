@@ -8,15 +8,12 @@ import org.springframework.validation.annotation.Validated;
 
 import javax.annotation.Nullable;
 
-@ConfigurationProperties(prefix = "datasafe.migration")
+@ConfigurationProperties(prefix = "datasafe.migration.lockprovider.jdbc.hikari")
 @Validated
 @Getter
 @Setter
 @ToString
-public class SpringDatasafeMigrationProperties {
-    @Nullable
-    private Boolean distinctfolder;
-
-    @Nullable
-    private LockProviderProperties lockprovider;
+public class SpringHikariDatasourceProperties {
+    private String url;
+    private String username;
 }

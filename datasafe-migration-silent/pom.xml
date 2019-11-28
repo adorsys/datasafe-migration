@@ -301,6 +301,11 @@
             <scope>test</scope>
         </dependency>
         <!-- test hsql for shedlock end -->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>8.0.16</version>
+        </dependency>
 
 
         <!-- WithStorageProviderStuff -->

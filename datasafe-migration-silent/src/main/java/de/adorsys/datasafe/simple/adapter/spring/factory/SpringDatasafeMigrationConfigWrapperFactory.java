@@ -1,44 +1,45 @@
 package de.adorsys.datasafe.simple.adapter.spring.factory;
 
-import com.zaxxer.hikari.HikariDataSource;
 import de.adorsys.datasafe.simple.adapter.impl.DatasafeMigrationConfig;
+import de.adorsys.datasafe.simple.adapter.spring.datasource.WithHikariDataSource;
+import de.adorsys.datasafe.simple.adapter.spring.datasource.WithMysqlDataSource;
+import de.adorsys.datasafe.simple.adapter.spring.properties.JdbcProperties;
 import de.adorsys.datasafe.simple.adapter.spring.properties.SpringDatasafeMigrationProperties;
+import de.adorsys.datasafemigration.MigrationException;
 import lombok.extern.slf4j.Slf4j;
 import net.javacrumbs.shedlock.core.LockProvider;
 import net.javacrumbs.shedlock.provider.jdbctemplate.JdbcTemplateLockProvider;
-import org.springframework.jdbc.core.JdbcTemplate;
+
+import javax.sql.DataSource;
 
 @Slf4j
 public class SpringDatasafeMigrationConfigWrapperFactory {
-    public static DatasafeMigrationConfig getFromProperties(SpringDatasafeMigrationProperties springDatasafeMigrationProperties) {
-        if (springDatasafeMigrationProperties.getUrl() == null) {
+    public static DatasafeMigrationConfig getFromProperties(SpringDatasafeMigrationProperties properties) {
+        if (properties.getLockprovider() == null) {
             log.info("NO URL FOR LOCKPROVIDER GIVEN");
             return new DatasafeMigrationConfig(null, Boolean.FALSE);
         }
+
+        JdbcProperties jdbc = properties.getLockprovider().getJdbc();
+
+        DataSource dataSource = null;
+        if (jdbc.getHikari() != null) {
+            dataSource = WithHikariDataSource.get(jdbc.getHikari());
+        }
+        if (jdbc.getMysql() != null) {
+            dataSource = WithMysqlDataSource.get(jdbc.getMysql());
+        }
+        if (dataSource == null) {
+            throw new MigrationException("Specification of jdbc not given in properties");
+        }
         log.info("URL FOR LOCKPROVIDER GIVEN");
 
-        HikariDataSource datasource = new HikariDataSource();
-        datasource.setJdbcUrl(springDatasafeMigrationProperties.getUrl());
-
-        if (springDatasafeMigrationProperties.getUsername() != null) {
-            datasource.setUsername(springDatasafeMigrationProperties.getUsername());
-        }
-
-        if (springDatasafeMigrationProperties.getPassword() != null) {
-            datasource.setPassword(springDatasafeMigrationProperties.getPassword());
-        }
-
         Boolean migrationDoNewFolder = Boolean.FALSE;
-        if (springDatasafeMigrationProperties.getDistinctfolder()!= null) {
-            migrationDoNewFolder = springDatasafeMigrationProperties.getDistinctfolder();
+        if (properties.getDistinctfolder() != null) {
+            migrationDoNewFolder = properties.getDistinctfolder();
         }
 
-        JdbcTemplate jdbcTemplate = new JdbcTemplate(datasource);
-        String createTableCommand = springDatasafeMigrationProperties.getCreatetablecommand();
-        if (createTableCommand != null) {
-            jdbcTemplate.execute(createTableCommand);
-        }
-        LockProvider lockProvider = new JdbcTemplateLockProvider(datasource);
+        LockProvider lockProvider = new JdbcTemplateLockProvider(dataSource);
         return new DatasafeMigrationConfig(lockProvider, migrationDoNewFolder);
     }
 

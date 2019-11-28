@@ -8,15 +8,15 @@ import org.springframework.validation.annotation.Validated;
 
 import javax.annotation.Nullable;
 
-@ConfigurationProperties(prefix = "datasafe.migration")
+@ConfigurationProperties(prefix = "datasafe.migration.lockprovider.jdbc")
 @Validated
 @Getter
 @Setter
 @ToString
-public class SpringDatasafeMigrationProperties {
+public class JdbcProperties {
     @Nullable
-    private Boolean distinctfolder;
+    private SpringHikariDatasourceProperties hikari;
 
     @Nullable
-    private LockProviderProperties lockprovider;
+    private SpringMysqlDatasourceProperties mysql;
 }

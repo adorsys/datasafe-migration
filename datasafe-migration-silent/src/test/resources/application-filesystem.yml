@@ -3,11 +3,14 @@ datasafe:
     filesystem:
       rootbucket: target/test-filesystem/filetest/
 
-
   migration:
     lockprovider:
       jdbc:
-        url: jdbc:hsqldb:hsql://localhost/test
-        username: SA
-        createtablecommand: CREATE TABLE IF NOT EXISTS shedlock(name VARCHAR(64), lock_until TIMESTAMP(3), locked_at TIMESTAMP(3), locked_by  VARCHAR(255), PRIMARY KEY (name))
+        hikari:
+          url: jdbc:hsqldb:hsql://localhost/test
+          username: SA
+
+
+
+
 
