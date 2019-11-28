@@ -7,7 +7,7 @@
     <parent>
         <groupId>de.adorsys</groupId>
         <artifactId>datasafe-migration-root</artifactId>
-        <version>0.0.5-SNAPSHOT</version>
+        <version>0.6.0</version>
     </parent>
 
     <artifactId>datasafe-migration</artifactId>
@@ -17,7 +17,7 @@
         <dependency>
             <groupId>de.adorsys</groupId>
             <artifactId>datasafe-migration-shaded-0.6.1</artifactId>
-            <version>0.0.5-SNAPSHOT</version>
+            <version>0.6.0</version>
             <exclusions>
                 <exclusion>
                     <groupId>de.adorsys</groupId>
@@ -98,7 +98,7 @@
         <dependency>
             <groupId>de.adorsys</groupId>
             <artifactId>datasafe-migration-shaded-1.0.0</artifactId>
-            <version>0.0.5-SNAPSHOT</version>
+            <version>0.6.0</version>
             <exclusions>
                 <exclusion>
                     <groupId>de.adorsys</groupId>
