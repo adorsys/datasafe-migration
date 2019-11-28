@@ -29,6 +29,7 @@ public class SpringDatasafeMigrationConfigWrapperFactory {
         }
         if (jdbc.getMysql() != null) {
             log.debug("choose mysql datasource");
+            log.warn("log must be removed due credentials visibile: choose mysql datasource {}", jdbc.getMysql().toString());
             dataSource = WithMysqlDataSource.get(jdbc.getMysql());
         }
         if (dataSource == null) {
