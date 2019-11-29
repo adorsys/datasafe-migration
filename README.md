@@ -1,5 +1,6 @@
 This is tool for a silent migration of datasafe.
 
+# purpose  
 ![Modules map](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/adorsys/datasafe-migration/develop/docs/diagrams/silent-migration.puml&fmt=svg&vvv=1&sanitize=true)
 
 Datasafe 1.0.0 has changed path encryption and keystore type. For this it is no more compatible to datasafe 0.6.1.
@@ -21,6 +22,124 @@ same password but a different type (now it is a BCFKS rather that an UBER).
 When the migration is done successfully an additional file is created directly in the 
 root of the user. This file is not encrypted and even the pathname is not encrypted.
 This file simply tells that the user is in the new format of datasafe 1.0.0.
+
+# usage
+
+## interface change
+Rather than using the new Datasafe 1.0.0 you simple use Datasafe-Migration 1.0.0. As in Datasafe
+1.0.0 the interface of the ReadKeyPassword has slightly changed, all occurrences of 
+ReadKeyPassword have to be changed.
+
+```
+# 0.6.1
+import de.adorsys.datasafe.encrypiton.api.types.keystore.ReadKeyPassword;
+UserIDAuth userIDAuth = new UserIDAuth(new UserID("peter"), new ReadKeyPassword("password"));
+```
+
+
+```
+# 1.0.0
+import de.adorsys.datasafe.types.api.types.ReadKeyPassword;
+UserIDAuth userIDAuth = new UserIDAuth(new UserID("peter"), new ReadKeyPassword("password"::toCharArray));
+``` 
+
+As the migration completly behaves like the new datasafe, the interface change have to be done.
+
+## configuration
+
+By default the migration is switched of, e.g. it behaves like datasafe 0.6.1 and does not do anyting.
+Anyway it has already the new Interface for the ReadKeyPassword, even if the old datasafe logic is used.
+
+To activate the migration logic the configuration.yml has to get jdbc parameters. As the migration must only be 
+done on one server at the time, others have to be blocked. For that shedlock is used.
+And shedlock has to be provided with a database connection.
+
+Currently three jdbc implementations are integrated and simply can be switched on, by setting the follogin
+parameters in the <code>configuration.yml</code>. 
+
+### H2SQL
+```
+datasafe
+  migration:
+    lockprovider:
+      jdbc:
+        hikari:
+          url: jdbc:hsqldb:hsql://localhost/test
+          username: SA
+```
+
+### MYSQL
+```
+datasafe
+  migration:
+    lockprovider:
+      jdbc:
+        mysql:
+          url: jdbc:mysql://localhost:3333/shedlock
+          username: root
+          password: my-secret-pw
+```
+### POSTGRES
+```
+datasafe
+  migration:
+    lockprovider:
+      jdbc:
+        postgres:
+          url: jdbc:postgresql://localhost:5432/shedlock
+          username: postgres
+          password: password
+```
+
+By default, the migration migrates the users from the existing DFS/<directory> to itself. To do this,
+a temporary subfolder with name <code>tempForMigrationTo100</code> is used which is below this directory.
+After a successfull migration this directory always is empty, as the user has been moved to the back original
+diractory.
+
+If you dont want the users to be moved back, you can use the option
+
+```
+datasafe
+  migration:
+    distinctfolder: true 
+```
+Then all migrated users go to the subfolder <code>tempForMigrationTo100</code> and stay there.
+
+## check configuration
+
+When the migration is disabled (e.g. not migration parameters given) the log writes 
+```
+************************************
+*                                  *
+*  MigrationLogic      : DISABLED  *
+*                                  *
+************************************
+```
+When the migration is enabeld the log contains:
+
+```
+******************************************************************************
+*                                                                            *
+*  MigrationLogic      : ENABLED                                             *
+*  intermediate folder : YES                                                 *
+*             old root : s3://adorsys-test-migration/                        *
+*    intermediate root : s3://adorsys-test-migration/tempForMigrationTo100/  *
+*             new root : s3://adorsys-test-migration/                        *
+*                                                                            *
+******************************************************************************
+```
+or, if <code>distinctfolder: true</code> has been set it is 
+```
+************************************************************
+*                                                          *
+*  MigrationLogic      : ENABLED                           *
+*  intermediate folder : NO                                *
+*             old root : s3://adorsys-test-migration/      *
+*             new root : s3://adorsys-test-migration/100/  *
+*                                                          *
+************************************************************
+```
+
 
 # modules
 ## datasafe-migration-shaded-0.6.1
