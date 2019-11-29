@@ -117,6 +117,22 @@ public class MigrationLogic {
             return true;
         }
 
+        // before now accessing a lock to work eclusivly, we can check if user is already migrated
+        if (withIntermediateFolder) {
+            if (DirectDFSAccess.doesDocumentExistInUsersRootDir(finalStorage, userIDAuth.getUserID(), MIGRATION_CONFIRMATION)) {
+                log.debug("user {} is already migrated, found version file in finalStorage", username);
+                migratedUsers.add(username);
+                return true;
+            }
+        } else {
+            if (DirectDFSAccess.doesDocumentExistInUsersRootDir(newStorage, userIDAuth.getUserID(), MIGRATION_CONFIRMATION)) {
+                log.debug("user {} is already migrated, found version file in newStorage", username);
+                migratedUsers.add(username);
+                return true;
+            }
+        }
+        // now as the user does not exist yet, we have to get a lock
+
         boolean gotALock = false;
 
         log.debug("check migration for {} not in cache yet", username);
