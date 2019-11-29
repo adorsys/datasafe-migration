@@ -4,8 +4,8 @@ import de.adorsys.datasafe_0_6_1.simple.adapter.api.S061_SimpleDatasafeService;
 import de.adorsys.datasafe_0_6_1.simple.adapter.api.types.S061_DSDocument;
 import de.adorsys.datasafe_0_6_1.simple.adapter.api.types.S061_DocumentContent;
 import de.adorsys.datasafe_0_6_1.simple.adapter.api.types.S061_DocumentFQN;
-import de.adorsys.datasafe_1_0_0.encrypiton.api.types.S100_UserIDAuth;
-import de.adorsys.datasafe_1_0_0.simple.adapter.api.types.S100_DocumentDirectoryFQN;
+import de.adorsys.datasafe_1_0_1.encrypiton.api.types.S101_UserIDAuth;
+import de.adorsys.datasafe_1_0_1.simple.adapter.api.types.S101_DocumentDirectoryFQN;
 import de.adorsys.datasafemigration.common.SwitchVersion;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
@@ -22,10 +22,10 @@ import java.util.stream.Stream;
 @AllArgsConstructor
 public class WriteOldUserFromLocal {
     private final S061_SimpleDatasafeService simpleDatasafeService;
-    private final S100_DocumentDirectoryFQN src;
+    private final S101_DocumentDirectoryFQN src;
 
     @SneakyThrows
-    public void migrateUser(S100_UserIDAuth userIDAuth) {
+    public void migrateUser(S101_UserIDAuth userIDAuth) {
 
         if (simpleDatasafeService.userExists(SwitchVersion.to_0_6_1(userIDAuth).getUserID())) {
             throw new RuntimeException("user " + userIDAuth.getUserID().getValue() + " already exists in old format");

@@ -1,10 +1,10 @@
 package de.adorsys.datasafemigration.docker;
 
-import de.adorsys.datasafe_1_0_0.storage.api.StorageService;
-import de.adorsys.datasafe_1_0_0.storage.impl.fs.FileSystemStorageService;
-import de.adorsys.datasafe_1_0_0.storage.impl.s3.S3StorageService;
-import de.adorsys.datasafe_1_0_0.types.api.resource.Uri;
-import de.adorsys.datasafe_1_0_0.types.api.utils.ExecutorServiceUtil;
+import de.adorsys.datasafe_1_0_1.storage.api.StorageService;
+import de.adorsys.datasafe_1_0_1.storage.impl.fs.FileSystemStorageService;
+import de.adorsys.datasafe_1_0_1.storage.impl.s3.S3StorageService;
+import de.adorsys.datasafe_1_0_1.types.api.resource.Uri;
+import de.adorsys.datasafe_1_0_1.types.api.utils.ExecutorServiceUtil;
 
 import com.amazonaws.ClientConfiguration;
 import com.amazonaws.Protocol;

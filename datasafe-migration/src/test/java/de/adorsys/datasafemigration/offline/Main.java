@@ -4,13 +4,13 @@ import de.adorsys.datasafe_0_6_1.simple.adapter.api.S061_SimpleDatasafeService;
 import de.adorsys.datasafe_0_6_1.simple.adapter.api.types.S061_AmazonS3DFSCredentials;
 import de.adorsys.datasafe_0_6_1.simple.adapter.api.types.S061_DFSCredentials;
 import de.adorsys.datasafe_0_6_1.simple.adapter.impl.S061_SimpleDatasafeServiceImpl;
-import de.adorsys.datasafe_1_0_0.encrypiton.api.types.S100_UserIDAuth;
-import de.adorsys.datasafe_1_0_0.encrypiton.api.types.encryption.MutableEncryptionConfig;
-import de.adorsys.datasafe_1_0_0.simple.adapter.api.S100_SimpleDatasafeService;
-import de.adorsys.datasafe_1_0_0.simple.adapter.api.types.S100_AmazonS3DFSCredentials;
-import de.adorsys.datasafe_1_0_0.simple.adapter.api.types.S100_DFSCredentials;
-import de.adorsys.datasafe_1_0_0.simple.adapter.api.types.S100_DocumentDirectoryFQN;
-import de.adorsys.datasafe_1_0_0.simple.adapter.impl.S100_SimpleDatasafeServiceImpl;
+import de.adorsys.datasafe_1_0_1.encrypiton.api.types.S101_UserIDAuth;
+import de.adorsys.datasafe_1_0_1.encrypiton.api.types.encryption.MutableEncryptionConfig;
+import de.adorsys.datasafe_1_0_1.simple.adapter.api.S101_SimpleDatasafeService;
+import de.adorsys.datasafe_1_0_1.simple.adapter.api.types.S101_AmazonS3DFSCredentials;
+import de.adorsys.datasafe_1_0_1.simple.adapter.api.types.S101_DFSCredentials;
+import de.adorsys.datasafe_1_0_1.simple.adapter.api.types.S101_DocumentDirectoryFQN;
+import de.adorsys.datasafe_1_0_1.simple.adapter.impl.S101_SimpleDatasafeServiceImpl;
 import de.adorsys.datasafemigration.withDFSonly.LoadUserNewToNewFormat;
 import de.adorsys.datasafemigration.withDFSonly.LoadUserOldToNewFormat;
 import de.adorsys.datasafemigration.withlocalfilesystem.LoadNewUserToLocal;
@@ -55,56 +55,56 @@ public class Main {
     public static void main(String[] args) {
         Security.addProvider(new BouncyCastleProvider());
 
-        List<S100_UserIDAuth> usersToMigrate = ReadUserPasswordFile.getAllUsers(get(args, USERLISTFILE));
+        List<S101_UserIDAuth> usersToMigrate = ReadUserPasswordFile.getAllUsers(get(args, USERLISTFILE));
 
         if (get(args, ACTION).equals(LOAD_OLD_TO_LOCAL)) {
-            S100_DocumentDirectoryFQN localfolder = new S100_DocumentDirectoryFQN(get(args, LOCALFOLDER));
+            S101_DocumentDirectoryFQN localfolder = new S101_DocumentDirectoryFQN(get(args, LOCALFOLDER));
             S061_SimpleDatasafeService simpleDatasafeService = new S061_SimpleDatasafeServiceImpl(getOldDfsCredentials(args));
             LoadOldUserToLocal service = new LoadOldUserToLocal(simpleDatasafeService, localfolder);
-            for (S100_UserIDAuth userIDAuth : usersToMigrate) {
+            for (S101_UserIDAuth userIDAuth : usersToMigrate) {
                 service.migrateUser(userIDAuth);
             }
         }
         if (get(args, ACTION).equals(LOAD_NEW_TO_LOCAL)) {
-            S100_DocumentDirectoryFQN localfolder = new S100_DocumentDirectoryFQN(get(args, LOCALFOLDER));
-            S100_SimpleDatasafeService simpleDatasafeService = new S100_SimpleDatasafeServiceImpl(getNewDfsCredentials(NEW, args), new MutableEncryptionConfig());
+            S101_DocumentDirectoryFQN localfolder = new S101_DocumentDirectoryFQN(get(args, LOCALFOLDER));
+            S101_SimpleDatasafeService simpleDatasafeService = new S101_SimpleDatasafeServiceImpl(getNewDfsCredentials(NEW, args), new MutableEncryptionConfig());
             LoadNewUserToLocal service = new LoadNewUserToLocal(simpleDatasafeService, localfolder);
-            for (S100_UserIDAuth userIDAuth : usersToMigrate) {
+            for (S101_UserIDAuth userIDAuth : usersToMigrate) {
                 service.migrateUser(userIDAuth);
             }
         }
         if (get(args, ACTION).equals(STORE_LOCAL_TO_NEW)) {
-            S100_DocumentDirectoryFQN localfolder = new S100_DocumentDirectoryFQN(get(args, LOCALFOLDER));
-            S100_SimpleDatasafeService simpleDatasafeService = new S100_SimpleDatasafeServiceImpl(getNewDfsCredentials(NEW, args), new MutableEncryptionConfig());
+            S101_DocumentDirectoryFQN localfolder = new S101_DocumentDirectoryFQN(get(args, LOCALFOLDER));
+            S101_SimpleDatasafeService simpleDatasafeService = new S101_SimpleDatasafeServiceImpl(getNewDfsCredentials(NEW, args), new MutableEncryptionConfig());
             WriteNewUserFromLocal service = new WriteNewUserFromLocal(simpleDatasafeService, localfolder);
-            for (S100_UserIDAuth userIDAuth : usersToMigrate) {
+            for (S101_UserIDAuth userIDAuth : usersToMigrate) {
                 service.migrateUser(userIDAuth);
             }
         }
         if (get(args, ACTION).equals(STORE_LOCAL_TO_OLD)) {
-            S100_DocumentDirectoryFQN localfolder = new S100_DocumentDirectoryFQN(get(args, LOCALFOLDER));
+            S101_DocumentDirectoryFQN localfolder = new S101_DocumentDirectoryFQN(get(args, LOCALFOLDER));
             S061_SimpleDatasafeService simpleDatasafeService = new S061_SimpleDatasafeServiceImpl(getOldDfsCredentials(args));
             WriteOldUserFromLocal service = new WriteOldUserFromLocal(simpleDatasafeService, localfolder);
-            for (S100_UserIDAuth userIDAuth : usersToMigrate) {
+            for (S101_UserIDAuth userIDAuth : usersToMigrate) {
                 service.migrateUser(userIDAuth);
             }
         }
         if (get(args, ACTION).equals(MIGRATE_DFS_TO_INTERMEDIATE)) {
-            S100_SimpleDatasafeService intermediateService = new S100_SimpleDatasafeServiceImpl(getNewDfsCredentials("intermediate", args), new MutableEncryptionConfig());
+            S101_SimpleDatasafeService intermediateService = new S101_SimpleDatasafeServiceImpl(getNewDfsCredentials("intermediate", args), new MutableEncryptionConfig());
             S061_SimpleDatasafeService oldService = new S061_SimpleDatasafeServiceImpl(getOldDfsCredentials(args));
 
             LoadUserOldToNewFormat old = new LoadUserOldToNewFormat(oldService, intermediateService);
 
-            for (S100_UserIDAuth userIDAuth : usersToMigrate) {
+            for (S101_UserIDAuth userIDAuth : usersToMigrate) {
                 old.migrateUser(userIDAuth);
             }
         }
         if (get(args, ACTION).equals(MIGRATE_DFS_FROM_INTERMEDIATE)) {
-            S100_SimpleDatasafeService intermediateService = new S100_SimpleDatasafeServiceImpl(getNewDfsCredentials("intermediate", args), new MutableEncryptionConfig());
-            S100_SimpleDatasafeService newService = new S100_SimpleDatasafeServiceImpl(getNewDfsCredentials(NEW, args), new MutableEncryptionConfig());
+            S101_SimpleDatasafeService intermediateService = new S101_SimpleDatasafeServiceImpl(getNewDfsCredentials("intermediate", args), new MutableEncryptionConfig());
+            S101_SimpleDatasafeService newService = new S101_SimpleDatasafeServiceImpl(getNewDfsCredentials(NEW, args), new MutableEncryptionConfig());
             LoadUserNewToNewFormat intermediateRead = new LoadUserNewToNewFormat(intermediateService, newService);
 
-            for (S100_UserIDAuth userIDAuth : usersToMigrate) {
+            for (S101_UserIDAuth userIDAuth : usersToMigrate) {
                 intermediateRead.migrateUser(userIDAuth);
             }
         }
@@ -124,8 +124,8 @@ public class Main {
 
     }
 
-    private static S100_DFSCredentials getNewDfsCredentials(String prefix, String[] args) {
-        return S100_AmazonS3DFSCredentials.builder()
+    private static S101_DFSCredentials getNewDfsCredentials(String prefix, String[] args) {
+        return S101_AmazonS3DFSCredentials.builder()
                 .accessKey(get(args, prefix + "-accesskey"))
                 .secretKey(get(args, prefix + "-secretkey"))
                 .rootBucket(get(args, prefix + "-rootbucket"))

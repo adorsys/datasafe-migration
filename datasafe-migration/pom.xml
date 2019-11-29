@@ -97,7 +97,7 @@
         </dependency>
         <dependency>
             <groupId>de.adorsys</groupId>
-            <artifactId>datasafe-migration-shaded-1.0.0</artifactId>
+            <artifactId>datasafe-migration-shaded-1.0.1</artifactId>
             <version>0.0.5-SNAPSHOT</version>
             <exclusions>
                 <exclusion>
@@ -182,7 +182,7 @@
                 <dependency>
                     <groupId>de.adorsys</groupId>
                     <artifactId>datasafe-simple-adapter-impl</artifactId>
-                    <version>1.0.0</version>
+                    <version>1.0.1</version>
                     <scope>test</scope>
                 </dependency>
         -->

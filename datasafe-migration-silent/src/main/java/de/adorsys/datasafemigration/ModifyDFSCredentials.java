@@ -1,8 +1,8 @@
 package de.adorsys.datasafemigration;
 
-import de.adorsys.datasafe_1_0_0.simple.adapter.api.types.S100_AmazonS3DFSCredentials;
-import de.adorsys.datasafe_1_0_0.simple.adapter.api.types.S100_DFSCredentials;
-import de.adorsys.datasafe_1_0_0.simple.adapter.api.types.S100_FilesystemDFSCredentials;
+import de.adorsys.datasafe_1_0_1.simple.adapter.api.types.S101_AmazonS3DFSCredentials;
+import de.adorsys.datasafe_1_0_1.simple.adapter.api.types.S101_DFSCredentials;
+import de.adorsys.datasafe_1_0_1.simple.adapter.api.types.S101_FilesystemDFSCredentials;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -11,7 +11,7 @@ public class ModifyDFSCredentials {
     private static String BEST_CASE_NEW_SUFFIX = "datasafe/100/backend/";
     private static String DEFAULT_NEW_PATH_SUFFIX = "100/";
 
-    public static S100_DFSCredentials appendToRootPath(S100_DFSCredentials dfsCredentials, String pathToAppend) {
+    public static S101_DFSCredentials appendToRootPath(S101_DFSCredentials dfsCredentials, String pathToAppend) {
         String currentRoot = getCurrentRootPath(dfsCredentials);
         if (! (currentRoot.endsWith("/"))) {
             currentRoot = currentRoot + "/";
@@ -27,18 +27,18 @@ public class ModifyDFSCredentials {
         return changeRootpath(dfsCredentials, newRootPath);
     }
 
-    public static S100_DFSCredentials getPathToMigratedData(S100_DFSCredentials dfsCredentials) {
+    public static S101_DFSCredentials getPathToMigratedData(S101_DFSCredentials dfsCredentials) {
         return changeRootpath(dfsCredentials, getModifiedRootPath(getCurrentRootPath(dfsCredentials)));
     }
 
-    public static String getCurrentRootPath(S100_DFSCredentials dfsCredentials) {
+    public static String getCurrentRootPath(S101_DFSCredentials dfsCredentials) {
         String currentRoot = null;
-        if (dfsCredentials instanceof S100_AmazonS3DFSCredentials) {
-            S100_AmazonS3DFSCredentials d = (S100_AmazonS3DFSCredentials) dfsCredentials;
+        if (dfsCredentials instanceof S101_AmazonS3DFSCredentials) {
+            S101_AmazonS3DFSCredentials d = (S101_AmazonS3DFSCredentials) dfsCredentials;
             currentRoot = d.getRootBucket();
         }
-        if (dfsCredentials instanceof S100_FilesystemDFSCredentials) {
-            S100_FilesystemDFSCredentials d = (S100_FilesystemDFSCredentials) dfsCredentials;
+        if (dfsCredentials instanceof S101_FilesystemDFSCredentials) {
+            S101_FilesystemDFSCredentials d = (S101_FilesystemDFSCredentials) dfsCredentials;
             currentRoot = d.getRoot();
         }
         if (currentRoot == null) {
@@ -68,10 +68,10 @@ public class ModifyDFSCredentials {
         return currentRoot + DEFAULT_NEW_PATH_SUFFIX;
     }
 
-    private static S100_DFSCredentials changeRootpath(S100_DFSCredentials dfsCredentials, String newRootPath) {
-        if (dfsCredentials instanceof S100_AmazonS3DFSCredentials) {
-            S100_AmazonS3DFSCredentials d = (S100_AmazonS3DFSCredentials) dfsCredentials;
-            return S100_AmazonS3DFSCredentials.builder()
+    private static S101_DFSCredentials changeRootpath(S101_DFSCredentials dfsCredentials, String newRootPath) {
+        if (dfsCredentials instanceof S101_AmazonS3DFSCredentials) {
+            S101_AmazonS3DFSCredentials d = (S101_AmazonS3DFSCredentials) dfsCredentials;
+            return S101_AmazonS3DFSCredentials.builder()
                     .rootBucket(newRootPath)
                     .url(d.getUrl())
                     .accessKey(d.getAccessKey())
@@ -81,10 +81,10 @@ public class ModifyDFSCredentials {
                     .threadPoolSize(d.getThreadPoolSize())
                     .queueSize(d.getQueueSize()).build();
         }
-        if (dfsCredentials instanceof S100_FilesystemDFSCredentials) {
+        if (dfsCredentials instanceof S101_FilesystemDFSCredentials) {
 
-            S100_FilesystemDFSCredentials d = (S100_FilesystemDFSCredentials) dfsCredentials;
-            return S100_FilesystemDFSCredentials.builder()
+            S101_FilesystemDFSCredentials d = (S101_FilesystemDFSCredentials) dfsCredentials;
+            return S101_FilesystemDFSCredentials.builder()
                     .root(newRootPath).build();
 
         }

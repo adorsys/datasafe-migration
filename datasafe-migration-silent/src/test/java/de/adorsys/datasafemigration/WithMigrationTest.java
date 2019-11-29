@@ -22,13 +22,13 @@ abstract public class WithMigrationTest extends SilentMigrationBaseTest {
         // Now all data must be readable with new service
 
         for(S061_UserIDAuth oldUser: oldStructure.keySet()) {
-            UserIDAuth newUser = ExtendedSwitchVersion.toCurrent(ExtendedSwitchVersion.to_1_0_0(oldUser));
+            UserIDAuth newUser = ExtendedSwitchVersion.toCurrent(ExtendedSwitchVersion.to_1_0_1(oldUser));
             Set<S061_DSDocument> oldDocsOfUser = oldStructure.get(oldUser);
 
             List<DocumentFQN> list = simpleDatasafeService.list(newUser, new DocumentDirectoryFQN("/"), ListRecursiveFlag.TRUE);
             Assertions.assertEquals(oldDocsOfUser.size(), list.size());
             for (S061_DSDocument oldDoc : oldDocsOfUser) {
-                DSDocument oldDocument = ExtendedSwitchVersion.toCurrent(ExtendedSwitchVersion.to_1_0_0(oldDoc));
+                DSDocument oldDocument = ExtendedSwitchVersion.toCurrent(ExtendedSwitchVersion.to_1_0_1(oldDoc));
                 Assertions.assertTrue(list.contains(oldDocument.getDocumentFQN()));
                 DSDocument newDocument = simpleDatasafeService.readDocument(newUser, oldDocument.getDocumentFQN());
                 Assertions.assertArrayEquals(oldDocument.getDocumentContent().getValue(), newDocument.getDocumentContent().getValue());

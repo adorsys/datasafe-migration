@@ -9,11 +9,11 @@ import de.adorsys.datasafe.simple.adapter.impl.GetStorage;
 import de.adorsys.datasafe_0_6_1.simple.adapter.api.S061_SimpleDatasafeService;
 import de.adorsys.datasafe_0_6_1.simple.adapter.api.types.S061_DFSCredentials;
 import de.adorsys.datasafe_0_6_1.simple.adapter.impl.S061_SimpleDatasafeServiceImpl;
-import de.adorsys.datasafe_1_0_0.encrypiton.api.types.encryption.MutableEncryptionConfig;
-import de.adorsys.datasafe_1_0_0.simple.adapter.api.S100_SimpleDatasafeService;
-import de.adorsys.datasafe_1_0_0.simple.adapter.api.types.S100_DFSCredentials;
-import de.adorsys.datasafe_1_0_0.simple.adapter.impl.LogStringFrame;
-import de.adorsys.datasafe_1_0_0.simple.adapter.impl.S100_SimpleDatasafeServiceImpl;
+import de.adorsys.datasafe_1_0_1.encrypiton.api.types.encryption.MutableEncryptionConfig;
+import de.adorsys.datasafe_1_0_1.simple.adapter.api.S101_SimpleDatasafeService;
+import de.adorsys.datasafe_1_0_1.simple.adapter.api.types.S101_DFSCredentials;
+import de.adorsys.datasafe_1_0_1.simple.adapter.impl.LogStringFrame;
+import de.adorsys.datasafe_1_0_1.simple.adapter.impl.S101_SimpleDatasafeServiceImpl;
 import de.adorsys.datasafemigration.lockprovider.DistributedLocker;
 import de.adorsys.datasafemigration.withDFSonly.LoadUserOldToNewFormat;
 import jdk.nashorn.internal.ir.annotations.Ignore;
@@ -35,25 +35,25 @@ public class MigrationLogic {
     private Set<String> migratedUsers = new HashSet<>();
 
     // this file has to exist for every user
-    private static DocumentFQN MIGRATION_CONFIRMATION = new DocumentFQN("DATASAFE_FORMAT_1_0_0");
+    private static DocumentFQN MIGRATION_CONFIRMATION = new DocumentFQN("DATASAFE_FORMAT_1_0_1");
 
     private final DistributedLocker distributedLocker;
     private final GetStorage.SystemRootAndStorageService oldStorage;
     private final GetStorage.SystemRootAndStorageService newStorage;
     private final GetStorage.SystemRootAndStorageService finalStorage;
     private final S061_SimpleDatasafeService oldService;
-    private final S100_SimpleDatasafeService newService;
+    private final S101_SimpleDatasafeService newService;
     private final boolean withIntermediateFolder;
     private final boolean migrationPossible;
 
-    public MigrationLogic(LockProvider lockProvider, S061_DFSCredentials oldDFS, S100_DFSCredentials newDFS, MutableEncryptionConfig mutableEncryptionConfig) {
+    public MigrationLogic(LockProvider lockProvider, S061_DFSCredentials oldDFS, S101_DFSCredentials newDFS, MutableEncryptionConfig mutableEncryptionConfig) {
         LogStringFrame lsf = new LogStringFrame();
         if (lockProvider != null) {
             distributedLocker = new DistributedLocker(lockProvider);
             migrationPossible = true;
 
             {
-                String oldRoot = ModifyDFSCredentials.getCurrentRootPath(ExtendedSwitchVersion.to_1_0_0(oldDFS));
+                String oldRoot = ModifyDFSCredentials.getCurrentRootPath(ExtendedSwitchVersion.to_1_0_1(oldDFS));
                 String newRoot = ModifyDFSCredentials.getCurrentRootPath(newDFS);
                 withIntermediateFolder = oldRoot.equalsIgnoreCase(newRoot);
             }
@@ -63,15 +63,15 @@ public class MigrationLogic {
             }
 
             oldService = new S061_SimpleDatasafeServiceImpl(oldDFS);
-            newService = new S100_SimpleDatasafeServiceImpl(newDFS, mutableEncryptionConfig);
+            newService = new S101_SimpleDatasafeServiceImpl(newDFS, mutableEncryptionConfig);
 
             if (withIntermediateFolder) {
-                finalStorage = GetStorage.get(ExtendedSwitchVersion.to_1_0_0(oldDFS));
+                finalStorage = GetStorage.get(ExtendedSwitchVersion.to_1_0_1(oldDFS));
             } else {
                 finalStorage = null;
             }
 
-            oldStorage = GetStorage.get(ExtendedSwitchVersion.to_1_0_0(oldDFS));
+            oldStorage = GetStorage.get(ExtendedSwitchVersion.to_1_0_1(oldDFS));
             newStorage = GetStorage.get(newDFS);
 
 
