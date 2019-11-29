@@ -9,6 +9,7 @@ import de.adorsys.datasafe.simple.adapter.spring.properties.LockProviderProperti
 import de.adorsys.datasafe.simple.adapter.spring.properties.SpringDatasafeMigrationProperties;
 import de.adorsys.datasafe.simple.adapter.spring.properties.SpringHikariDatasourceProperties;
 import de.adorsys.datasafe.simple.adapter.spring.properties.SpringMysqlDatasourceProperties;
+import de.adorsys.datasafe.simple.adapter.spring.properties.SpringPostgresDatasourceProperties;
 import de.adorsys.datasafe_1_0_0.simple.adapter.api.types.S100_DFSCredentials;
 import de.adorsys.datasafe_1_0_0.simple.adapter.spring.SpringPropertiesToDFSCredentialsUtil;
 import de.adorsys.datasafe_1_0_0.simple.adapter.spring.properties.SpringAmazonS3DFSCredentialsProperties;
@@ -28,6 +29,7 @@ import org.springframework.context.annotation.Configuration;
         SpringDatasafeEncryptionProperties.class,
         SpringHikariDatasourceProperties.class,
         SpringMysqlDatasourceProperties.class,
+        SpringPostgresDatasourceProperties.class,
         JdbcProperties.class,
         LockProviderProperties.class,
         SpringDatasafeMigrationProperties.class
