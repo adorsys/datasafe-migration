@@ -25,6 +25,15 @@ This file simply tells that the user is in the new format of datasafe 1.0.1.
 
 # usage
 
+## depenency
+
+```
+        <dependency>
+            <groupId>de.adorsys</groupId>
+            <artifactId>datasafe-migration-silent</artifactId>
+            <version>1.0.1</version>
+        </dependency>
+```
 ## interface change
 Rather than using the new Datasafe 1.0.1 you simple use Datasafe-Migration 1.0.1. As in Datasafe
 1.0.1 the interface of the ReadKeyPassword has slightly changed, all occurrences of 
