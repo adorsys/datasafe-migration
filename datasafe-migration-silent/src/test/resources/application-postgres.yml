@@ -1,0 +1,17 @@
+datasafe:
+  storeconnection:
+    filesystem:
+      rootbucket: target/test-filesystem/filetest/
+
+  migration:
+    lockprovider:
+      jdbc:
+        postgres:
+          url: jdbc:postgresql://localhost:5432/shedlock
+          username: postgres
+          password: password
+
+
+# to run this test, start docker with
+# docker run --name postgres -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=password -p 5432:5432 -p 8080:8888 -d postgres
+# and create shedlock database

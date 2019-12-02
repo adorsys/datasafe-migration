@@ -3,6 +3,7 @@ package de.adorsys.datasafe.simple.adapter.spring.factory;
 import de.adorsys.datasafe.simple.adapter.impl.DatasafeMigrationConfig;
 import de.adorsys.datasafe.simple.adapter.spring.datasource.WithHikariDataSource;
 import de.adorsys.datasafe.simple.adapter.spring.datasource.WithMysqlDataSource;
+import de.adorsys.datasafe.simple.adapter.spring.datasource.WithPostgresDataSource;
 import de.adorsys.datasafe.simple.adapter.spring.properties.JdbcProperties;
 import de.adorsys.datasafe.simple.adapter.spring.properties.SpringDatasafeMigrationProperties;
 import de.adorsys.datasafemigration.MigrationException;
@@ -29,8 +30,11 @@ public class SpringDatasafeMigrationConfigWrapperFactory {
         }
         if (jdbc.getMysql() != null) {
             log.debug("choose mysql datasource");
-            log.warn("log must be removed due credentials visibile: choose mysql datasource {}", jdbc.getMysql().toString());
             dataSource = WithMysqlDataSource.get(jdbc.getMysql());
+        }
+        if (jdbc.getPostgres() != null) {
+            log.debug("choose postgres datasource");
+            dataSource = WithPostgresDataSource.get(jdbc.getPostgres());
         }
         if (dataSource == null) {
             throw new MigrationException("Specification of jdbc not given in properties");

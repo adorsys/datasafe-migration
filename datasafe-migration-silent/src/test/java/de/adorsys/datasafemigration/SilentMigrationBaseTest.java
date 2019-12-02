@@ -89,12 +89,12 @@ abstract public class SilentMigrationBaseTest extends WithStorageProvider {
 
 
         for(S061_UserIDAuth oldUser : s061_userIDAuths) {
-            GetStorage.SystemRootAndStorageService systemRootAndStorageService = GetStorage.get(ExtendedSwitchVersion.to_1_0_0(credentialsToNOTMigratedData));
-            UserID userID = ExtendedSwitchVersion.toCurrent(ExtendedSwitchVersion.to_1_0_0(oldUser)).getUserID();
+            GetStorage.SystemRootAndStorageService systemRootAndStorageService = GetStorage.get(ExtendedSwitchVersion.to_1_0_1(credentialsToNOTMigratedData));
+            UserID userID = ExtendedSwitchVersion.toCurrent(ExtendedSwitchVersion.to_1_0_1(oldUser)).getUserID();
             checkBeforeMigration(userID, systemRootAndStorageService, structure.get(oldUser).size());
             simpleDatasafeService.readDocument(
-                    ExtendedSwitchVersion.toCurrent(ExtendedSwitchVersion.to_1_0_0(oldUser)),
-                    ExtendedSwitchVersion.toCurrent(ExtendedSwitchVersion.to_1_0_0(structure.get(oldUser).stream().findFirst().get().getDocumentFQN())));
+                    ExtendedSwitchVersion.toCurrent(ExtendedSwitchVersion.to_1_0_1(oldUser)),
+                    ExtendedSwitchVersion.toCurrent(ExtendedSwitchVersion.to_1_0_1(structure.get(oldUser).stream().findFirst().get().getDocumentFQN())));
             checkAfterMigration(userID, systemRootAndStorageService, structure.get(oldUser).size());
         }
 

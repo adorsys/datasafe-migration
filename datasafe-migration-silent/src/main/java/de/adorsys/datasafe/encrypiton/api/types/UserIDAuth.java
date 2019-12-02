@@ -2,7 +2,7 @@ package de.adorsys.datasafe.encrypiton.api.types;
 
 
 import de.adorsys.datasafe.types.api.types.ReadKeyPassword;
-import de.adorsys.datasafe_1_0_0.encrypiton.api.types.S100_UserIDAuth;
+import de.adorsys.datasafe_1_0_1.encrypiton.api.types.S101_UserIDAuth;
 import lombok.Getter;
 
 /**
@@ -10,7 +10,7 @@ import lombok.Getter;
  */
 @Getter
 public class UserIDAuth {
-    S100_UserIDAuth real;
+    S101_UserIDAuth real;
 
     public UserID getUserID() {
         return new UserID(real.getUserID().getValue());
@@ -21,7 +21,7 @@ public class UserIDAuth {
     }
 
     public UserIDAuth(UserID userid, ReadKeyPassword readKeyPassword) {
-        real = new S100_UserIDAuth(userid.getReal(), readKeyPassword.getReal());
+        real = new S101_UserIDAuth(userid.getReal(), readKeyPassword.getReal());
     }
 
 }

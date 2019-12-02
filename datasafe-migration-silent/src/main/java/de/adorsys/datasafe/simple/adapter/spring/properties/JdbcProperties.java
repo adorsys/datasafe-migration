@@ -19,4 +19,7 @@ public class JdbcProperties {
 
     @Nullable
     private SpringMysqlDatasourceProperties mysql;
+
+    @Nullable
+    private SpringPostgresDatasourceProperties postgres;
 }

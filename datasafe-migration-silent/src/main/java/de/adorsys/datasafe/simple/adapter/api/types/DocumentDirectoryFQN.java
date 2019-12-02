@@ -1,6 +1,6 @@
 package de.adorsys.datasafe.simple.adapter.api.types;
 
-import de.adorsys.datasafe_1_0_0.simple.adapter.api.types.S100_DocumentDirectoryFQN;
+import de.adorsys.datasafe_1_0_1.simple.adapter.api.types.S101_DocumentDirectoryFQN;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.experimental.Delegate;
@@ -9,10 +9,10 @@ import lombok.experimental.Delegate;
 @EqualsAndHashCode
 public class DocumentDirectoryFQN {
     @Delegate (excludes = Without.class)
-    S100_DocumentDirectoryFQN real;
+    S101_DocumentDirectoryFQN real;
 
     public DocumentDirectoryFQN(String s) {
-        real = new S100_DocumentDirectoryFQN(s);
+        real = new S101_DocumentDirectoryFQN(s);
     }
 
     public DocumentDirectoryFQN addDirectory(String s) {
