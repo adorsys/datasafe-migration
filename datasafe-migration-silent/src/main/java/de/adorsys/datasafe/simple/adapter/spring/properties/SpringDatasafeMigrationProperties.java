@@ -19,4 +19,7 @@ public class SpringDatasafeMigrationProperties {
 
     @Nullable
     private LockProviderProperties lockprovider;
+
+    @Nullable
+    private Integer timeout;
 }

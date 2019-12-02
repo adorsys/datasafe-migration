@@ -16,7 +16,6 @@ import de.adorsys.datasafe_1_0_1.simple.adapter.impl.LogStringFrame;
 import de.adorsys.datasafe_1_0_1.simple.adapter.impl.S101_SimpleDatasafeServiceImpl;
 import de.adorsys.datasafemigration.lockprovider.DistributedLocker;
 import de.adorsys.datasafemigration.withDFSonly.LoadUserOldToNewFormat;
-import jdk.nashorn.internal.ir.annotations.Ignore;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import net.javacrumbs.shedlock.core.LockProvider;
@@ -30,7 +29,7 @@ import java.util.Set;
 
 @Slf4j
 public class MigrationLogic {
-    private final static int TIMEOUT_FOR_MIGRATION = 3 * 1000;
+    private final int timeout;
 
     private Set<String> migratedUsers = new HashSet<>();
 
@@ -46,9 +45,10 @@ public class MigrationLogic {
     private final boolean withIntermediateFolder;
     private final boolean migrationPossible;
 
-    public MigrationLogic(LockProvider lockProvider, S061_DFSCredentials oldDFS, S101_DFSCredentials newDFS, MutableEncryptionConfig mutableEncryptionConfig) {
+    public MigrationLogic(LockProvider lockProvider, int timeout, S061_DFSCredentials oldDFS, S101_DFSCredentials newDFS, MutableEncryptionConfig mutableEncryptionConfig) {
         LogStringFrame lsf = new LogStringFrame();
         if (lockProvider != null) {
+            this.timeout = timeout;
             distributedLocker = new DistributedLocker(lockProvider);
             migrationPossible = true;
 
@@ -76,6 +76,7 @@ public class MigrationLogic {
 
 
             lsf.add("MigrationLogic      : ENABLED");
+            lsf.add("  migration timeout : " + timeout);
             lsf.add("intermediate folder : " + (withIntermediateFolder ? "YES" : "NO"));
             lsf.add("           old root : " + oldStorage.getSystemRoot());
             if (withIntermediateFolder) {
@@ -85,6 +86,7 @@ public class MigrationLogic {
                 lsf.add("           new root : " + newStorage.getSystemRoot());
             }
         } else {
+            this.timeout = 0;
             oldStorage = null;
             newStorage = null;
             finalStorage = null;
@@ -137,20 +139,22 @@ public class MigrationLogic {
 
         log.debug("check migration for {} not in cache yet", username);
         try {
-            if (!(gotALock = distributedLocker.lockOrFail(username, TIMEOUT_FOR_MIGRATION))) {
-                log.debug("as another thread/server seems to be busy with the migration of {}, we now wait at most {} millisecs", username, TIMEOUT_FOR_MIGRATION);
-                for (int i = 0; i < TIMEOUT_FOR_MIGRATION * 2; i++) {
+            if (!(gotALock = distributedLocker.lockOrFail(username, timeout))) {
+                log.debug("as another thread/server seems to be busy with the migration of {}, we now wait at most {} millisecs", username, timeout);
+                int waitedInMillis = 0;
+                while (waitedInMillis < timeout) {
                     Thread.currentThread().sleep(500);
                     if (physicallyCheckMigrationWasDoneSuccessfully(userIDAuth.getUserID())) {
                         log.debug("another thread successfully migrated user {} in the meantime", username);
                         migratedUsers.add(username);
                         return true;
                     }
-                    // we did not get a lock, so we continue to wait
+                    waitedInMillis+= 500;
+                    // we did not get a lock and user is not migrated, we have to wait
                 }
                 // we waited long enough. Migration should be finished.
                 if (!physicallyCheckMigrationWasDoneSuccessfully(userIDAuth.getUserID())) {
-                    throw new MigrationException("we have waitet " + TIMEOUT_FOR_MIGRATION + " millisecs, but migration is not finished yet, what shall we do?");
+                    throw new MigrationException("we have waited " + waitedInMillis + " millisecs, but migration is not finished yet, what shall we do?");
                 }
                 log.debug("another thread successfully migrated user {} in the meantime", username);
                 migratedUsers.add(username);

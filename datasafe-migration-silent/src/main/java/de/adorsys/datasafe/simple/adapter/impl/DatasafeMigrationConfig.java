@@ -9,5 +9,5 @@ import net.javacrumbs.shedlock.core.LockProvider;
 public class DatasafeMigrationConfig {
     private final LockProvider lockProvider;
     private final boolean distinctFolder;
-
+    private final int migrationtimeout;
 }

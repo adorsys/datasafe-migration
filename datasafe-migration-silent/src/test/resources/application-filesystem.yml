@@ -4,6 +4,7 @@ datasafe:
       rootbucket: target/test-filesystem/filetest/
 
   migration:
+    timeout: 15231
     lockprovider:
       jdbc:
         hikari:

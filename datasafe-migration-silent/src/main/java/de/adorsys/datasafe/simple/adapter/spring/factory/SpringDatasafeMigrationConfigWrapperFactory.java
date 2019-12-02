@@ -18,7 +18,7 @@ public class SpringDatasafeMigrationConfigWrapperFactory {
     public static DatasafeMigrationConfig getFromProperties(SpringDatasafeMigrationProperties properties) {
         if (properties.getLockprovider() == null) {
             log.info("NO URL FOR LOCKPROVIDER GIVEN");
-            return new DatasafeMigrationConfig(null, Boolean.FALSE);
+            return new DatasafeMigrationConfig(null, Boolean.FALSE, 0);
         }
 
         JdbcProperties jdbc = properties.getLockprovider().getJdbc();
@@ -41,13 +41,18 @@ public class SpringDatasafeMigrationConfigWrapperFactory {
         }
         log.info("URL FOR LOCKPROVIDER GIVEN");
 
-        Boolean migrationDoNewFolder = Boolean.FALSE;
+        Boolean migrationToNewFolder = Boolean.FALSE;
         if (properties.getDistinctfolder() != null) {
-            migrationDoNewFolder = properties.getDistinctfolder();
+            migrationToNewFolder = properties.getDistinctfolder();
+        }
+
+        Integer migrationTimeout = 20 * 1000;
+        if (properties.getTimeout() != null) {
+            migrationTimeout = properties.getTimeout();
         }
 
         LockProvider lockProvider = new JdbcTemplateLockProvider(dataSource);
-        return new DatasafeMigrationConfig(lockProvider, migrationDoNewFolder);
+        return new DatasafeMigrationConfig(lockProvider, migrationToNewFolder, migrationTimeout);
     }
 
 }
