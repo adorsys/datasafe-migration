@@ -61,6 +61,7 @@ parameters in the <code>configuration.yml</code>.
 ```
 datasafe
   migration:
+    timeout: 15000
     lockprovider:
       jdbc:
         hikari:
@@ -72,6 +73,7 @@ datasafe
 ```
 datasafe
   migration:
+    imeout: 15000
     lockprovider:
       jdbc:
         mysql:
@@ -83,6 +85,7 @@ datasafe
 ```
 datasafe
   migration:
+    timeout: 15000
     lockprovider:
       jdbc:
         postgres:
@@ -121,6 +124,7 @@ When the migration is enabeld the log contains:
 ******************************************************************************
 *                                                                            *
 *  MigrationLogic      : ENABLED                                             *
+*    migration timeout : 20000                                               *
 *  intermediate folder : YES                                                 *
 *             old root : s3://adorsys-test-migration/                        *
 *    intermediate root : s3://adorsys-test-migration/tempForMigrationTo100/  *
@@ -133,6 +137,7 @@ or, if <code>distinctfolder: true</code> has been set it is
 ************************************************************
 *                                                          *
 *  MigrationLogic      : ENABLED                           *
+*    migration timeout : 20000                             *
 *  intermediate folder : NO                                *
 *             old root : s3://adorsys-test-migration/      *
 *             new root : s3://adorsys-test-migration/100/  *
@@ -140,6 +145,27 @@ or, if <code>distinctfolder: true</code> has been set it is
 ************************************************************
 ```
 
+## timeout
+The migration should not take longer than a second. But this strongly depends on the 
+s3 connection, the hardware and the amount of data, that has to be migrated. 
+For that a user, that tries to access the data is blocked as long as the migration is active. 
+If a user at another node tries to access the same date, this user becomes blocked too. As soon 
+as the migration is finished, the block is release. But if for WHATEVER reasons, the
+migration takes longer as excpeted, an exception is thrown and the migration aborted.
+This time, to wait for a migration to be finished is set in the default to 20 000 Milliseconds and
+can be set in the properties too:
+```
+datasafe
+  migration:
+    timeout: 1000
+```
+
+## log
+For each user a log is written:
+```
+10:51:14.894 [main] INFO de.adorsys.datasafemigration.MigrationLogic - MIGRATION OF 21 FILES FOR USER user_1 TOOK 1843 MILLIS. Migration itself took 1588 millis and relocation of files took 255 millis.
+
+```
 
 # modules
 ## datasafe-migration-shaded-0.6.1

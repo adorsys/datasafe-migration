@@ -45,7 +45,7 @@ public class SimpleDatasafeServiceWithMigration implements SimpleDatasafeService
         oldReal = new S061_SimpleDatasafeServiceImpl(credentialsToNOTMigratedData);
         newReal = new S101_SimpleDatasafeServiceImpl(credentialsToMigratedData, mutableEncryptionConfig);
 
-        migrationLogic = new MigrationLogic(datasafeMigrationConfig.getLockProvider(), credentialsToNOTMigratedData, credentialsToMigratedData, mutableEncryptionConfig);
+        migrationLogic = new MigrationLogic(datasafeMigrationConfig.getLockProvider(), datasafeMigrationConfig.getMigrationtimeout(), credentialsToNOTMigratedData, credentialsToMigratedData, mutableEncryptionConfig);
     }
 
     public S061_DFSCredentials getCredentialsToNOTMigratedData() {
