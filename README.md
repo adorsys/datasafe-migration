@@ -52,15 +52,15 @@ import de.adorsys.datasafe.types.api.types.ReadKeyPassword;
 UserIDAuth userIDAuth = new UserIDAuth(new UserID("peter"), new ReadKeyPassword("password"::toCharArray));
 ``` 
 
-As the migration completly behaves like the new datasafe, the interface change have to be done.
+As the migration completly behaves like the new datasafe, these interface changes have to be done.
 
 ## configuration
 
-By default the migration is switched of, e.g. it behaves like datasafe 0.6.1 and does not do anyting.
-Anyway it has already the new Interface for the ReadKeyPassword, even if the old datasafe logic is used.
+By default the migration is switched off, e.g. it behaves like datasafe 0.6.1 and does not do anything.
+Anyway it has already the new interface for the ReadKeyPassword, even if the old datasafe logic is used.
 
 To activate the migration logic the configuration.yml has to get jdbc parameters. As the migration must only be 
-done on one server at the time, others have to be blocked. For that shedlock is used.
+done on one server at the time, others servers have to be blocked for this user. For that shedlock is used.
 And shedlock has to be provided with a database connection.
 
 Currently three jdbc implementations are integrated and simply can be switched on, by setting the follogin
@@ -70,7 +70,6 @@ parameters in the <code>configuration.yml</code>.
 ```
 datasafe
   migration:
-    timeout: 15000
     lockprovider:
       jdbc:
         hikari:
@@ -82,7 +81,6 @@ datasafe
 ```
 datasafe
   migration:
-    imeout: 15000
     lockprovider:
       jdbc:
         mysql:
@@ -94,7 +92,6 @@ datasafe
 ```
 datasafe
   migration:
-    timeout: 15000
     lockprovider:
       jdbc:
         postgres:
@@ -103,10 +100,10 @@ datasafe
           password: password
 ```
 
-By default, the migration migrates the users from the existing DFS/<directory> to itself. To do this,
-a temporary subfolder with name <code>tempForMigrationTo100</code> is used which is below this directory.
-After a successfull migration this directory always is empty, as the user has been moved to the back original
-diractory.
+By default, the migration migrates the users from the existing DFS directory to itself. To do this,
+a temporary subfolder with name <code>tempForMigrationTo100</code> is used which is below the root directory.
+After a successfull migration this directory always is empty, as the user has been moved back to the original
+directory.
 
 If you dont want the users to be moved back, you can use the option
 
@@ -119,7 +116,7 @@ Then all migrated users go to the subfolder <code>tempForMigrationTo100</code> a
 
 ## check configuration
 
-When the migration is disabled (e.g. not migration parameters given) the log writes 
+When the migration is disabled (e.g. no migration parameters given) the log writes 
 ```
 ************************************
 *                                  *
@@ -127,7 +124,7 @@ When the migration is disabled (e.g. not migration parameters given) the log wri
 *                                  *
 ************************************
 ```
-When the migration is enabeld the log contains:
+When the migration is enabeld the log may look like:
 
 ```
 ******************************************************************************
@@ -141,7 +138,7 @@ When the migration is enabeld the log contains:
 *                                                                            *
 ******************************************************************************
 ```
-or, if <code>distinctfolder: true</code> has been set it is 
+or, if <code>distinctfolder: true</code> has been set it could be: 
 ```
 ************************************************************
 *                                                          *
@@ -158,15 +155,15 @@ or, if <code>distinctfolder: true</code> has been set it is
 The migration should not take longer than a second. But this strongly depends on the 
 s3 connection, the hardware and the amount of data, that has to be migrated. 
 For that a user, that tries to access the data is blocked as long as the migration is active. 
-If a user at another node tries to access the same date, this user becomes blocked too. As soon 
+If a user at another node tries to access the same user, this request becomes blocked too. As soon 
 as the migration is finished, the block is release. But if for WHATEVER reasons, the
 migration takes longer as excpeted, an exception is thrown and the migration aborted.
-This time, to wait for a migration to be finished is set in the default to 20 000 Milliseconds and
+This time, to wait for a migration to be finished is set in the default to 20 seconds and
 can be set in the properties too:
 ```
 datasafe
   migration:
-    timeout: 1000
+    timeout: 20000
 ```
 
 ## log
@@ -180,11 +177,11 @@ For each user a log is written:
 ## datasafe-migration-shaded-0.6.1
 contains the datasafe version 0.6.1. All classes have the path <code>de.adorsys.datasafe_0_6_1</code>
  instead of <code>de.adorsys.datasafe</code>. Further the used classes of datasafe have the prefix 
- <code>S061</code>.
+ <code>S061_</code>.
 ## datasafe-migration-shaded-1.0.1
 contains the datasafe version 1.0.1. All classes have the path <code>de.adorsys.datasafe_1_0_1</code>
  instead of <code>de.adorsys.datasafe</code>. Further the used classes of datasafe have the prefix 
- <code>S100</code>.
+ <code>S101_</code>.
 ## datasafe-migration
 contains the classes, which actually do the migration itself, e.g. read all files
 from the <code>S061_SimpledatasafeAdapter</code> and write it to the <code>S101_SimpleDatasafeAdapter</code>.
@@ -211,9 +208,10 @@ SimpleDatasafeService simpleDatasafeService ....
 ``` 
 
 To make sure, that the old and the current datasafe adapter are not imported, they are
-explicitly excluded each time, the shaded jars are included. With  this, all
+explicitly excluded. With  this, all
 the implicit inclusions of third libraries like bouncy castle, lombok and so on
-were lost too and had to be included manually too.
+were lost too and had to be included manually too. But all this is none of the business of users of the 
+datasafe-migration-silent.jar.
 
 ## IDE
 
@@ -225,7 +223,9 @@ File -> Invalidate Caches / Restart
 If you still have problems do
 ```
 mvn clean install -DskipTests
-select pom.xml of datasafe-migration-shaded-xxx project
+select pom.xml of datasafe-migration-shaded-061 project
+right click -> Maven -> ignore Projects
+select pom.xml of datasafe-migration-shaded-101 project
 right click -> Maven -> ignore Projects
 select root pom.xml
 right click -> Maven -> reimport
