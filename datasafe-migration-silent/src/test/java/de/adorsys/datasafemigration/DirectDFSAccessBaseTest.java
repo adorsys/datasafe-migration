@@ -90,7 +90,7 @@ public class DirectDFSAccessBaseTest extends WithStorageProvider {
             return;
         }
         for (int i = 0; i < numberOfFilesPerFolder; i++) {
-            result.add(ExtendedSwitchVersion.toCurrent(dir.addName("file== =" + i)));
+            result.add(dir.addName("file== =" + i));
         }
         for (int i = 0; i < numberOfDirsPerFolder; i++) {
             createNames(result, dir.addDirectory("dir" + i), numberOfFilesPerFolder, numberOfDirsPerFolder, depthOfFolders-1);
