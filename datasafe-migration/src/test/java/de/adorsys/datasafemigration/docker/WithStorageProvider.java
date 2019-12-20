@@ -197,6 +197,7 @@ public abstract class WithStorageProvider extends BaseMockitoTest {
                     try {
                         minioStorage.get();
                     } catch (AmazonS3Exception e) {
+                        log.error("minioStorage.get got exception", e);
                         Arrays.stream(e.getStackTrace()).forEach(el -> log.error(el.toString()));
                         if (e.getMessage().contains("Server not initialized")) {
                             log.error("SERVER NOT INITIALIZED YET, WAIT ONE SECOND");
