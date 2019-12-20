@@ -49,22 +49,7 @@ public class InitFromStorageProvider {
             case MINIO:
             case CEPH:
             case AMAZON: {
-                try {
-                    descriptor.getStorageService().get();
-                } catch (AmazonS3Exception e) {
-                    log.error("dfsFromDescriptor got exception", e);
-                    Arrays.stream(e.getStackTrace()).forEach(el -> log.error(el.toString()));
-                    if (e.getMessage().contains("Server not initialized")) {
-                        log.error("SERVER NOT INITIALIZED YET, WAIT ONE SECOND");
-                        try {
-                            Thread.currentThread().sleep(1000);
-                        } catch (Exception interupted) {
-                            // ignored by purpose
-                        }
-                        log.info("TRY AGAIN");
-                        descriptor.getStorageService().get();
-                    }
-                }
+                descriptor.getStorageService().get();
 
                 log.info("uri       :" + descriptor.getLocation());
                 log.info("accesskey :" + descriptor.getAccessKey());

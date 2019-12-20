@@ -194,22 +194,7 @@ public abstract class WithStorageProvider extends BaseMockitoTest {
         return new StorageDescriptor(
                 StorageDescriptorName.MINIO,
                 () -> {
-                    try {
-                        minioStorage.get();
-                    } catch (AmazonS3Exception e) {
-                        log.error("minioStorage.get got exception", e);
-                        Arrays.stream(e.getStackTrace()).forEach(el -> log.error(el.toString()));
-                        if (e.getMessage().contains("Server not initialized")) {
-                            log.error("SERVER NOT INITIALIZED YET, WAIT ONE SECOND");
-                            try {
-                                Thread.currentThread().sleep(1000);
-                            } catch(Exception interupted) {
-                                // ignored by purpose
-                            }
-                            log.info("TRY AGAIN");
-                            minioStorage.get();
-                        }
-                    }
+                    minioStorage.get();
                     return new S3StorageService(minio, primaryBucket, EXECUTOR_SERVICE);
                 },
                 new Uri("s3://" + primaryBucket + "/" + bucketPath + "/"),
@@ -349,7 +334,23 @@ public abstract class WithStorageProvider extends BaseMockitoTest {
                 .build();
 
 
-        buckets.forEach(minio::createBucket);
+
+        try {
+            buckets.forEach(minio::createBucket);
+        } catch (AmazonS3Exception e) {
+            log.error("startMinio create Bucket got exception", e);
+            if (e.getMessage().contains("Server not initialized")) {
+                log.error("SERVER NOT INITIALIZED YET, WAIT ONE SECOND");
+                try {
+                    Thread.currentThread().sleep(1000);
+                } catch(Exception interupted) {
+                    // ignored by purpose
+                }
+                log.info("TRY AGAIN");
+                buckets.forEach(minio::createBucket);
+            }
+        }
+
     }
 
     private static void startCeph() {
