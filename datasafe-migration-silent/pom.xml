@@ -361,12 +361,6 @@
             <version>${assert.jcore.version}</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>com.google.dagger</groupId>
-            <artifactId>dagger</artifactId>
-            <version>${dagger.version}</version>
-            <scope>test</scope>
-        </dependency>
 
         <!-- Spring test section -->
         <dependency>
@@ -392,12 +386,6 @@
                     <artifactId>logback-classic</artifactId>
                 </exclusion>
             </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-test</artifactId>
-            <version>${spring.framework.version}</version>
-            <scope>test</scope>
         </dependency>
 
     </dependencies>
