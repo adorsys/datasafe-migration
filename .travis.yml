@@ -7,7 +7,7 @@ jdk:
 script:
   # tests wont run with mvn test because shade plugin is only running with
   # in package phase, e.g. when pom is created
-  - mvn package test
+  - mvn verify
 
 before_deploy:
   - echo $GPG_SECRET_KEY | base64 --decode | $GPG_EXECUTABLE --import
