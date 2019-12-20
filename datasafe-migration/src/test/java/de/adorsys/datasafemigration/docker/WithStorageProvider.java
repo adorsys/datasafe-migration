@@ -1,5 +1,6 @@
 package de.adorsys.datasafemigration.docker;
 
+import com.amazonaws.services.s3.model.AmazonS3Exception;
 import de.adorsys.datasafe_1_0_1.storage.api.StorageService;
 import de.adorsys.datasafe_1_0_1.storage.impl.fs.FileSystemStorageService;
 import de.adorsys.datasafe_1_0_1.storage.impl.s3.S3StorageService;
@@ -189,11 +190,22 @@ public abstract class WithStorageProvider extends BaseMockitoTest {
         );
     }
 
+    @SneakyThrows
     protected static StorageDescriptor minio() {
         return new StorageDescriptor(
                 StorageDescriptorName.MINIO,
                 () -> {
-                    minioStorage.get();
+                    try {
+                        minioStorage.get();
+                    } catch (AmazonS3Exception e) {
+                        Arrays.stream(e.getStackTrace()).forEach(el -> log.error(el.toString()));
+                        if (e.getMessage().contains("Server not initialized")) {
+                            log.error("SERVER NOT INITIALIZED YET, WAIT ONE SECOND");
+                            Thread.currentThread().sleep(1000);
+                            log.info("TRY AGAIN");
+                            minioStorage.get();
+                        }
+                    }
                     return new S3StorageService(minio, primaryBucket, EXECUTOR_SERVICE);
                 },
                 new Uri("s3://" + primaryBucket + "/" + bucketPath + "/"),
