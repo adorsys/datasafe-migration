@@ -33,12 +33,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -60,7 +55,13 @@ public class MigrationTest extends WithStorageProvider {
     @ParameterizedTest
     @MethodSource("allStorages")
     public void testMigrationWithLocalFiles(WithStorageProvider.StorageDescriptor descriptor) {
-        InitFromStorageProvider.DFSCredentialsTuple dfsCredentialsTuple = InitFromStorageProvider.dfsFromDescriptor(descriptor, oldSubFolder, newSubFolder);
+        try {
+            InitFromStorageProvider.DFSCredentialsTuple dfsCredentialsTuple = InitFromStorageProvider.dfsFromDescriptor(descriptor, oldSubFolder, newSubFolder);
+        } catch (Exception e) {
+            log.error("exception during setup for minio", e);
+            Arrays.stream(e.getStackTrace()).forEach(el -> log.error(el.toString()));
+            throw e;
+        }
 
         S101_UserIDAuth userIDAuth = new S101_UserIDAuth(new S101_UserID("peter"), new S101_ReadKeyPassword("password"::toCharArray));
         S061_SimpleDatasafeService oldService = new S061_SimpleDatasafeServiceImpl(dfsCredentialsTuple.getOldVersion());
@@ -110,7 +111,7 @@ public class MigrationTest extends WithStorageProvider {
         S101_SimpleDatasafeService s100_simpleDatasafeService = new S101_SimpleDatasafeServiceImpl(dfsCredentialsTuple.getNewVersion(), new MutableEncryptionConfig());
         Map<S061_UserIDAuth, Set<S061_DSDocument>> s061StructureMap = CreateStructureUtil.create061Structure(s061_simpleDatasafeService, listOfOldUsers);
 
-        for (S101_UserIDAuth s100_userIDAuth : listOfNewUsers ) {
+        for (S101_UserIDAuth s100_userIDAuth : listOfNewUsers) {
             LoadUserOldToNewFormat migrator = new LoadUserOldToNewFormat(s061_simpleDatasafeService, s100_simpleDatasafeService);
             migrator.migrateUser(s100_userIDAuth);
         }
@@ -160,7 +161,7 @@ public class MigrationTest extends WithStorageProvider {
         for (S061_DSDocument s061_dsDocument : s061_dsDocuments) {
             S061_DocumentFQN s061_dsDocumentDocumentFQN = s061_dsDocument.getDocumentFQN();
             boolean documentFound = false;
-            for (S101_DSDocument s100_dsDocument : s100_dsDocuments ) {
+            for (S101_DSDocument s100_dsDocument : s100_dsDocuments) {
                 if (SwitchVersion.to_0_6_1(s100_dsDocument.getDocumentFQN()).equals(s061_dsDocumentDocumentFQN)) {
                     Assertions.assertArrayEquals(s061_dsDocument.getDocumentContent().getValue(),
                             s100_dsDocument.getDocumentContent().getValue());
@@ -170,7 +171,7 @@ public class MigrationTest extends WithStorageProvider {
                 }
             }
             if (!documentFound) {
-                throw new RuntimeException("Did not find document "  + s061_dsDocumentDocumentFQN);
+                throw new RuntimeException("Did not find document " + s061_dsDocumentDocumentFQN);
             }
         }
         log.info("successfully compared {} documents with {} bytes in total", counter, bytecounter);
