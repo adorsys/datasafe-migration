@@ -190,7 +190,6 @@ public abstract class WithStorageProvider extends BaseMockitoTest {
         );
     }
 
-    @SneakyThrows
     protected static StorageDescriptor minio() {
         return new StorageDescriptor(
                 StorageDescriptorName.MINIO,
@@ -201,7 +200,11 @@ public abstract class WithStorageProvider extends BaseMockitoTest {
                         Arrays.stream(e.getStackTrace()).forEach(el -> log.error(el.toString()));
                         if (e.getMessage().contains("Server not initialized")) {
                             log.error("SERVER NOT INITIALIZED YET, WAIT ONE SECOND");
-                            Thread.currentThread().sleep(1000);
+                            try {
+                                Thread.currentThread().sleep(1000);
+                            } catch(Exception interupted) {
+                                // ignored by purpose
+                            }
                             log.info("TRY AGAIN");
                             minioStorage.get();
                         }
