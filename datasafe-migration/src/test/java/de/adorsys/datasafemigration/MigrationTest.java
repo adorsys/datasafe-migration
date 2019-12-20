@@ -55,8 +55,9 @@ public class MigrationTest extends WithStorageProvider {
     @ParameterizedTest
     @MethodSource("allStorages")
     public void testMigrationWithLocalFiles(WithStorageProvider.StorageDescriptor descriptor) {
+        InitFromStorageProvider.DFSCredentialsTuple dfsCredentialsTuple = null;
         try {
-            InitFromStorageProvider.DFSCredentialsTuple dfsCredentialsTuple = InitFromStorageProvider.dfsFromDescriptor(descriptor, oldSubFolder, newSubFolder);
+            dfsCredentialsTuple = InitFromStorageProvider.dfsFromDescriptor(descriptor, oldSubFolder, newSubFolder);
         } catch (Exception e) {
             log.error("exception during setup for minio", e);
             Arrays.stream(e.getStackTrace()).forEach(el -> log.error(el.toString()));
