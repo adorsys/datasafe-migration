@@ -14,6 +14,7 @@ import de.adorsys.datasafe_1_0_1.simple.adapter.api.S101_SimpleDatasafeService;
 import de.adorsys.datasafe_1_0_1.simple.adapter.api.types.S101_DFSCredentials;
 import de.adorsys.datasafe_1_0_1.simple.adapter.impl.LogStringFrame;
 import de.adorsys.datasafe_1_0_1.simple.adapter.impl.S101_SimpleDatasafeServiceImpl;
+import de.adorsys.datasafe_1_0_1.simple.adapter.impl.config.S101_PathEncryptionConfig;
 import de.adorsys.datasafemigration.lockprovider.DistributedLocker;
 import de.adorsys.datasafemigration.withDFSonly.LoadUserOldToNewFormat;
 import lombok.SneakyThrows;
@@ -45,7 +46,8 @@ public class MigrationLogic {
     private final boolean withIntermediateFolder;
     private final boolean migrationPossible;
 
-    public MigrationLogic(LockProvider lockProvider, int timeout, S061_DFSCredentials oldDFS, S101_DFSCredentials newDFS, MutableEncryptionConfig mutableEncryptionConfig) {
+    public MigrationLogic(LockProvider lockProvider, int timeout, S061_DFSCredentials oldDFS, S101_DFSCredentials newDFS, MutableEncryptionConfig mutableEncryptionConfig,
+                          S101_PathEncryptionConfig pathEncryptionConfig) {
         LogStringFrame lsf = new LogStringFrame();
         if (lockProvider != null) {
             this.timeout = timeout;
@@ -63,7 +65,7 @@ public class MigrationLogic {
             }
 
             oldService = new S061_SimpleDatasafeServiceImpl(oldDFS);
-            newService = new S101_SimpleDatasafeServiceImpl(newDFS, mutableEncryptionConfig);
+            newService = new S101_SimpleDatasafeServiceImpl(newDFS, mutableEncryptionConfig, pathEncryptionConfig);
 
             if (withIntermediateFolder) {
                 finalStorage = GetStorage.get(ExtendedSwitchVersion.to_1_0_1(oldDFS));

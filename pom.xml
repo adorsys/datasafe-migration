@@ -36,7 +36,7 @@
 
     <modules>
         <module>datasafe-migration-shaded-0.6.1</module>
-        <module>datasafe-migration-shaded-1.0.1</module>
+        <module>datasafe-migration-shaded-1.0.2</module>
         <module>datasafe-migration</module>
         <module>datasafe-migration-silent</module>
     </modules>

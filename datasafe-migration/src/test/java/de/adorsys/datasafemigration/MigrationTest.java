@@ -15,6 +15,7 @@ import de.adorsys.datasafe_1_0_1.simple.adapter.api.types.S101_DocumentDirectory
 import de.adorsys.datasafe_1_0_1.simple.adapter.api.types.S101_DocumentFQN;
 import de.adorsys.datasafe_1_0_1.simple.adapter.api.types.S101_ListRecursiveFlag;
 import de.adorsys.datasafe_1_0_1.simple.adapter.impl.S101_SimpleDatasafeServiceImpl;
+import de.adorsys.datasafe_1_0_1.simple.adapter.impl.config.S101_PathEncryptionConfig;
 import de.adorsys.datasafe_1_0_1.types.api.types.S101_ReadKeyPassword;
 import de.adorsys.datasafemigration.common.SwitchVersion;
 import de.adorsys.datasafemigration.docker.InitFromStorageProvider;
@@ -33,7 +34,12 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -59,7 +65,7 @@ public class MigrationTest extends WithStorageProvider {
 
         S101_UserIDAuth userIDAuth = new S101_UserIDAuth(new S101_UserID("peter"), new S101_ReadKeyPassword("password"::toCharArray));
         S061_SimpleDatasafeService oldService = new S061_SimpleDatasafeServiceImpl(dfsCredentialsTuple.getOldVersion());
-        S101_SimpleDatasafeService newService = new S101_SimpleDatasafeServiceImpl(dfsCredentialsTuple.getNewVersion(), new MutableEncryptionConfig());
+        S101_SimpleDatasafeService newService = new S101_SimpleDatasafeServiceImpl(dfsCredentialsTuple.getNewVersion(), new MutableEncryptionConfig(), new S101_PathEncryptionConfig(true));
         S101_DocumentDirectoryFQN startDatadir;
         {
             // Test preparation
@@ -102,7 +108,8 @@ public class MigrationTest extends WithStorageProvider {
         listOfOldUsers.forEach(s061_userIDAuth -> listOfNewUsers.add(SwitchVersion.to_1_0_1(s061_userIDAuth)));
 
         S061_SimpleDatasafeService s061_simpleDatasafeService = new S061_SimpleDatasafeServiceImpl(dfsCredentialsTuple.getOldVersion());
-        S101_SimpleDatasafeService s100_simpleDatasafeService = new S101_SimpleDatasafeServiceImpl(dfsCredentialsTuple.getNewVersion(), new MutableEncryptionConfig());
+        S101_SimpleDatasafeService s100_simpleDatasafeService = new S101_SimpleDatasafeServiceImpl(dfsCredentialsTuple.getNewVersion(), new MutableEncryptionConfig(),
+            new S101_PathEncryptionConfig(true));
         Map<S061_UserIDAuth, Set<S061_DSDocument>> s061StructureMap = CreateStructureUtil.create061Structure(s061_simpleDatasafeService, listOfOldUsers);
 
         for (S101_UserIDAuth s100_userIDAuth : listOfNewUsers) {
@@ -140,7 +147,8 @@ public class MigrationTest extends WithStorageProvider {
             oldWriter.migrateUser(userIDAuth);
         }
 
-        S101_SimpleDatasafeService newService = new S101_SimpleDatasafeServiceImpl(dfsCredentialsTuple.getNewVersion(), new MutableEncryptionConfig());
+        S101_SimpleDatasafeService newService = new S101_SimpleDatasafeServiceImpl(dfsCredentialsTuple.getNewVersion(), new MutableEncryptionConfig(),
+            new S101_PathEncryptionConfig(true));
         Assertions.assertThrows(IOException.class, () -> newService.list(
                 userIDAuth,
                 new S101_DocumentDirectoryFQN("/"),

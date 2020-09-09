@@ -9,6 +9,7 @@ import de.adorsys.datasafe_1_0_1.encrypiton.api.types.encryption.MutableEncrypti
 import de.adorsys.datasafe_1_0_1.simple.adapter.api.types.S101_AmazonS3DFSCredentials;
 import de.adorsys.datasafe_1_0_1.simple.adapter.api.types.S101_DFSCredentials;
 import de.adorsys.datasafe_1_0_1.simple.adapter.api.types.S101_FilesystemDFSCredentials;
+import de.adorsys.datasafe_1_0_1.simple.adapter.impl.config.S101_PathEncryptionConfig;
 import de.adorsys.datasafe_1_0_1.simple.adapter.spring.properties.SpringDatasafeEncryptionProperties;
 import de.adorsys.datasafemigration.MigrationException;
 import lombok.extern.slf4j.Slf4j;
@@ -64,21 +65,23 @@ public class SpringSimpleDatasafeServiceFactory {
         if (dfsCredentials instanceof S101_AmazonS3DFSCredentials) {
             S101_AmazonS3DFSCredentials amazonS3DFSCredentials = (S101_AmazonS3DFSCredentials) dfsCredentials;
             return new SimpleDatasafeServiceWithMigration(
-                    datasafeMigrationConfig,
-                    amazonS3DFSCredentials.toBuilder().rootBucket(
-                            amazonS3DFSCredentials.getRootBucket() + "/" + subdirBelowRoot
-                    ).build(),
-                    null != encryptionProperties ? encryptionProperties.getEncryption() : new MutableEncryptionConfig()
+                datasafeMigrationConfig,
+                amazonS3DFSCredentials.toBuilder().rootBucket(
+                    amazonS3DFSCredentials.getRootBucket() + "/" + subdirBelowRoot
+                ).build(),
+                null != encryptionProperties ? encryptionProperties.getEncryption() : new MutableEncryptionConfig(),
+                new S101_PathEncryptionConfig(null != encryptionProperties ? encryptionProperties.getPathEncryption() : true)
             );
         }
         if (dfsCredentials instanceof S101_FilesystemDFSCredentials) {
             S101_FilesystemDFSCredentials filesystemDFSCredentials = (S101_FilesystemDFSCredentials) dfsCredentials;
             return new SimpleDatasafeServiceWithMigration(
-                    datasafeMigrationConfig,
-                    filesystemDFSCredentials.toBuilder().root(
-                            filesystemDFSCredentials.getRoot() + "/" + subdirBelowRoot
-                    ).build(),
-                    null != encryptionProperties ? encryptionProperties.getEncryption() : new MutableEncryptionConfig()
+                datasafeMigrationConfig,
+                filesystemDFSCredentials.toBuilder().root(
+                    filesystemDFSCredentials.getRoot() + "/" + subdirBelowRoot
+                ).build(),
+                null != encryptionProperties ? encryptionProperties.getEncryption() : new MutableEncryptionConfig(),
+                new S101_PathEncryptionConfig(null != encryptionProperties ? encryptionProperties.getPathEncryption() : true)
             );
         }
         throw new SimpleAdapterException("missing switch for DFSCredentials" + dfsCredentials);

@@ -47,29 +47,29 @@ abstract public class SilentMigrationBaseTest extends WithStorageProvider {
     private static int DOCUMENT_SIZE = 1000;
 
     protected void basicTests(SimpleDatasafeService datasafeService) {
-        org.junit.jupiter.api.Assertions.assertNotNull(datasafeService);
+        Assertions.assertNotNull(datasafeService);
         log.debug("Service successfully injected: {}", SimpleDatasafeService.class.toString());
         datasafeService.cleanupDb();
 
         UserIDAuth userIDAuth = new UserIDAuth(new UserID("peter"), new ReadKeyPassword("affe"::toCharArray));
 
-        org.junit.jupiter.api.Assertions.assertFalse(datasafeService.userExists(userIDAuth.getUserID()));
+        Assertions.assertFalse(datasafeService.userExists(userIDAuth.getUserID()));
         datasafeService.createUser(userIDAuth);
-        org.junit.jupiter.api.Assertions.assertTrue(datasafeService.userExists(userIDAuth.getUserID()));
+        Assertions.assertTrue(datasafeService.userExists(userIDAuth.getUserID()));
 
         DocumentFQN path = new DocumentFQN("peters/first/file.txt");
         DocumentContent content = createDocumentContent(DOCUMENT_SIZE);
         DSDocument dsDocument = new DSDocument(path, content);
 
-        org.junit.jupiter.api.Assertions.assertFalse(datasafeService.documentExists(userIDAuth, path));
+        Assertions.assertFalse(datasafeService.documentExists(userIDAuth, path));
         datasafeService.storeDocument(userIDAuth, dsDocument);
-        org.junit.jupiter.api.Assertions.assertTrue(datasafeService.documentExists(userIDAuth, path));
+        Assertions.assertTrue(datasafeService.documentExists(userIDAuth, path));
 
         DSDocument loadedDSDocument = datasafeService.readDocument(userIDAuth, path);
-        org.junit.jupiter.api.Assertions.assertArrayEquals(loadedDSDocument.getDocumentContent().getValue(), content.getValue());
+        Assertions.assertArrayEquals(loadedDSDocument.getDocumentContent().getValue(), content.getValue());
 
         datasafeService.deleteDocument(userIDAuth, path);
-        org.junit.jupiter.api.Assertions.assertFalse(datasafeService.documentExists(userIDAuth, path));
+        Assertions.assertFalse(datasafeService.documentExists(userIDAuth, path));
 
         datasafeService.destroyUser(userIDAuth);
         Assertions.assertFalse(datasafeService.userExists(userIDAuth.getUserID()));
