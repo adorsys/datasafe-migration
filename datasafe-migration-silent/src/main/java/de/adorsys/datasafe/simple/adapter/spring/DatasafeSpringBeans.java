@@ -10,12 +10,12 @@ import de.adorsys.datasafe.simple.adapter.spring.properties.SpringDatasafeMigrat
 import de.adorsys.datasafe.simple.adapter.spring.properties.SpringHikariDatasourceProperties;
 import de.adorsys.datasafe.simple.adapter.spring.properties.SpringMysqlDatasourceProperties;
 import de.adorsys.datasafe.simple.adapter.spring.properties.SpringPostgresDatasourceProperties;
-import de.adorsys.datasafe_1_0_1.simple.adapter.api.types.S101_DFSCredentials;
-import de.adorsys.datasafe_1_0_1.simple.adapter.spring.SpringPropertiesToDFSCredentialsUtil;
-import de.adorsys.datasafe_1_0_1.simple.adapter.spring.properties.SpringAmazonS3DFSCredentialsProperties;
-import de.adorsys.datasafe_1_0_1.simple.adapter.spring.properties.SpringDFSCredentialProperties;
-import de.adorsys.datasafe_1_0_1.simple.adapter.spring.properties.SpringDatasafeEncryptionProperties;
-import de.adorsys.datasafe_1_0_1.simple.adapter.spring.properties.SpringFilesystemDFSCredentialsProperties;
+import de.adorsys.datasafe_1_0_3.simple.adapter.api.types.S103_DFSCredentials;
+import de.adorsys.datasafe_1_0_3.simple.adapter.spring.SpringPropertiesToDFSCredentialsUtil;
+import de.adorsys.datasafe_1_0_3.simple.adapter.spring.properties.SpringAmazonS3DFSCredentialsProperties;
+import de.adorsys.datasafe_1_0_3.simple.adapter.spring.properties.SpringDFSCredentialProperties;
+import de.adorsys.datasafe_1_0_3.simple.adapter.spring.properties.SpringDatasafeEncryptionProperties;
+import de.adorsys.datasafe_1_0_3.simple.adapter.spring.properties.SpringFilesystemDFSCredentialsProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -47,7 +47,7 @@ public class DatasafeSpringBeans {
     }
 
     @Bean
-    S101_DFSCredentials dfsCredentials(SpringDFSCredentialProperties properties) {
+    S103_DFSCredentials dfsCredentials(SpringDFSCredentialProperties properties) {
         return SpringPropertiesToDFSCredentialsUtil.dfsCredentials(properties);
     }
 

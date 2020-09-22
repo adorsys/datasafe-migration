@@ -6,17 +6,17 @@ import de.adorsys.datasafe_0_6_1.simple.adapter.api.S061_SimpleDatasafeService;
 import de.adorsys.datasafe_0_6_1.simple.adapter.api.types.S061_DSDocument;
 import de.adorsys.datasafe_0_6_1.simple.adapter.api.types.S061_DocumentFQN;
 import de.adorsys.datasafe_0_6_1.simple.adapter.impl.S061_SimpleDatasafeServiceImpl;
-import de.adorsys.datasafe_1_0_1.encrypiton.api.types.S101_UserID;
-import de.adorsys.datasafe_1_0_1.encrypiton.api.types.S101_UserIDAuth;
-import de.adorsys.datasafe_1_0_1.encrypiton.api.types.encryption.MutableEncryptionConfig;
-import de.adorsys.datasafe_1_0_1.simple.adapter.api.S101_SimpleDatasafeService;
-import de.adorsys.datasafe_1_0_1.simple.adapter.api.types.S101_DSDocument;
-import de.adorsys.datasafe_1_0_1.simple.adapter.api.types.S101_DocumentDirectoryFQN;
-import de.adorsys.datasafe_1_0_1.simple.adapter.api.types.S101_DocumentFQN;
-import de.adorsys.datasafe_1_0_1.simple.adapter.api.types.S101_ListRecursiveFlag;
-import de.adorsys.datasafe_1_0_1.simple.adapter.impl.S101_SimpleDatasafeServiceImpl;
-import de.adorsys.datasafe_1_0_1.simple.adapter.impl.config.S101_PathEncryptionConfig;
-import de.adorsys.datasafe_1_0_1.types.api.types.S101_ReadKeyPassword;
+import de.adorsys.datasafe_1_0_3.encrypiton.api.types.S103_UserID;
+import de.adorsys.datasafe_1_0_3.encrypiton.api.types.S103_UserIDAuth;
+import de.adorsys.datasafe_1_0_3.encrypiton.api.types.encryption.MutableEncryptionConfig;
+import de.adorsys.datasafe_1_0_3.simple.adapter.api.S103_SimpleDatasafeService;
+import de.adorsys.datasafe_1_0_3.simple.adapter.api.types.S103_DSDocument;
+import de.adorsys.datasafe_1_0_3.simple.adapter.api.types.S103_DocumentDirectoryFQN;
+import de.adorsys.datasafe_1_0_3.simple.adapter.api.types.S103_DocumentFQN;
+import de.adorsys.datasafe_1_0_3.simple.adapter.api.types.S103_ListRecursiveFlag;
+import de.adorsys.datasafe_1_0_3.simple.adapter.impl.S103_SimpleDatasafeServiceImpl;
+import de.adorsys.datasafe_1_0_3.simple.adapter.impl.config.S103_PathEncryptionConfig;
+import de.adorsys.datasafe_1_0_3.types.api.types.S103_ReadKeyPassword;
 import de.adorsys.datasafemigration.common.SwitchVersion;
 import de.adorsys.datasafemigration.docker.InitFromStorageProvider;
 import de.adorsys.datasafemigration.docker.WithStorageProvider;
@@ -63,15 +63,15 @@ public class MigrationTest extends WithStorageProvider {
     public void testMigrationWithLocalFiles(WithStorageProvider.StorageDescriptor descriptor) {
         InitFromStorageProvider.DFSCredentialsTuple dfsCredentialsTuple =  InitFromStorageProvider.dfsFromDescriptor(descriptor, oldSubFolder, newSubFolder);
 
-        S101_UserIDAuth userIDAuth = new S101_UserIDAuth(new S101_UserID("peter"), new S101_ReadKeyPassword("password"::toCharArray));
+        S103_UserIDAuth userIDAuth = new S103_UserIDAuth(new S103_UserID("peter"), new S103_ReadKeyPassword("password"::toCharArray));
         S061_SimpleDatasafeService oldService = new S061_SimpleDatasafeServiceImpl(dfsCredentialsTuple.getOldVersion());
-        S101_SimpleDatasafeService newService = new S101_SimpleDatasafeServiceImpl(dfsCredentialsTuple.getNewVersion(), new MutableEncryptionConfig(), new S101_PathEncryptionConfig(true));
-        S101_DocumentDirectoryFQN startDatadir;
+        S103_SimpleDatasafeService newService = new S103_SimpleDatasafeServiceImpl(dfsCredentialsTuple.getNewVersion(), new MutableEncryptionConfig(), new S103_PathEncryptionConfig(true));
+        S103_DocumentDirectoryFQN startDatadir;
         {
             // Test preparation
 
             // create tree of files for one user on local disk (below tempDir)
-            startDatadir = new S101_DocumentDirectoryFQN(tempDir.toString()).addDirectory("startupfiles");
+            startDatadir = new S103_DocumentDirectoryFQN(tempDir.toString()).addDirectory("startupfiles");
             createLocalFilesInFolder(startDatadir.addDirectory(userIDAuth.getUserID().getValue()), 3, 3, 2, 1000);
 
             // move file tree of user to old datasafe format. destination depending on dataservice config
@@ -89,7 +89,7 @@ public class MigrationTest extends WithStorageProvider {
             // Test result
 
             // load all data from new filetree to local disk
-            S101_DocumentDirectoryFQN destDatadir = new S101_DocumentDirectoryFQN(tempDir.toString()).addDirectory("loadedfromnewfiles");
+            S103_DocumentDirectoryFQN destDatadir = new S103_DocumentDirectoryFQN(tempDir.toString()).addDirectory("loadedfromnewfiles");
             LoadNewUserToLocal loadNewUserToLocal = new LoadNewUserToLocal(newService, destDatadir);
             loadNewUserToLocal.migrateUser(userIDAuth);
 
@@ -104,24 +104,24 @@ public class MigrationTest extends WithStorageProvider {
         InitFromStorageProvider.DFSCredentialsTuple dfsCredentialsTuple = InitFromStorageProvider.dfsFromDescriptor(descriptor, oldSubFolder, newSubFolder);
 
         Set<S061_UserIDAuth> listOfOldUsers = CreateStructureUtil.getS061_userIDAuths();
-        Set<S101_UserIDAuth> listOfNewUsers = new HashSet<>();
-        listOfOldUsers.forEach(s061_userIDAuth -> listOfNewUsers.add(SwitchVersion.to_1_0_1(s061_userIDAuth)));
+        Set<S103_UserIDAuth> listOfNewUsers = new HashSet<>();
+        listOfOldUsers.forEach(s061_userIDAuth -> listOfNewUsers.add(SwitchVersion.to_1_0_3(s061_userIDAuth)));
 
         S061_SimpleDatasafeService s061_simpleDatasafeService = new S061_SimpleDatasafeServiceImpl(dfsCredentialsTuple.getOldVersion());
-        S101_SimpleDatasafeService s100_simpleDatasafeService = new S101_SimpleDatasafeServiceImpl(dfsCredentialsTuple.getNewVersion(), new MutableEncryptionConfig(),
-            new S101_PathEncryptionConfig(true));
+        S103_SimpleDatasafeService s100_simpleDatasafeService = new S103_SimpleDatasafeServiceImpl(dfsCredentialsTuple.getNewVersion(), new MutableEncryptionConfig(),
+            new S103_PathEncryptionConfig(true));
         Map<S061_UserIDAuth, Set<S061_DSDocument>> s061StructureMap = CreateStructureUtil.create061Structure(s061_simpleDatasafeService, listOfOldUsers);
 
-        for (S101_UserIDAuth s100_userIDAuth : listOfNewUsers) {
+        for (S103_UserIDAuth s100_userIDAuth : listOfNewUsers) {
             LoadUserOldToNewFormat migrator = new LoadUserOldToNewFormat(s061_simpleDatasafeService, s100_simpleDatasafeService);
             migrator.migrateUser(s100_userIDAuth);
         }
 
-        Map<S101_UserIDAuth, Set<S101_DSDocument>> s100_Structuremap = LoadStructureUtil.loadS100Structure(s100_simpleDatasafeService, listOfNewUsers);
+        Map<S103_UserIDAuth, Set<S103_DSDocument>> s100_Structuremap = LoadStructureUtil.loadS100Structure(s100_simpleDatasafeService, listOfNewUsers);
 
         for (S061_UserIDAuth s061_userIDAuth : listOfOldUsers) {
             Set<S061_DSDocument> s061_dsDocuments = s061StructureMap.get(s061_userIDAuth);
-            Set<S101_DSDocument> s100_dsDocuments = s100_Structuremap.get(SwitchVersion.to_1_0_1(s061_userIDAuth));
+            Set<S103_DSDocument> s100_dsDocuments = s100_Structuremap.get(SwitchVersion.to_1_0_3(s061_userIDAuth));
             compare(s061_dsDocuments, s100_dsDocuments);
         }
     }
@@ -132,14 +132,14 @@ public class MigrationTest extends WithStorageProvider {
     public void testIncompatibility(WithStorageProvider.StorageDescriptor descriptor) {
         InitFromStorageProvider.DFSCredentialsTuple dfsCredentialsTuple = InitFromStorageProvider.dfsFromDescriptor(descriptor, oldSubFolder, oldSubFolder);
 
-        S101_UserIDAuth userIDAuth = new S101_UserIDAuth(new S101_UserID("peter"), new S101_ReadKeyPassword("password"::toCharArray));
+        S103_UserIDAuth userIDAuth = new S103_UserIDAuth(new S103_UserID("peter"), new S103_ReadKeyPassword("password"::toCharArray));
         S061_SimpleDatasafeService oldService = new S061_SimpleDatasafeServiceImpl(dfsCredentialsTuple.getOldVersion());
-        S101_DocumentDirectoryFQN startDatadir;
+        S103_DocumentDirectoryFQN startDatadir;
         {
             // Test preparation
 
             // create tree of files for one user on local disk (below tempDir)
-            startDatadir = new S101_DocumentDirectoryFQN(tempDir.toString()).addDirectory("startupfiles");
+            startDatadir = new S103_DocumentDirectoryFQN(tempDir.toString()).addDirectory("startupfiles");
             createLocalFilesInFolder(startDatadir.addDirectory(userIDAuth.getUserID().getValue()), 3, 3, 2, 1000);
 
             // move file tree of user to old datasafe format. destination depending on dataservice config
@@ -147,23 +147,23 @@ public class MigrationTest extends WithStorageProvider {
             oldWriter.migrateUser(userIDAuth);
         }
 
-        S101_SimpleDatasafeService newService = new S101_SimpleDatasafeServiceImpl(dfsCredentialsTuple.getNewVersion(), new MutableEncryptionConfig(),
-            new S101_PathEncryptionConfig(true));
+        S103_SimpleDatasafeService newService = new S103_SimpleDatasafeServiceImpl(dfsCredentialsTuple.getNewVersion(), new MutableEncryptionConfig(),
+            new S103_PathEncryptionConfig(true));
         Assertions.assertThrows(IOException.class, () -> newService.list(
                 userIDAuth,
-                new S101_DocumentDirectoryFQN("/"),
-                S101_ListRecursiveFlag.TRUE));
+                new S103_DocumentDirectoryFQN("/"),
+                S103_ListRecursiveFlag.TRUE));
 
     }
 
     @SneakyThrows
-    private void compare(Set<S061_DSDocument> s061_dsDocuments, Set<S101_DSDocument> s100_dsDocuments) {
+    private void compare(Set<S061_DSDocument> s061_dsDocuments, Set<S103_DSDocument> s100_dsDocuments) {
         int counter = 0;
         long bytecounter = 0;
         for (S061_DSDocument s061_dsDocument : s061_dsDocuments) {
             S061_DocumentFQN s061_dsDocumentDocumentFQN = s061_dsDocument.getDocumentFQN();
             boolean documentFound = false;
-            for (S101_DSDocument s100_dsDocument : s100_dsDocuments) {
+            for (S103_DSDocument s100_dsDocument : s100_dsDocuments) {
                 if (SwitchVersion.to_0_6_1(s100_dsDocument.getDocumentFQN()).equals(s061_dsDocumentDocumentFQN)) {
                     Assertions.assertArrayEquals(s061_dsDocument.getDocumentContent().getValue(),
                             s100_dsDocument.getDocumentContent().getValue());
@@ -180,7 +180,7 @@ public class MigrationTest extends WithStorageProvider {
     }
 
     @SneakyThrows
-    private void compare(S101_DocumentDirectoryFQN srcFolder, S101_DocumentDirectoryFQN destFolder) {
+    private void compare(S103_DocumentDirectoryFQN srcFolder, S103_DocumentDirectoryFQN destFolder) {
         List<String> srcList;
         {
             try (Stream<Path> srcWalk = Files.walk(Paths.get(srcFolder.getDocusafePath()))) {
@@ -207,8 +207,8 @@ public class MigrationTest extends WithStorageProvider {
 
         int counter = 0;
         for (String el : pathOnlyListFromSrc) {
-            S101_DocumentFQN srcFQN = srcFolder.addName(el);
-            S101_DocumentFQN destFQN = destFolder.addName(el);
+            S103_DocumentFQN srcFQN = srcFolder.addName(el);
+            S103_DocumentFQN destFQN = destFolder.addName(el);
 
             byte[] srcBytes = Files.readAllBytes(Paths.get(srcFQN.getDocusafePath()));
             byte[] destBytes = Files.readAllBytes(Paths.get(destFQN.getDocusafePath()));
@@ -222,7 +222,7 @@ public class MigrationTest extends WithStorageProvider {
 
 
     @SneakyThrows
-    private static void createLocalFilesInFolder(S101_DocumentDirectoryFQN path, int recursiveDepth, int numberOfFiles, int numberOfSubdirs, int sizeOfFile) {
+    private static void createLocalFilesInFolder(S103_DocumentDirectoryFQN path, int recursiveDepth, int numberOfFiles, int numberOfSubdirs, int sizeOfFile) {
         if (recursiveDepth == 0) {
             return;
         }

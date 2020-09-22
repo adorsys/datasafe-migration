@@ -4,10 +4,10 @@ import com.amazonaws.services.s3.model.AmazonS3Exception;
 import de.adorsys.datasafe_0_6_1.simple.adapter.api.types.S061_AmazonS3DFSCredentials;
 import de.adorsys.datasafe_0_6_1.simple.adapter.api.types.S061_DFSCredentials;
 import de.adorsys.datasafe_0_6_1.simple.adapter.api.types.S061_FilesystemDFSCredentials;
-import de.adorsys.datasafe_1_0_1.simple.adapter.api.exceptions.SimpleAdapterException;
-import de.adorsys.datasafe_1_0_1.simple.adapter.api.types.S101_AmazonS3DFSCredentials;
-import de.adorsys.datasafe_1_0_1.simple.adapter.api.types.S101_DFSCredentials;
-import de.adorsys.datasafe_1_0_1.simple.adapter.api.types.S101_FilesystemDFSCredentials;
+import de.adorsys.datasafe_1_0_3.simple.adapter.api.exceptions.SimpleAdapterException;
+import de.adorsys.datasafe_1_0_3.simple.adapter.api.types.S103_AmazonS3DFSCredentials;
+import de.adorsys.datasafe_1_0_3.simple.adapter.api.types.S103_DFSCredentials;
+import de.adorsys.datasafe_1_0_3.simple.adapter.api.types.S103_FilesystemDFSCredentials;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.experimental.UtilityClass;
@@ -42,7 +42,7 @@ public class InitFromStorageProvider {
                 log.info("uri:" + descriptor.getRootBucket());
                 return new DFSCredentialsTuple(
                         S061_FilesystemDFSCredentials.builder().root(descriptor.getRootBucket() + oldSubfolder).build(),
-                        S101_FilesystemDFSCredentials.builder().root(descriptor.getRootBucket() + newSubfolder).build()
+                        S103_FilesystemDFSCredentials.builder().root(descriptor.getRootBucket() + newSubfolder).build()
                 );
 
             }
@@ -67,7 +67,7 @@ public class InitFromStorageProvider {
                                 .rootBucket(descriptor.getRootBucket() + oldSubfolder)
                                 .url(descriptor.getMappedUrl())
                                 .build(),
-                        S101_AmazonS3DFSCredentials.builder()
+                        S103_AmazonS3DFSCredentials.builder()
                                 .accessKey(descriptor.getAccessKey())
                                 .secretKey(descriptor.getSecretKey())
                                 .region(descriptor.getRegion())
@@ -84,7 +84,7 @@ public class InitFromStorageProvider {
     @Getter
     public static class DFSCredentialsTuple {
         private final S061_DFSCredentials oldVersion;
-        private final S101_DFSCredentials newVersion;
+        private final S103_DFSCredentials newVersion;
 
     }
 }

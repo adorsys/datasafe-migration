@@ -9,13 +9,13 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>datasafe-migration-shaded-1.0.2</artifactId>
+    <artifactId>datasafe-migration-shaded-1.0.3</artifactId>
 
     <dependencies>
         <dependency>
             <groupId>de.adorsys</groupId>
             <artifactId>datasafe-simple-adapter-spring</artifactId>
-            <version>1.0.3-SNAPSHOT</version>
+            <version>1.0.3</version>
         </dependency>
     </dependencies>
     <build>
@@ -62,72 +62,72 @@
                             <relocations>
                                 <relocation>
                                     <pattern>de.adorsys.datasafe.encrypiton.api.types.UserIDAuth</pattern>
-                                    <shadedPattern>de.adorsys.datasafe_1_0_1.encrypiton.api.types.S101_UserIDAuth</shadedPattern>
+                                    <shadedPattern>de.adorsys.datasafe_1_0_3.encrypiton.api.types.S103_UserIDAuth</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>de.adorsys.datasafe.simple.adapter.api.SimpleDatasafeService</pattern>
-                                    <shadedPattern>de.adorsys.datasafe_1_0_1.simple.adapter.api.S101_SimpleDatasafeService</shadedPattern>
+                                    <shadedPattern>de.adorsys.datasafe_1_0_3.simple.adapter.api.S103_SimpleDatasafeService</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>de.adorsys.datasafe.simple.adapter.api.types.DSDocument</pattern>
-                                    <shadedPattern>de.adorsys.datasafe_1_0_1.simple.adapter.api.types.S101_DSDocument</shadedPattern>
+                                    <shadedPattern>de.adorsys.datasafe_1_0_3.simple.adapter.api.types.S103_DSDocument</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>de.adorsys.datasafe.simple.adapter.api.types.DocumentDirectoryFQN</pattern>
-                                    <shadedPattern>de.adorsys.datasafe_1_0_1.simple.adapter.api.types.S101_DocumentDirectoryFQN</shadedPattern>
+                                    <shadedPattern>de.adorsys.datasafe_1_0_3.simple.adapter.api.types.S103_DocumentDirectoryFQN</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>de.adorsys.datasafe.simple.adapter.api.types.DocumentFQN</pattern>
-                                    <shadedPattern>de.adorsys.datasafe_1_0_1.simple.adapter.api.types.S101_DocumentFQN</shadedPattern>
+                                    <shadedPattern>de.adorsys.datasafe_1_0_3.simple.adapter.api.types.S103_DocumentFQN</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>de.adorsys.datasafe.simple.adapter.api.types.ListRecursiveFlag</pattern>
-                                    <shadedPattern>de.adorsys.datasafe_1_0_1.simple.adapter.api.types.S101_ListRecursiveFlag</shadedPattern>
+                                    <shadedPattern>de.adorsys.datasafe_1_0_3.simple.adapter.api.types.S103_ListRecursiveFlag</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>de.adorsys.datasafe.simple.adapter.impl.SimpleDatasafeServiceImpl</pattern>
-                                    <shadedPattern>de.adorsys.datasafe_1_0_1.simple.adapter.impl.S101_SimpleDatasafeServiceImpl</shadedPattern>
+                                    <shadedPattern>de.adorsys.datasafe_1_0_3.simple.adapter.impl.S103_SimpleDatasafeServiceImpl</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>de.adorsys.datasafe.encrypiton.api.types.UserID</pattern>
-                                    <shadedPattern>de.adorsys.datasafe_1_0_1.encrypiton.api.types.S101_UserID</shadedPattern>
+                                    <shadedPattern>de.adorsys.datasafe_1_0_3.encrypiton.api.types.S103_UserID</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>de.adorsys.datasafe.encrypiton.api.types.keystore.ReadKeyPassword</pattern>
-                                    <shadedPattern>de.adorsys.datasafe_1_0_1.encrypiton.api.types.keystore.S101_ReadKeyPassword</shadedPattern>
+                                    <shadedPattern>de.adorsys.datasafe_1_0_3.encrypiton.api.types.keystore.S103_ReadKeyPassword</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>de.adorsys.datasafe.simple.adapter.api.types.FilesystemDFSCredentials</pattern>
-                                    <shadedPattern>de.adorsys.datasafe_1_0_1.simple.adapter.api.types.S101_FilesystemDFSCredentials</shadedPattern>
+                                    <shadedPattern>de.adorsys.datasafe_1_0_3.simple.adapter.api.types.S103_FilesystemDFSCredentials</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>de.adorsys.datasafe.simple.adapter.api.types.AmazonS3DFSCredentials</pattern>
-                                    <shadedPattern>de.adorsys.datasafe_1_0_1.simple.adapter.api.types.S101_AmazonS3DFSCredentials</shadedPattern>
+                                    <shadedPattern>de.adorsys.datasafe_1_0_3.simple.adapter.api.types.S103_AmazonS3DFSCredentials</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>de.adorsys.datasafe.simple.adapter.api.types.DFSCredentials</pattern>
-                                    <shadedPattern>de.adorsys.datasafe_1_0_1.simple.adapter.api.types.S101_DFSCredentials</shadedPattern>
+                                    <shadedPattern>de.adorsys.datasafe_1_0_3.simple.adapter.api.types.S103_DFSCredentials</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>de.adorsys.datasafe.simple.adapter.api.types.DocumentContent</pattern>
-                                    <shadedPattern>de.adorsys.datasafe_1_0_1.simple.adapter.api.types.S101_DocumentContent</shadedPattern>
+                                    <shadedPattern>de.adorsys.datasafe_1_0_3.simple.adapter.api.types.S103_DocumentContent</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>de.adorsys.datasafe.types.api.types.ReadKeyPassword</pattern>
-                                    <shadedPattern>de.adorsys.datasafe_1_0_1.types.api.types.S101_ReadKeyPassword</shadedPattern>
+                                    <shadedPattern>de.adorsys.datasafe_1_0_3.types.api.types.S103_ReadKeyPassword</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>de.adorsys.datasafe.inbox.api.InboxService</pattern>
-                                    <shadedPattern>de.adorsys.datasafe_1_0_1.inbox.api.S101_InboxService</shadedPattern>
+                                    <shadedPattern>de.adorsys.datasafe_1_0_3.inbox.api.S103_InboxService</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>de.adorsys.datasafe.simple.adapter.impl.config.PathEncryptionConfig</pattern>
-                                    <shadedPattern>de.adorsys.datasafe_1_0_1.simple.adapter.impl.config.S101_PathEncryptionConfig</shadedPattern>
+                                    <shadedPattern>de.adorsys.datasafe_1_0_3.simple.adapter.impl.config.S103_PathEncryptionConfig</shadedPattern>
                                 </relocation>
 
                                 <relocation>
                                     <pattern>de.adorsys.datasafe</pattern>
-                                    <shadedPattern>de.adorsys.datasafe_1_0_1</shadedPattern>
+                                    <shadedPattern>de.adorsys.datasafe_1_0_3</shadedPattern>
                                 </relocation>
                             </relocations>
 
@@ -155,10 +155,6 @@
                     </annotationProcessorPaths>
                 </configuration>
             </plugin>
-
         </plugins>
-
     </build>
-
-
 </project>

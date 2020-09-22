@@ -5,8 +5,8 @@ import de.adorsys.datasafe_0_6_1.simple.adapter.api.types.S061_DSDocument;
 import de.adorsys.datasafe_0_6_1.simple.adapter.api.types.S061_DocumentDirectoryFQN;
 import de.adorsys.datasafe_0_6_1.simple.adapter.api.types.S061_DocumentFQN;
 import de.adorsys.datasafe_0_6_1.simple.adapter.api.types.S061_ListRecursiveFlag;
-import de.adorsys.datasafe_1_0_1.encrypiton.api.types.S101_UserIDAuth;
-import de.adorsys.datasafe_1_0_1.simple.adapter.api.types.S101_DocumentDirectoryFQN;
+import de.adorsys.datasafe_1_0_3.encrypiton.api.types.S103_UserIDAuth;
+import de.adorsys.datasafe_1_0_3.simple.adapter.api.types.S103_DocumentDirectoryFQN;
 import de.adorsys.datasafemigration.common.SwitchVersion;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
@@ -23,9 +23,9 @@ import java.util.List;
 @AllArgsConstructor
 public class LoadOldUserToLocal {
     private final S061_SimpleDatasafeService simpleDatasafeService;
-    private final S101_DocumentDirectoryFQN dest;
+    private final S103_DocumentDirectoryFQN dest;
 
-    public void migrateUser(S101_UserIDAuth userIDAuth) {
+    public void migrateUser(S103_UserIDAuth userIDAuth) {
         Security.addProvider(new BouncyCastleProvider());
 
         List<S061_DocumentFQN> list = simpleDatasafeService.list(SwitchVersion.to_0_6_1(userIDAuth), new S061_DocumentDirectoryFQN("/"), S061_ListRecursiveFlag.TRUE);

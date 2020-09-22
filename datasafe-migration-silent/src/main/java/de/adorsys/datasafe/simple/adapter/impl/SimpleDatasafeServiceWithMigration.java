@@ -15,12 +15,12 @@ import de.adorsys.datasafe_0_6_1.inbox.api.InboxService;
 import de.adorsys.datasafe_0_6_1.simple.adapter.api.S061_SimpleDatasafeService;
 import de.adorsys.datasafe_0_6_1.simple.adapter.api.types.S061_DFSCredentials;
 import de.adorsys.datasafe_0_6_1.simple.adapter.impl.S061_SimpleDatasafeServiceImpl;
-import de.adorsys.datasafe_1_0_1.encrypiton.api.types.encryption.MutableEncryptionConfig;
-import de.adorsys.datasafe_1_0_1.inbox.api.S101_InboxService;
-import de.adorsys.datasafe_1_0_1.simple.adapter.api.S101_SimpleDatasafeService;
-import de.adorsys.datasafe_1_0_1.simple.adapter.api.types.S101_DFSCredentials;
-import de.adorsys.datasafe_1_0_1.simple.adapter.impl.S101_SimpleDatasafeServiceImpl;
-import de.adorsys.datasafe_1_0_1.simple.adapter.impl.config.S101_PathEncryptionConfig;
+import de.adorsys.datasafe_1_0_3.encrypiton.api.types.encryption.MutableEncryptionConfig;
+import de.adorsys.datasafe_1_0_3.inbox.api.S103_InboxService;
+import de.adorsys.datasafe_1_0_3.simple.adapter.api.S103_SimpleDatasafeService;
+import de.adorsys.datasafe_1_0_3.simple.adapter.api.types.S103_DFSCredentials;
+import de.adorsys.datasafe_1_0_3.simple.adapter.impl.S103_SimpleDatasafeServiceImpl;
+import de.adorsys.datasafe_1_0_3.simple.adapter.impl.config.S103_PathEncryptionConfig;
 import de.adorsys.datasafemigration.ExtendedSwitchVersion;
 import de.adorsys.datasafemigration.MigrationLogic;
 import de.adorsys.datasafemigration.ModifyDFSCredentials;
@@ -35,19 +35,19 @@ import static de.adorsys.datasafemigration.ExtendedSwitchVersion.toCurrent;
 
 @Slf4j
 public class SimpleDatasafeServiceWithMigration implements SimpleDatasafeService {
-    private S101_SimpleDatasafeService newReal;
+    private S103_SimpleDatasafeService newReal;
     private S061_SimpleDatasafeService oldReal;
     private MigrationLogic migrationLogic;
     private final S061_DFSCredentials credentialsToNOTMigratedData;
-    private final S101_DFSCredentials credentialsToMigratedData;
+    private final S103_DFSCredentials credentialsToMigratedData;
 
-    public SimpleDatasafeServiceWithMigration(DatasafeMigrationConfig datasafeMigrationConfig, S101_DFSCredentials dfsCredentials, MutableEncryptionConfig mutableEncryptionConfig,
-                                              S101_PathEncryptionConfig pathEncryptionConfig) {
+    public SimpleDatasafeServiceWithMigration(DatasafeMigrationConfig datasafeMigrationConfig, S103_DFSCredentials dfsCredentials, MutableEncryptionConfig mutableEncryptionConfig,
+                                              S103_PathEncryptionConfig pathEncryptionConfig) {
         credentialsToNOTMigratedData = ExtendedSwitchVersion.to_0_6_1(dfsCredentials);
         credentialsToMigratedData = datasafeMigrationConfig.isDistinctFolder() ? ModifyDFSCredentials.getPathToMigratedData(dfsCredentials) : dfsCredentials;
 
         oldReal = new S061_SimpleDatasafeServiceImpl(credentialsToNOTMigratedData);
-        newReal = new S101_SimpleDatasafeServiceImpl(credentialsToMigratedData, mutableEncryptionConfig, pathEncryptionConfig);
+        newReal = new S103_SimpleDatasafeServiceImpl(credentialsToMigratedData, mutableEncryptionConfig, pathEncryptionConfig);
 
         migrationLogic = new MigrationLogic(datasafeMigrationConfig.getLockProvider(), datasafeMigrationConfig.getMigrationtimeout(), credentialsToNOTMigratedData, credentialsToMigratedData, mutableEncryptionConfig,
             pathEncryptionConfig);
@@ -56,7 +56,7 @@ public class SimpleDatasafeServiceWithMigration implements SimpleDatasafeService
     public S061_DFSCredentials getCredentialsToNOTMigratedData() {
         return credentialsToNOTMigratedData;
     }
-    public S101_DFSCredentials getCredentialsToMigratedData() {
+    public S103_DFSCredentials getCredentialsToMigratedData() {
         return credentialsToMigratedData;
     }
 
@@ -178,7 +178,7 @@ public class SimpleDatasafeServiceWithMigration implements SimpleDatasafeService
     public List<DocumentFQN> list(UserIDAuth userIDAuth, DocumentDirectoryFQN documentDirectoryFQN, ListRecursiveFlag listRecursiveFlag) {
         if (checkMigration(userIDAuth)) {
             List<DocumentFQN> result = new ArrayList<>();
-            newReal.list(userIDAuth.getReal(), documentDirectoryFQN.getReal(), ExtendedSwitchVersion.to_1_0_1(listRecursiveFlag)).forEach(
+            newReal.list(userIDAuth.getReal(), documentDirectoryFQN.getReal(), ExtendedSwitchVersion.to_1_0_3(listRecursiveFlag)).forEach(
                     el -> result.add(new DocumentFQN(el.getDocusafePath()))
             );
             return result;
@@ -191,7 +191,7 @@ public class SimpleDatasafeServiceWithMigration implements SimpleDatasafeService
     }
 
     @Override
-    public S101_InboxService getInboxService() {
+    public S103_InboxService getInboxService() {
         return newReal.getInboxService();
     }
 

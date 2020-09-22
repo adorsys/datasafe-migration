@@ -1,8 +1,8 @@
 package de.adorsys.datasafemigration.offline;
 
-import de.adorsys.datasafe_1_0_1.encrypiton.api.types.S101_UserID;
-import de.adorsys.datasafe_1_0_1.encrypiton.api.types.S101_UserIDAuth;
-import de.adorsys.datasafe_1_0_1.types.api.types.S101_ReadKeyPassword;
+import de.adorsys.datasafe_1_0_3.encrypiton.api.types.S103_UserID;
+import de.adorsys.datasafe_1_0_3.encrypiton.api.types.S103_UserIDAuth;
+import de.adorsys.datasafe_1_0_3.types.api.types.S103_ReadKeyPassword;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
@@ -15,8 +15,8 @@ import java.util.function.Supplier;
 @Slf4j
 public class ReadUserPasswordFile {
     @SneakyThrows
-    public static List<S101_UserIDAuth> getAllUsers(String filename) {
-        List<S101_UserIDAuth> list = new ArrayList<>();
+    public static List<S103_UserIDAuth> getAllUsers(String filename) {
+        List<S103_UserIDAuth> list = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
             String line = reader.readLine();
             if (! (line.startsWith("#") || line.replaceAll(" ","").length() == 0)) {
@@ -25,7 +25,7 @@ public class ReadUserPasswordFile {
                 String username = line.substring(0, delimiter);
                 String password = line.substring(delimiter+1);
                 Supplier<char[]> passwordSupplier = password::toCharArray;
-                list.add(new S101_UserIDAuth(new S101_UserID(username), new S101_ReadKeyPassword(passwordSupplier)));
+                list.add(new S103_UserIDAuth(new S103_UserID(username), new S103_ReadKeyPassword(passwordSupplier)));
             }
         }
         log.debug("read {} user from {}", list.size(), filename);

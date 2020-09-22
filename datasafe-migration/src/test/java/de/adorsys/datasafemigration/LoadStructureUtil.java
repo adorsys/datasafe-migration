@@ -1,11 +1,11 @@
 package de.adorsys.datasafemigration;
 
-import de.adorsys.datasafe_1_0_1.encrypiton.api.types.S101_UserIDAuth;
-import de.adorsys.datasafe_1_0_1.simple.adapter.api.S101_SimpleDatasafeService;
-import de.adorsys.datasafe_1_0_1.simple.adapter.api.types.S101_DSDocument;
-import de.adorsys.datasafe_1_0_1.simple.adapter.api.types.S101_DocumentDirectoryFQN;
-import de.adorsys.datasafe_1_0_1.simple.adapter.api.types.S101_DocumentFQN;
-import de.adorsys.datasafe_1_0_1.simple.adapter.api.types.S101_ListRecursiveFlag;
+import de.adorsys.datasafe_1_0_3.encrypiton.api.types.S103_UserIDAuth;
+import de.adorsys.datasafe_1_0_3.simple.adapter.api.S103_SimpleDatasafeService;
+import de.adorsys.datasafe_1_0_3.simple.adapter.api.types.S103_DSDocument;
+import de.adorsys.datasafe_1_0_3.simple.adapter.api.types.S103_DocumentDirectoryFQN;
+import de.adorsys.datasafe_1_0_3.simple.adapter.api.types.S103_DocumentFQN;
+import de.adorsys.datasafe_1_0_3.simple.adapter.api.types.S103_ListRecursiveFlag;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -14,14 +14,14 @@ import java.util.Map;
 import java.util.Set;
 
 public class LoadStructureUtil {
-    static public Map<S101_UserIDAuth, Set<S101_DSDocument>> loadS100Structure(S101_SimpleDatasafeService s100_simpleDatasafeService, Set<S101_UserIDAuth> s100_userIDAuths) {
+    static public Map<S103_UserIDAuth, Set<S103_DSDocument>> loadS100Structure(S103_SimpleDatasafeService s100_simpleDatasafeService, Set<S103_UserIDAuth> s100_userIDAuths) {
 
-        Map<S101_UserIDAuth, Set<S101_DSDocument>> resultMap = new HashMap<>();
+        Map<S103_UserIDAuth, Set<S103_DSDocument>> resultMap = new HashMap<>();
 
-        for (S101_UserIDAuth s100_userIDAuth : s100_userIDAuths) {
-            Set<S101_DSDocument> resultSet = new HashSet<>();
-            List<S101_DocumentFQN> list = s100_simpleDatasafeService.list(s100_userIDAuth, new S101_DocumentDirectoryFQN("/"), S101_ListRecursiveFlag.TRUE);
-            for (S101_DocumentFQN s100_documentFQN : list) {
+        for (S103_UserIDAuth s100_userIDAuth : s100_userIDAuths) {
+            Set<S103_DSDocument> resultSet = new HashSet<>();
+            List<S103_DocumentFQN> list = s100_simpleDatasafeService.list(s100_userIDAuth, new S103_DocumentDirectoryFQN("/"), S103_ListRecursiveFlag.TRUE);
+            for (S103_DocumentFQN s100_documentFQN : list) {
                 resultSet.add(s100_simpleDatasafeService.readDocument(s100_userIDAuth, s100_documentFQN));
             }
             resultMap.put(s100_userIDAuth, resultSet);

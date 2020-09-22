@@ -7,13 +7,13 @@ import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.client.builder.AwsClientBuilder;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
-import de.adorsys.datasafe_1_0_1.simple.adapter.api.types.S101_AmazonS3DFSCredentials;
-import de.adorsys.datasafe_1_0_1.simple.adapter.api.types.S101_DFSCredentials;
-import de.adorsys.datasafe_1_0_1.simple.adapter.api.types.S101_FilesystemDFSCredentials;
-import de.adorsys.datasafe_1_0_1.storage.api.StorageService;
-import de.adorsys.datasafe_1_0_1.storage.impl.fs.FileSystemStorageService;
-import de.adorsys.datasafe_1_0_1.storage.impl.s3.S3StorageService;
-import de.adorsys.datasafe_1_0_1.types.api.utils.ExecutorServiceUtil;
+import de.adorsys.datasafe_1_0_3.simple.adapter.api.types.S103_AmazonS3DFSCredentials;
+import de.adorsys.datasafe_1_0_3.simple.adapter.api.types.S103_DFSCredentials;
+import de.adorsys.datasafe_1_0_3.simple.adapter.api.types.S103_FilesystemDFSCredentials;
+import de.adorsys.datasafe_1_0_3.storage.api.StorageService;
+import de.adorsys.datasafe_1_0_3.storage.impl.fs.FileSystemStorageService;
+import de.adorsys.datasafe_1_0_3.storage.impl.s3.S3StorageService;
+import de.adorsys.datasafe_1_0_3.types.api.utils.ExecutorServiceUtil;
 import de.adorsys.datasafemigration.MigrationException;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -28,18 +28,18 @@ public class GetStorage {
     private static final String AMAZON_URL = "https://s3.amazonaws.com";
     private static final String S3_PREFIX = "s3://";
 
-    public static SystemRootAndStorageService get(S101_DFSCredentials dfsCredentials) {
-        if (dfsCredentials instanceof S101_FilesystemDFSCredentials) {
-            return useFileSystem((S101_FilesystemDFSCredentials) dfsCredentials);
+    public static SystemRootAndStorageService get(S103_DFSCredentials dfsCredentials) {
+        if (dfsCredentials instanceof S103_FilesystemDFSCredentials) {
+            return useFileSystem((S103_FilesystemDFSCredentials) dfsCredentials);
         }
-        if (dfsCredentials instanceof S101_AmazonS3DFSCredentials) {
-            return useAmazonS3((S101_AmazonS3DFSCredentials) dfsCredentials);
+        if (dfsCredentials instanceof S103_AmazonS3DFSCredentials) {
+            return useAmazonS3((S103_AmazonS3DFSCredentials) dfsCredentials);
         }
         throw new MigrationException("dont know to get storage of " + dfsCredentials.getClass().getName());
     }
 
-    private static SystemRootAndStorageService useAmazonS3(S101_AmazonS3DFSCredentials dfsCredentials) {
-        S101_AmazonS3DFSCredentials amazonS3DFSCredentials = dfsCredentials;
+    private static SystemRootAndStorageService useAmazonS3(S103_AmazonS3DFSCredentials dfsCredentials) {
+        S103_AmazonS3DFSCredentials amazonS3DFSCredentials = dfsCredentials;
         AmazonS3ClientBuilder amazonS3ClientBuilder = AmazonS3ClientBuilder.standard()
                 .withCredentials(
                         new AWSStaticCredentialsProvider(
@@ -88,8 +88,8 @@ public class GetStorage {
         return new SystemRootAndStorageService(systemRoot, storageService);
     }
 
-    private static SystemRootAndStorageService useFileSystem(S101_FilesystemDFSCredentials dfsCredentials) {
-        S101_FilesystemDFSCredentials filesystemDFSCredentials = dfsCredentials;
+    private static SystemRootAndStorageService useFileSystem(S103_FilesystemDFSCredentials dfsCredentials) {
+        S103_FilesystemDFSCredentials filesystemDFSCredentials = dfsCredentials;
         URI systemRoot = FileSystems.getDefault().getPath(filesystemDFSCredentials.getRoot()).toAbsolutePath().toUri();
         StorageService storageService = new FileSystemStorageService(FileSystems.getDefault().getPath(filesystemDFSCredentials.getRoot()));
         log.info("build DFS to FILESYSTEM with root " + filesystemDFSCredentials.getRoot());

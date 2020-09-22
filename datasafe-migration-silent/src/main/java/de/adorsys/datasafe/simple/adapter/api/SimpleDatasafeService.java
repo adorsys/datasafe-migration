@@ -8,7 +8,7 @@ import de.adorsys.datasafe.simple.adapter.api.types.DocumentDirectoryFQN;
 import de.adorsys.datasafe.simple.adapter.api.types.DocumentFQN;
 import de.adorsys.datasafe.simple.adapter.api.types.ListRecursiveFlag;
 import de.adorsys.datasafe.types.api.types.ReadKeyPassword;
-import de.adorsys.datasafe_1_0_1.inbox.api.S101_InboxService;
+import de.adorsys.datasafe_1_0_3.inbox.api.S103_InboxService;
 
 import java.io.OutputStream;
 import java.util.List;
@@ -48,7 +48,7 @@ public interface SimpleDatasafeService {
     List<DocumentFQN> list(UserIDAuth userIDAuth, DocumentDirectoryFQN documentDirectoryFQN, ListRecursiveFlag recursiveFlag);
 
     // This service can not be migrated, as it is not used in old DatasafeAdapter
-    S101_InboxService getInboxService();
+    S103_InboxService getInboxService();
 
     // deletes all users and their files from storage
     void cleanupDb();
