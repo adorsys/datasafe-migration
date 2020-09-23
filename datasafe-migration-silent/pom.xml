@@ -95,7 +95,7 @@
         </dependency>
         <dependency>
             <groupId>de.adorsys</groupId>
-            <artifactId>datasafe-migration-shaded-1.0.1</artifactId>
+            <artifactId>datasafe-migration-shaded-1.0.3</artifactId>
             <version>${project.version}</version>
             <exclusions>
                 <exclusion>

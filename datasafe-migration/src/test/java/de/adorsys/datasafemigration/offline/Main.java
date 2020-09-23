@@ -4,13 +4,14 @@ import de.adorsys.datasafe_0_6_1.simple.adapter.api.S061_SimpleDatasafeService;
 import de.adorsys.datasafe_0_6_1.simple.adapter.api.types.S061_AmazonS3DFSCredentials;
 import de.adorsys.datasafe_0_6_1.simple.adapter.api.types.S061_DFSCredentials;
 import de.adorsys.datasafe_0_6_1.simple.adapter.impl.S061_SimpleDatasafeServiceImpl;
-import de.adorsys.datasafe_1_0_1.encrypiton.api.types.S101_UserIDAuth;
-import de.adorsys.datasafe_1_0_1.encrypiton.api.types.encryption.MutableEncryptionConfig;
-import de.adorsys.datasafe_1_0_1.simple.adapter.api.S101_SimpleDatasafeService;
-import de.adorsys.datasafe_1_0_1.simple.adapter.api.types.S101_AmazonS3DFSCredentials;
-import de.adorsys.datasafe_1_0_1.simple.adapter.api.types.S101_DFSCredentials;
-import de.adorsys.datasafe_1_0_1.simple.adapter.api.types.S101_DocumentDirectoryFQN;
-import de.adorsys.datasafe_1_0_1.simple.adapter.impl.S101_SimpleDatasafeServiceImpl;
+import de.adorsys.datasafe_1_0_3.encrypiton.api.types.S103_UserIDAuth;
+import de.adorsys.datasafe_1_0_3.encrypiton.api.types.encryption.MutableEncryptionConfig;
+import de.adorsys.datasafe_1_0_3.simple.adapter.api.S103_SimpleDatasafeService;
+import de.adorsys.datasafe_1_0_3.simple.adapter.api.types.S103_AmazonS3DFSCredentials;
+import de.adorsys.datasafe_1_0_3.simple.adapter.api.types.S103_DFSCredentials;
+import de.adorsys.datasafe_1_0_3.simple.adapter.api.types.S103_DocumentDirectoryFQN;
+import de.adorsys.datasafe_1_0_3.simple.adapter.impl.S103_SimpleDatasafeServiceImpl;
+import de.adorsys.datasafe_1_0_3.simple.adapter.impl.config.S103_PathEncryptionConfig;
 import de.adorsys.datasafemigration.withDFSonly.LoadUserNewToNewFormat;
 import de.adorsys.datasafemigration.withDFSonly.LoadUserOldToNewFormat;
 import de.adorsys.datasafemigration.withlocalfilesystem.LoadNewUserToLocal;
@@ -55,56 +56,61 @@ public class Main {
     public static void main(String[] args) {
         Security.addProvider(new BouncyCastleProvider());
 
-        List<S101_UserIDAuth> usersToMigrate = ReadUserPasswordFile.getAllUsers(get(args, USERLISTFILE));
+        List<S103_UserIDAuth> usersToMigrate = ReadUserPasswordFile.getAllUsers(get(args, USERLISTFILE));
 
         if (get(args, ACTION).equals(LOAD_OLD_TO_LOCAL)) {
-            S101_DocumentDirectoryFQN localfolder = new S101_DocumentDirectoryFQN(get(args, LOCALFOLDER));
+            S103_DocumentDirectoryFQN localfolder = new S103_DocumentDirectoryFQN(get(args, LOCALFOLDER));
             S061_SimpleDatasafeService simpleDatasafeService = new S061_SimpleDatasafeServiceImpl(getOldDfsCredentials(args));
             LoadOldUserToLocal service = new LoadOldUserToLocal(simpleDatasafeService, localfolder);
-            for (S101_UserIDAuth userIDAuth : usersToMigrate) {
+            for (S103_UserIDAuth userIDAuth : usersToMigrate) {
                 service.migrateUser(userIDAuth);
             }
         }
         if (get(args, ACTION).equals(LOAD_NEW_TO_LOCAL)) {
-            S101_DocumentDirectoryFQN localfolder = new S101_DocumentDirectoryFQN(get(args, LOCALFOLDER));
-            S101_SimpleDatasafeService simpleDatasafeService = new S101_SimpleDatasafeServiceImpl(getNewDfsCredentials(NEW, args), new MutableEncryptionConfig());
+            S103_DocumentDirectoryFQN localfolder = new S103_DocumentDirectoryFQN(get(args, LOCALFOLDER));
+            S103_SimpleDatasafeService simpleDatasafeService = new S103_SimpleDatasafeServiceImpl(getNewDfsCredentials(NEW, args), new MutableEncryptionConfig(),
+                getNewPathEncryptionConfig(NEW, args));
             LoadNewUserToLocal service = new LoadNewUserToLocal(simpleDatasafeService, localfolder);
-            for (S101_UserIDAuth userIDAuth : usersToMigrate) {
+            for (S103_UserIDAuth userIDAuth : usersToMigrate) {
                 service.migrateUser(userIDAuth);
             }
         }
         if (get(args, ACTION).equals(STORE_LOCAL_TO_NEW)) {
-            S101_DocumentDirectoryFQN localfolder = new S101_DocumentDirectoryFQN(get(args, LOCALFOLDER));
-            S101_SimpleDatasafeService simpleDatasafeService = new S101_SimpleDatasafeServiceImpl(getNewDfsCredentials(NEW, args), new MutableEncryptionConfig());
+            S103_DocumentDirectoryFQN localfolder = new S103_DocumentDirectoryFQN(get(args, LOCALFOLDER));
+            S103_SimpleDatasafeService simpleDatasafeService = new S103_SimpleDatasafeServiceImpl(getNewDfsCredentials(NEW, args), new MutableEncryptionConfig(),
+                getNewPathEncryptionConfig(NEW, args));
             WriteNewUserFromLocal service = new WriteNewUserFromLocal(simpleDatasafeService, localfolder);
-            for (S101_UserIDAuth userIDAuth : usersToMigrate) {
+            for (S103_UserIDAuth userIDAuth : usersToMigrate) {
                 service.migrateUser(userIDAuth);
             }
         }
         if (get(args, ACTION).equals(STORE_LOCAL_TO_OLD)) {
-            S101_DocumentDirectoryFQN localfolder = new S101_DocumentDirectoryFQN(get(args, LOCALFOLDER));
+            S103_DocumentDirectoryFQN localfolder = new S103_DocumentDirectoryFQN(get(args, LOCALFOLDER));
             S061_SimpleDatasafeService simpleDatasafeService = new S061_SimpleDatasafeServiceImpl(getOldDfsCredentials(args));
             WriteOldUserFromLocal service = new WriteOldUserFromLocal(simpleDatasafeService, localfolder);
-            for (S101_UserIDAuth userIDAuth : usersToMigrate) {
+            for (S103_UserIDAuth userIDAuth : usersToMigrate) {
                 service.migrateUser(userIDAuth);
             }
         }
         if (get(args, ACTION).equals(MIGRATE_DFS_TO_INTERMEDIATE)) {
-            S101_SimpleDatasafeService intermediateService = new S101_SimpleDatasafeServiceImpl(getNewDfsCredentials("intermediate", args), new MutableEncryptionConfig());
+            S103_SimpleDatasafeService intermediateService = new S103_SimpleDatasafeServiceImpl(getNewDfsCredentials("intermediate", args), new MutableEncryptionConfig(),
+                getNewPathEncryptionConfig("intermediate", args));
             S061_SimpleDatasafeService oldService = new S061_SimpleDatasafeServiceImpl(getOldDfsCredentials(args));
 
             LoadUserOldToNewFormat old = new LoadUserOldToNewFormat(oldService, intermediateService);
 
-            for (S101_UserIDAuth userIDAuth : usersToMigrate) {
+            for (S103_UserIDAuth userIDAuth : usersToMigrate) {
                 old.migrateUser(userIDAuth);
             }
         }
         if (get(args, ACTION).equals(MIGRATE_DFS_FROM_INTERMEDIATE)) {
-            S101_SimpleDatasafeService intermediateService = new S101_SimpleDatasafeServiceImpl(getNewDfsCredentials("intermediate", args), new MutableEncryptionConfig());
-            S101_SimpleDatasafeService newService = new S101_SimpleDatasafeServiceImpl(getNewDfsCredentials(NEW, args), new MutableEncryptionConfig());
+            S103_SimpleDatasafeService intermediateService = new S103_SimpleDatasafeServiceImpl(getNewDfsCredentials("intermediate", args), new MutableEncryptionConfig(),
+                getNewPathEncryptionConfig("intermediate", args));
+            S103_SimpleDatasafeService newService = new S103_SimpleDatasafeServiceImpl(getNewDfsCredentials(NEW, args), new MutableEncryptionConfig(),
+                getNewPathEncryptionConfig(NEW, args));
             LoadUserNewToNewFormat intermediateRead = new LoadUserNewToNewFormat(intermediateService, newService);
 
-            for (S101_UserIDAuth userIDAuth : usersToMigrate) {
+            for (S103_UserIDAuth userIDAuth : usersToMigrate) {
                 intermediateRead.migrateUser(userIDAuth);
             }
         }
@@ -124,8 +130,8 @@ public class Main {
 
     }
 
-    private static S101_DFSCredentials getNewDfsCredentials(String prefix, String[] args) {
-        return S101_AmazonS3DFSCredentials.builder()
+    private static S103_DFSCredentials getNewDfsCredentials(String prefix, String[] args) {
+        return S103_AmazonS3DFSCredentials.builder()
                 .accessKey(get(args, prefix + "-accesskey"))
                 .secretKey(get(args, prefix + "-secretkey"))
                 .rootBucket(get(args, prefix + "-rootbucket"))
@@ -133,6 +139,10 @@ public class Main {
                 .noHttps(!get(args, prefix + "-url").startsWith("https"))
                 .region(get(args, prefix + "-region"))
                 .build();
+    }
+
+    private static S103_PathEncryptionConfig getNewPathEncryptionConfig(String prefix, String[] args) {
+        return new S103_PathEncryptionConfig(Boolean.getBoolean(get(args, prefix + "-pathEncryption")));
     }
 
     private static String get(String[] args, String argToSearch) {

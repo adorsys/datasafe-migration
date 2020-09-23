@@ -146,7 +146,7 @@ or, if <code>distinctfolder: true</code> has been set it could be:
 *    migration timeout : 20000                             *
 *  intermediate folder : NO                                *
 *             old root : s3://adorsys-test-migration/      *
-*             new root : s3://adorsys-test-migration/100/  *
+*             new root : s3://adorsys-test-migration/103/  *
 *                                                          *
 ************************************************************
 ```
@@ -179,17 +179,17 @@ contains the datasafe version 0.6.1. All classes have the path <code>de.adorsys.
  instead of <code>de.adorsys.datasafe</code>. Further the used classes of datasafe have the prefix 
  <code>S061_</code>.
 ## datasafe-migration-shaded-1.0.1
-contains the datasafe version 1.0.1. All classes have the path <code>de.adorsys.datasafe_1_0_1</code>
+contains the datasafe version 1.0.1. All classes have the path <code>de.adorsys.datasafe_1_0_3</code>
  instead of <code>de.adorsys.datasafe</code>. Further the used classes of datasafe have the prefix 
- <code>S101_</code>.
+ <code>S103_</code>.
 ## datasafe-migration
 contains the classes, which actually do the migration itself, e.g. read all files
-from the <code>S061_SimpledatasafeAdapter</code> and write it to the <code>S101_SimpleDatasafeAdapter</code>.
+from the <code>S061_SimpledatasafeAdapter</code> and write it to the <code>S103_SimpleDatasafeAdapter</code>.
 ## datasafe-migration-silent
 contains all the classes of the SimpleDatasafeAdapter. These classes are wrapper. The Service class
 SimpleDatasafeService is an instance of SimpleDatasafesServiceWithMigration. That class itself
 contains the old and the new SimpleDatasafeAdapterImpls (e.g. <code>S061_SimpleDatasafeAdapterServiceImpl</code>
-and <code>S101_SimpleDatasafeAdapterServiceImpl</code>).
+and <code>S103_SimpleDatasafeAdapterServiceImpl</code>).
 
  
 # Development
@@ -198,7 +198,7 @@ To be sure which class of which jar (shaded 0.6.1, shaded 1.0.1) is used
 all directly used shaded classes got a prefix
 ```
 S061_SimpleDatasafeService oldService...
-S101_SimpleDatasafeService newService...
+S103_SimpleDatasafeService newService...
 ```
 The new classes, which wrap the old classes look like the interface of
 Datasafe 1.0.1.
@@ -223,9 +223,9 @@ File -> Invalidate Caches / Restart
 If you still have problems do
 ```
 mvn clean install -DskipTests
-select pom.xml of datasafe-migration-shaded-061 project
+select pom.xml of datasafe-migration-shaded-0.6.1 project
 right click -> Maven -> ignore Projects
-select pom.xml of datasafe-migration-shaded-101 project
+select pom.xml of datasafe-migration-shaded-1.0.3 project
 right click -> Maven -> ignore Projects
 select root pom.xml
 right click -> Maven -> reimport

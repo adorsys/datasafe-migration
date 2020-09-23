@@ -1,19 +1,19 @@
 package de.adorsys.datasafemigration;
 
-import de.adorsys.datasafe_1_0_1.simple.adapter.api.types.S101_AmazonS3DFSCredentials;
-import de.adorsys.datasafe_1_0_1.simple.adapter.api.types.S101_DFSCredentials;
-import de.adorsys.datasafe_1_0_1.simple.adapter.api.types.S101_FilesystemDFSCredentials;
+import de.adorsys.datasafe_1_0_3.simple.adapter.api.types.S103_AmazonS3DFSCredentials;
+import de.adorsys.datasafe_1_0_3.simple.adapter.api.types.S103_DFSCredentials;
+import de.adorsys.datasafe_1_0_3.simple.adapter.api.types.S103_FilesystemDFSCredentials;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class ModifyDFSCredentials {
+    public static String DEFAULT_NEW_PATH_SUFFIX = "103/";
     private static String BEST_CASE_SUFFIX = "datasafe/backend/";
-    private static String BEST_CASE_NEW_SUFFIX = "datasafe/100/backend/";
-    private static String DEFAULT_NEW_PATH_SUFFIX = "100/";
+    private static String BEST_CASE_NEW_SUFFIX = "datasafe/" + DEFAULT_NEW_PATH_SUFFIX + "backend/";
 
-    public static S101_DFSCredentials appendToRootPath(S101_DFSCredentials dfsCredentials, String pathToAppend) {
+    public static S103_DFSCredentials appendToRootPath(S103_DFSCredentials dfsCredentials, String pathToAppend) {
         String currentRoot = getCurrentRootPath(dfsCredentials);
-        if (! (currentRoot.endsWith("/"))) {
+        if (!(currentRoot.endsWith("/"))) {
             currentRoot = currentRoot + "/";
         }
         if (pathToAppend.startsWith("/")) {
@@ -27,18 +27,18 @@ public class ModifyDFSCredentials {
         return changeRootpath(dfsCredentials, newRootPath);
     }
 
-    public static S101_DFSCredentials getPathToMigratedData(S101_DFSCredentials dfsCredentials) {
+    public static S103_DFSCredentials getPathToMigratedData(S103_DFSCredentials dfsCredentials) {
         return changeRootpath(dfsCredentials, getModifiedRootPath(getCurrentRootPath(dfsCredentials)));
     }
 
-    public static String getCurrentRootPath(S101_DFSCredentials dfsCredentials) {
+    public static String getCurrentRootPath(S103_DFSCredentials dfsCredentials) {
         String currentRoot = null;
-        if (dfsCredentials instanceof S101_AmazonS3DFSCredentials) {
-            S101_AmazonS3DFSCredentials d = (S101_AmazonS3DFSCredentials) dfsCredentials;
+        if (dfsCredentials instanceof S103_AmazonS3DFSCredentials) {
+            S103_AmazonS3DFSCredentials d = (S103_AmazonS3DFSCredentials) dfsCredentials;
             currentRoot = d.getRootBucket();
         }
-        if (dfsCredentials instanceof S101_FilesystemDFSCredentials) {
-            S101_FilesystemDFSCredentials d = (S101_FilesystemDFSCredentials) dfsCredentials;
+        if (dfsCredentials instanceof S103_FilesystemDFSCredentials) {
+            S103_FilesystemDFSCredentials d = (S103_FilesystemDFSCredentials) dfsCredentials;
             currentRoot = d.getRoot();
         }
         if (currentRoot == null) {
@@ -48,7 +48,7 @@ public class ModifyDFSCredentials {
     }
 
     private static String getModifiedRootPath(String currentRoot) {
-        if (! (currentRoot.endsWith("/"))) {
+        if (!(currentRoot.endsWith("/"))) {
             currentRoot = currentRoot + "/";
         }
 
@@ -68,29 +68,28 @@ public class ModifyDFSCredentials {
         return currentRoot + DEFAULT_NEW_PATH_SUFFIX;
     }
 
-    private static S101_DFSCredentials changeRootpath(S101_DFSCredentials dfsCredentials, String newRootPath) {
-        if (dfsCredentials instanceof S101_AmazonS3DFSCredentials) {
-            S101_AmazonS3DFSCredentials d = (S101_AmazonS3DFSCredentials) dfsCredentials;
-            return S101_AmazonS3DFSCredentials.builder()
-                    .rootBucket(newRootPath)
-                    .url(d.getUrl())
-                    .accessKey(d.getAccessKey())
-                    .secretKey(d.getSecretKey())
-                    .noHttps(d.isNoHttps())
-                    .region(d.getRegion())
-                    .threadPoolSize(d.getThreadPoolSize())
-                    .queueSize(d.getQueueSize()).build();
+    private static S103_DFSCredentials changeRootpath(S103_DFSCredentials dfsCredentials, String newRootPath) {
+        if (dfsCredentials instanceof S103_AmazonS3DFSCredentials) {
+            S103_AmazonS3DFSCredentials d = (S103_AmazonS3DFSCredentials) dfsCredentials;
+            return S103_AmazonS3DFSCredentials.builder()
+                .rootBucket(newRootPath)
+                .url(d.getUrl())
+                .accessKey(d.getAccessKey())
+                .secretKey(d.getSecretKey())
+                .noHttps(d.isNoHttps())
+                .region(d.getRegion())
+                .threadPoolSize(d.getThreadPoolSize())
+                .queueSize(d.getQueueSize()).build();
         }
-        if (dfsCredentials instanceof S101_FilesystemDFSCredentials) {
+        if (dfsCredentials instanceof S103_FilesystemDFSCredentials) {
 
-            S101_FilesystemDFSCredentials d = (S101_FilesystemDFSCredentials) dfsCredentials;
-            return S101_FilesystemDFSCredentials.builder()
-                    .root(newRootPath).build();
+            S103_FilesystemDFSCredentials d = (S103_FilesystemDFSCredentials) dfsCredentials;
+            return S103_FilesystemDFSCredentials.builder()
+                .root(newRootPath).build();
 
         }
         throw new RuntimeException("DFSCredentials have new class not known to the code: " + dfsCredentials.getClass().toString());
     }
-
 
 
 }

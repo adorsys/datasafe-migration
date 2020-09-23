@@ -5,9 +5,9 @@ import de.adorsys.datasafe_0_6_1.simple.adapter.api.types.S061_DSDocument;
 import de.adorsys.datasafe_0_6_1.simple.adapter.api.types.S061_DocumentDirectoryFQN;
 import de.adorsys.datasafe_0_6_1.simple.adapter.api.types.S061_DocumentFQN;
 import de.adorsys.datasafe_0_6_1.simple.adapter.api.types.S061_ListRecursiveFlag;
-import de.adorsys.datasafe_1_0_1.encrypiton.api.types.S101_UserIDAuth;
-import de.adorsys.datasafe_1_0_1.simple.adapter.api.S101_SimpleDatasafeService;
-import de.adorsys.datasafe_1_0_1.simple.adapter.api.types.S101_DSDocument;
+import de.adorsys.datasafe_1_0_3.encrypiton.api.types.S103_UserIDAuth;
+import de.adorsys.datasafe_1_0_3.simple.adapter.api.S103_SimpleDatasafeService;
+import de.adorsys.datasafe_1_0_3.simple.adapter.api.types.S103_DSDocument;
 import de.adorsys.datasafemigration.common.SwitchVersion;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -24,9 +24,9 @@ import java.util.List;
 @Slf4j
 public class LoadUserOldToNewFormat {
     private final S061_SimpleDatasafeService sourceDatasafeService;
-    private final S101_SimpleDatasafeService destDatasafeService;
+    private final S103_SimpleDatasafeService destDatasafeService;
 
-    public MigrationInfo migrateUser(S101_UserIDAuth userIDAuth) {
+    public MigrationInfo migrateUser(S103_UserIDAuth userIDAuth) {
 
         MigrationInfo migrationInfo = new MigrationInfo();
         Instant start = Instant.now();
@@ -36,7 +36,7 @@ public class LoadUserOldToNewFormat {
         List<S061_DocumentFQN> list = sourceDatasafeService.list(SwitchVersion.to_0_6_1(userIDAuth), new S061_DocumentDirectoryFQN("/"), S061_ListRecursiveFlag.TRUE);
         for (S061_DocumentFQN fqn : list) {
             S061_DSDocument dsDocument = sourceDatasafeService.readDocument(SwitchVersion.to_0_6_1(userIDAuth), fqn);
-            storeDocument(userIDAuth, SwitchVersion.to_1_0_1(dsDocument));
+            storeDocument(userIDAuth, SwitchVersion.to_1_0_3(dsDocument));
             migrationInfo.incrementFiles();
             migrationInfo.addBytes(dsDocument.getDocumentContent().getValue().length);
         }
@@ -45,7 +45,7 @@ public class LoadUserOldToNewFormat {
         return migrationInfo;
     }
 
-    private void createUser(S101_UserIDAuth userIDAuth) {
+    private void createUser(S103_UserIDAuth userIDAuth) {
         if (destDatasafeService.userExists(userIDAuth.getUserID())) {
             throw new RuntimeException("user " + userIDAuth.getUserID().getValue() + " already exists");
         }
@@ -54,7 +54,7 @@ public class LoadUserOldToNewFormat {
         log.debug("created user {} in new format", userIDAuth.getUserID().getValue());
     }
 
-    private void storeDocument(S101_UserIDAuth userIDAuth, S101_DSDocument dsDocument) {
+    private void storeDocument(S103_UserIDAuth userIDAuth, S103_DSDocument dsDocument) {
         destDatasafeService.storeDocument(userIDAuth, dsDocument);
         log.debug("stored document of size {} in new format for user {}", dsDocument.getDocumentContent().getValue().length, userIDAuth.getUserID().getValue());
     }

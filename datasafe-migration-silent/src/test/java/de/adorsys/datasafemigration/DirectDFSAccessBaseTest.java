@@ -9,7 +9,7 @@ import de.adorsys.datasafe.simple.adapter.api.types.DocumentFQN;
 import de.adorsys.datasafe.simple.adapter.impl.GetStorage;
 import de.adorsys.datasafe.simple.adapter.impl.SimpleDatasafeServiceWithMigration;
 import de.adorsys.datasafe.simple.adapter.spring.annotations.UseDatasafeSpringConfiguration;
-import de.adorsys.datasafe_1_0_1.simple.adapter.api.types.S101_DFSCredentials;
+import de.adorsys.datasafe_1_0_3.simple.adapter.api.types.S103_DFSCredentials;
 import de.adorsys.datasafemigration.docker.WithStorageProvider;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -36,8 +36,8 @@ import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER
 public class DirectDFSAccessBaseTest extends WithStorageProvider {
 
     protected void testWriteFilesToDFS(SimpleDatasafeService datasafeService) {
-        S101_DFSCredentials s100_dfsCredentials = ((SimpleDatasafeServiceWithMigration) datasafeService).getCredentialsToMigratedData();
-        GetStorage.SystemRootAndStorageService systemRootAndStorageService = GetStorage.get(s100_dfsCredentials);
+        S103_DFSCredentials s103_dfsCredentials = ((SimpleDatasafeServiceWithMigration) datasafeService).getCredentialsToMigratedData();
+        GetStorage.SystemRootAndStorageService systemRootAndStorageService = GetStorage.get(s103_dfsCredentials);
         DSDocument dsDocument = new DSDocument(new DocumentFQN("filename.txt"), new DocumentContent("content of file".getBytes()));
         UserID userID = new UserID("peter");
         Assertions.assertTrue(DirectDFSAccess.listAllFiles(systemRootAndStorageService).isEmpty());
@@ -50,8 +50,8 @@ public class DirectDFSAccessBaseTest extends WithStorageProvider {
 
     @SneakyThrows
     protected void testMoveFiles(SimpleDatasafeService datasafeService) {
-        S101_DFSCredentials s100_dfsCredentials = ((SimpleDatasafeServiceWithMigration) datasafeService).getCredentialsToMigratedData();
-        GetStorage.SystemRootAndStorageService base = GetStorage.get(s100_dfsCredentials);
+        S103_DFSCredentials s103_dfsCredentials = ((SimpleDatasafeServiceWithMigration) datasafeService).getCredentialsToMigratedData();
+        GetStorage.SystemRootAndStorageService base = GetStorage.get(s103_dfsCredentials);
 
         GetStorage.SystemRootAndStorageService source = new GetStorage.SystemRootAndStorageService(new URI(base.getSystemRoot().toString() + ("source")), base.getStorageService());
         GetStorage.SystemRootAndStorageService dest = new GetStorage.SystemRootAndStorageService(new URI(base.getSystemRoot().toString() + ("dest")), base.getStorageService());
@@ -68,8 +68,8 @@ public class DirectDFSAccessBaseTest extends WithStorageProvider {
 
     @SneakyThrows
     protected void testUserExists(SimpleDatasafeService datasafeService) {
-        S101_DFSCredentials s100_dfsCredentials = ((SimpleDatasafeServiceWithMigration) datasafeService).getCredentialsToMigratedData();
-        GetStorage.SystemRootAndStorageService base = GetStorage.get(s100_dfsCredentials);
+        S103_DFSCredentials s103_dfsCredentials = ((SimpleDatasafeServiceWithMigration) datasafeService).getCredentialsToMigratedData();
+        GetStorage.SystemRootAndStorageService base = GetStorage.get(s103_dfsCredentials);
 
         GetStorage.SystemRootAndStorageService source = new GetStorage.SystemRootAndStorageService(new URI(base.getSystemRoot().toString() + ("source")), base.getStorageService());
         UserID userID = new UserID("peter");
