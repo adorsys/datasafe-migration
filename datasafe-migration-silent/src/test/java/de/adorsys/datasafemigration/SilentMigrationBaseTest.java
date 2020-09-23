@@ -117,7 +117,7 @@ abstract public class SilentMigrationBaseTest extends WithStorageProvider {
 
     protected List<String> findDocumentsOfUserInNewLocation(UserID userID, GetStorage.SystemRootAndStorageService service) {
         String base = service.getSystemRoot().toASCIIString();
-        return DirectDFSAccess.listAllFiles(service).stream().sorted().filter(el -> el.contains(base + "100/users/" + userID.getValue() + "/")).collect(Collectors.toList());
+        return DirectDFSAccess.listAllFiles(service).stream().sorted().filter(el -> el.contains(base + ModifyDFSCredentials.DEFAULT_NEW_PATH_SUFFIX + "users/" + userID.getValue() + "/")).collect(Collectors.toList());
     }
 
 }

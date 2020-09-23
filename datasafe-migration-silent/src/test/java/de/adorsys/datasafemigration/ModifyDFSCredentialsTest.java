@@ -9,19 +9,19 @@ public class ModifyDFSCredentialsTest {
     @Test
     public void testBestCase() {
         S103_DFSCredentials newRoot = ModifyDFSCredentials.getPathToMigratedData(getDFSCredentials("s3://adorsys-timp-dev/datasafe/backend/"));
-        Assertions.assertEquals("s3://adorsys-timp-dev/datasafe/100/backend/", getRoot(newRoot));
+        Assertions.assertEquals("s3://adorsys-timp-dev/datasafe/" + ModifyDFSCredentials.DEFAULT_NEW_PATH_SUFFIX + "backend/", getRoot(newRoot));
     }
 
     @Test
     public void testBestCase2() {
         S103_DFSCredentials newRoot = ModifyDFSCredentials.getPathToMigratedData(getDFSCredentials("datasafe/backend"));
-        Assertions.assertEquals("datasafe/100/backend/", getRoot(newRoot));
+        Assertions.assertEquals("datasafe/" + ModifyDFSCredentials.DEFAULT_NEW_PATH_SUFFIX + "backend/", getRoot(newRoot));
     }
 
     @Test
     public void testDefaultCase() {
         S103_DFSCredentials newRoot = ModifyDFSCredentials.getPathToMigratedData(getDFSCredentials("anyOtherRoot"));
-        Assertions.assertEquals("anyOtherRoot/100/", getRoot(newRoot));
+        Assertions.assertEquals("anyOtherRoot/" + ModifyDFSCredentials.DEFAULT_NEW_PATH_SUFFIX, getRoot(newRoot));
     }
 
     @Test

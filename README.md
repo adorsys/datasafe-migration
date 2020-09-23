@@ -146,7 +146,7 @@ or, if <code>distinctfolder: true</code> has been set it could be:
 *    migration timeout : 20000                             *
 *  intermediate folder : NO                                *
 *             old root : s3://adorsys-test-migration/      *
-*             new root : s3://adorsys-test-migration/100/  *
+*             new root : s3://adorsys-test-migration/103/  *
 *                                                          *
 ************************************************************
 ```
@@ -223,9 +223,9 @@ File -> Invalidate Caches / Restart
 If you still have problems do
 ```
 mvn clean install -DskipTests
-select pom.xml of datasafe-migration-shaded-061 project
+select pom.xml of datasafe-migration-shaded-0.6.1 project
 right click -> Maven -> ignore Projects
-select pom.xml of datasafe-migration-shaded-101 project
+select pom.xml of datasafe-migration-shaded-1.0.3 project
 right click -> Maven -> ignore Projects
 select root pom.xml
 right click -> Maven -> reimport

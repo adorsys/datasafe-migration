@@ -7,13 +7,13 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class ModifyDFSCredentials {
+    public static String DEFAULT_NEW_PATH_SUFFIX = "103/";
     private static String BEST_CASE_SUFFIX = "datasafe/backend/";
-    private static String BEST_CASE_NEW_SUFFIX = "datasafe/100/backend/";
-    private static String DEFAULT_NEW_PATH_SUFFIX = "100/";
+    private static String BEST_CASE_NEW_SUFFIX = "datasafe/" + DEFAULT_NEW_PATH_SUFFIX + "backend/";
 
     public static S103_DFSCredentials appendToRootPath(S103_DFSCredentials dfsCredentials, String pathToAppend) {
         String currentRoot = getCurrentRootPath(dfsCredentials);
-        if (! (currentRoot.endsWith("/"))) {
+        if (!(currentRoot.endsWith("/"))) {
             currentRoot = currentRoot + "/";
         }
         if (pathToAppend.startsWith("/")) {
@@ -48,7 +48,7 @@ public class ModifyDFSCredentials {
     }
 
     private static String getModifiedRootPath(String currentRoot) {
-        if (! (currentRoot.endsWith("/"))) {
+        if (!(currentRoot.endsWith("/"))) {
             currentRoot = currentRoot + "/";
         }
 
@@ -72,25 +72,24 @@ public class ModifyDFSCredentials {
         if (dfsCredentials instanceof S103_AmazonS3DFSCredentials) {
             S103_AmazonS3DFSCredentials d = (S103_AmazonS3DFSCredentials) dfsCredentials;
             return S103_AmazonS3DFSCredentials.builder()
-                    .rootBucket(newRootPath)
-                    .url(d.getUrl())
-                    .accessKey(d.getAccessKey())
-                    .secretKey(d.getSecretKey())
-                    .noHttps(d.isNoHttps())
-                    .region(d.getRegion())
-                    .threadPoolSize(d.getThreadPoolSize())
-                    .queueSize(d.getQueueSize()).build();
+                .rootBucket(newRootPath)
+                .url(d.getUrl())
+                .accessKey(d.getAccessKey())
+                .secretKey(d.getSecretKey())
+                .noHttps(d.isNoHttps())
+                .region(d.getRegion())
+                .threadPoolSize(d.getThreadPoolSize())
+                .queueSize(d.getQueueSize()).build();
         }
         if (dfsCredentials instanceof S103_FilesystemDFSCredentials) {
 
             S103_FilesystemDFSCredentials d = (S103_FilesystemDFSCredentials) dfsCredentials;
             return S103_FilesystemDFSCredentials.builder()
-                    .root(newRootPath).build();
+                .root(newRootPath).build();
 
         }
         throw new RuntimeException("DFSCredentials have new class not known to the code: " + dfsCredentials.getClass().toString());
     }
-
 
 
 }

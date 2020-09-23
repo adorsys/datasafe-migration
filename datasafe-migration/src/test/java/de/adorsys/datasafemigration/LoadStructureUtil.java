@@ -14,17 +14,17 @@ import java.util.Map;
 import java.util.Set;
 
 public class LoadStructureUtil {
-    static public Map<S103_UserIDAuth, Set<S103_DSDocument>> loadS100Structure(S103_SimpleDatasafeService s100_simpleDatasafeService, Set<S103_UserIDAuth> s100_userIDAuths) {
+    static public Map<S103_UserIDAuth, Set<S103_DSDocument>> loadS100Structure(S103_SimpleDatasafeService s103_simpleDatasafeService, Set<S103_UserIDAuth> s103_userIDAuths) {
 
         Map<S103_UserIDAuth, Set<S103_DSDocument>> resultMap = new HashMap<>();
 
-        for (S103_UserIDAuth s100_userIDAuth : s100_userIDAuths) {
+        for (S103_UserIDAuth s103_userIDAuth : s103_userIDAuths) {
             Set<S103_DSDocument> resultSet = new HashSet<>();
-            List<S103_DocumentFQN> list = s100_simpleDatasafeService.list(s100_userIDAuth, new S103_DocumentDirectoryFQN("/"), S103_ListRecursiveFlag.TRUE);
-            for (S103_DocumentFQN s100_documentFQN : list) {
-                resultSet.add(s100_simpleDatasafeService.readDocument(s100_userIDAuth, s100_documentFQN));
+            List<S103_DocumentFQN> list = s103_simpleDatasafeService.list(s103_userIDAuth, new S103_DocumentDirectoryFQN("/"), S103_ListRecursiveFlag.TRUE);
+            for (S103_DocumentFQN s103_documentFQN : list) {
+                resultSet.add(s103_simpleDatasafeService.readDocument(s103_userIDAuth, s103_documentFQN));
             }
-            resultMap.put(s100_userIDAuth, resultSet);
+            resultMap.put(s103_userIDAuth, resultSet);
         }
         return resultMap;
     }

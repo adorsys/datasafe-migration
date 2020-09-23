@@ -108,21 +108,21 @@ public class MigrationTest extends WithStorageProvider {
         listOfOldUsers.forEach(s061_userIDAuth -> listOfNewUsers.add(SwitchVersion.to_1_0_3(s061_userIDAuth)));
 
         S061_SimpleDatasafeService s061_simpleDatasafeService = new S061_SimpleDatasafeServiceImpl(dfsCredentialsTuple.getOldVersion());
-        S103_SimpleDatasafeService s100_simpleDatasafeService = new S103_SimpleDatasafeServiceImpl(dfsCredentialsTuple.getNewVersion(), new MutableEncryptionConfig(),
+        S103_SimpleDatasafeService s103_simpleDatasafeService = new S103_SimpleDatasafeServiceImpl(dfsCredentialsTuple.getNewVersion(), new MutableEncryptionConfig(),
             new S103_PathEncryptionConfig(true));
         Map<S061_UserIDAuth, Set<S061_DSDocument>> s061StructureMap = CreateStructureUtil.create061Structure(s061_simpleDatasafeService, listOfOldUsers);
 
-        for (S103_UserIDAuth s100_userIDAuth : listOfNewUsers) {
-            LoadUserOldToNewFormat migrator = new LoadUserOldToNewFormat(s061_simpleDatasafeService, s100_simpleDatasafeService);
-            migrator.migrateUser(s100_userIDAuth);
+        for (S103_UserIDAuth s103_userIDAuth : listOfNewUsers) {
+            LoadUserOldToNewFormat migrator = new LoadUserOldToNewFormat(s061_simpleDatasafeService, s103_simpleDatasafeService);
+            migrator.migrateUser(s103_userIDAuth);
         }
 
-        Map<S103_UserIDAuth, Set<S103_DSDocument>> s100_Structuremap = LoadStructureUtil.loadS100Structure(s100_simpleDatasafeService, listOfNewUsers);
+        Map<S103_UserIDAuth, Set<S103_DSDocument>> s103_Structuremap = LoadStructureUtil.loadS100Structure(s103_simpleDatasafeService, listOfNewUsers);
 
         for (S061_UserIDAuth s061_userIDAuth : listOfOldUsers) {
             Set<S061_DSDocument> s061_dsDocuments = s061StructureMap.get(s061_userIDAuth);
-            Set<S103_DSDocument> s100_dsDocuments = s100_Structuremap.get(SwitchVersion.to_1_0_3(s061_userIDAuth));
-            compare(s061_dsDocuments, s100_dsDocuments);
+            Set<S103_DSDocument> s103_dsDocuments = s103_Structuremap.get(SwitchVersion.to_1_0_3(s061_userIDAuth));
+            compare(s061_dsDocuments, s103_dsDocuments);
         }
     }
 
@@ -157,16 +157,16 @@ public class MigrationTest extends WithStorageProvider {
     }
 
     @SneakyThrows
-    private void compare(Set<S061_DSDocument> s061_dsDocuments, Set<S103_DSDocument> s100_dsDocuments) {
+    private void compare(Set<S061_DSDocument> s061_dsDocuments, Set<S103_DSDocument> s103_dsDocuments) {
         int counter = 0;
         long bytecounter = 0;
         for (S061_DSDocument s061_dsDocument : s061_dsDocuments) {
             S061_DocumentFQN s061_dsDocumentDocumentFQN = s061_dsDocument.getDocumentFQN();
             boolean documentFound = false;
-            for (S103_DSDocument s100_dsDocument : s100_dsDocuments) {
-                if (SwitchVersion.to_0_6_1(s100_dsDocument.getDocumentFQN()).equals(s061_dsDocumentDocumentFQN)) {
+            for (S103_DSDocument s103_dsDocument : s103_dsDocuments) {
+                if (SwitchVersion.to_0_6_1(s103_dsDocument.getDocumentFQN()).equals(s061_dsDocumentDocumentFQN)) {
                     Assertions.assertArrayEquals(s061_dsDocument.getDocumentContent().getValue(),
-                            s100_dsDocument.getDocumentContent().getValue());
+                            s103_dsDocument.getDocumentContent().getValue());
                     documentFound = true;
                     counter++;
                     bytecounter += s061_dsDocument.getDocumentContent().getValue().length;

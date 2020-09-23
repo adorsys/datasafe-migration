@@ -151,11 +151,11 @@ public class ExtendedSwitchVersion extends SwitchVersion {
         );
     }
 
-    public static DocumentFQN toCurrent(S103_DocumentFQN s100_documentFQN) {
-        return new DocumentFQN(s100_documentFQN.getDocusafePath());
+    public static DocumentFQN toCurrent(S103_DocumentFQN s103_documentFQN) {
+        return new DocumentFQN(s103_documentFQN.getDocusafePath());
     }
 
-    public static DocumentDirectoryFQN toCurrent(S103_DocumentDirectoryFQN s100_documentDirectoryFQN) {
-        return new DocumentDirectoryFQN(s100_documentDirectoryFQN.getDocusafePath());
+    public static DocumentDirectoryFQN toCurrent(S103_DocumentDirectoryFQN s103_documentDirectoryFQN) {
+        return new DocumentDirectoryFQN(s103_documentDirectoryFQN.getDocusafePath());
     }
 }
