@@ -17,7 +17,7 @@ deploy:
   -
     skip_cleanup: true
     provider: script
-    script: mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar -Dsonar.host.url=$SONAR_HOST -Dsonar.login=$SONAR_TOKEN
+    script: mvn clean install
     on:
       branch: develop
   -
