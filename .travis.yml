@@ -18,8 +18,7 @@ deploy:
     skip_cleanup: true
     provider: script
     script: mvn clean install
-    on:
-      branch: develop
+
   -
     skip_cleanup: true
     provider: script
