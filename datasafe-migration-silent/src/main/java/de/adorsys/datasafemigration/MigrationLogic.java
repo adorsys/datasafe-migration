@@ -35,7 +35,8 @@ public class MigrationLogic {
     private Set<String> migratedUsers = new HashSet<>();
 
     // this file has to exist for every user
-    private static DocumentFQN MIGRATION_CONFIRMATION = new DocumentFQN("DATASAFE_FORMAT_1_0_3");
+    private static final DocumentFQN MIGRATION_CONFIRMATION = new DocumentFQN("DATASAFE_FORMAT_1_0_3");
+    private static final DocumentFQN MIGRATION_CONFIRMATION_1_0_1 = new DocumentFQN("DATASAFE_FORMAT_1_0_1");
 
     private final DistributedLocker distributedLocker;
     private final GetStorage.SystemRootAndStorageService oldStorage;
@@ -123,13 +124,15 @@ public class MigrationLogic {
 
         // before now accessing a lock to work eclusivly, we can check if user is already migrated
         if (withIntermediateFolder) {
-            if (DirectDFSAccess.doesDocumentExistInUsersRootDir(finalStorage, userIDAuth.getUserID(), MIGRATION_CONFIRMATION)) {
+            if (DirectDFSAccess.doesDocumentExistInUsersRootDir(finalStorage, userIDAuth.getUserID(), MIGRATION_CONFIRMATION_1_0_1) ||
+                    DirectDFSAccess.doesDocumentExistInUsersRootDir(finalStorage, userIDAuth.getUserID(), MIGRATION_CONFIRMATION)) {
                 log.debug("user {} is already migrated, found version file in finalStorage", username);
                 migratedUsers.add(username);
                 return true;
             }
         } else {
-            if (DirectDFSAccess.doesDocumentExistInUsersRootDir(newStorage, userIDAuth.getUserID(), MIGRATION_CONFIRMATION)) {
+            if (DirectDFSAccess.doesDocumentExistInUsersRootDir(newStorage, userIDAuth.getUserID(), MIGRATION_CONFIRMATION_1_0_1) ||
+                    DirectDFSAccess.doesDocumentExistInUsersRootDir(newStorage, userIDAuth.getUserID(), MIGRATION_CONFIRMATION)) {
                 log.debug("user {} is already migrated, found version file in newStorage", username);
                 migratedUsers.add(username);
                 return true;
